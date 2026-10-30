@@ -25,7 +25,8 @@ integration tests requiring RPC credentials are outside this offline check.
 
 Link checks include local README/docs links and remote URLs; missing assets and
 not-yet-live launch URLs are failures to repair in the content release. No broad
-HTTP status or path exclusions hide those failures.
+HTTP status or path exclusions hide those failures. Only x.com/twitter.com
+links are excluded because these hosts return HTTP 403 to automated checks.
 
 Gitleaks uses the private export's reviewed config copied here; keep its exact
 public-value exceptions synchronized. It scans all reachable Git history with
