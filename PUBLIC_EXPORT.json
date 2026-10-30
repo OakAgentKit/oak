@@ -3,6 +3,10 @@
   "mode": "launch",
   "files": [
     {
+      "path": ".github/CI-NOTES.md",
+      "sha256": "63f094d65aa6efe697fe37fac3ce8c3cab2fb363e2535f1d761309a59b247746"
+    },
+    {
       "path": ".github/ISSUE_TEMPLATE/bug_report.md",
       "sha256": "e692e26ba28b904bf4ffaae5456754294ab59b31b5a7cada549cb0b8b94bf4fa"
     },
@@ -13,10 +17,6 @@
     {
       "path": ".github/PULL_REQUEST_TEMPLATE.md",
       "sha256": "e208dd453f626d0dfb79b520cc4f53095a13d3d1268842a155f284e044c3ebc1"
-    },
-    {
-      "path": ".github/README.md",
-      "sha256": "ef2d1ceee5a1813ed8f4a0ade5faff332e7ec9472da8344363d1300bd2c79db1"
     },
     {
       "path": ".github/dependabot.yml",
@@ -56,7 +56,7 @@
     },
     {
       "path": ".github/workflows/docs-links.yml",
-      "sha256": "1ff29629f408ee4731a5852598dea430be6ab1af3dec99aaf89d772e9b2b0134"
+      "sha256": "83014bd22e1e10f2006d3d5d53cd08c448030c2d0802e2e85584e4bd59e98846"
     },
     {
       "path": ".github/workflows/security.yml",
