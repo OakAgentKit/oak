@@ -1,0 +1,19 @@
+{
+  "name": "oak-public-examples",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22.12.0 <23" },
+  "scripts": {
+    "test": "node --test */*.test.mjs",
+    "test:packed": "node test-packed.mjs",
+    "quickstart": "node 01-quickstart-mcp/index.mjs",
+    "preview": "node 02-preview-sign-swap/index.mjs",
+    "portfolio": "node 03-portfolio-agent/index.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@oakagentkit/core": "0.0.0",
+    "@oakagentkit/addon": "0.0.0"
+  }
+}

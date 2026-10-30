@@ -1,0 +1,38 @@
+name: Security
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '43 8 * * 1'
+permissions:
+  contents: read
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install checksum-pinned gitleaks (no license secret)
+        run: bash .github/scripts/setup-gitleaks.sh
+      - name: Scan all history with reviewed config
+        run: bash .github/scripts/secret-scan.sh .github/gitleaks.toml
+  codeql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
+        with:
+          languages: javascript-typescript
+          build-mode: none
+      - uses: github/codeql-action/analyze@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
+        with:
+          category: /language:javascript-typescript
