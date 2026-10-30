@@ -1,45 +1,51 @@
-# Oak Agent Kit — npm Package License Summary (DRAFT)
+# Oak npm package license
 
-> **STATUS: DRAFT** — Plain-English summary of the license terms for the published `@oakagentkit/addon` and `@oakagentkit/core` npm packages. Final legal text will be published in the npm package archives and updated here at launch.
+The published `@oakagentkit/addon` and `@oakagentkit/core` packages are free to
+install and use under the license included in each package's `LICENSE` file.
+Their implementation source is private. This page summarizes those terms;
+the license shipped with your installed package is authoritative.
 
----
+## Repository and package boundaries
 
-## 1. Repository Split: What Is MIT vs. What Is Covered Here
+- **Docs, examples and runtime contracts in this repository:** [MIT](LICENSE).
+- **Legacy differential test only:** `contracts/test/OakTickMathDifferential.t.sol` contains a GPL-2.0-or-later Uniswap v3 reference oracle; it is test-only and is never deployed.
+- **Core and add-on npm packages:** “Oak — Free to use, no copying.”
+- **Hosted Oak service:** private and proprietary; subscription terms are separate.
 
-Oak Agent Kit separates open repository material from the compiled npm packages and the hosted service:
+No recipe package ships in this repository. Your own examples and data-only
+recipes can invoke the official npm packages as dependencies.
 
-| Surface | License | Summary |
-| :--- | :--- | :--- |
-| **This GitHub Repository** (`docs/`, `examples/`, `recipes/`, `contracts/`) | **[MIT License](LICENSE)** | Free to read, fork, modify, test, and reuse under standard MIT terms. |
-| **Published npm Packages** (`@oakagentkit/addon`, `@oakagentkit/core`) | **Oak Package License (Free to Use, No Copying — DRAFT)** | Free to install and run; no copying, redistribution, or extraction of the compiled add-on or connectors. |
-| **Oak Hosted Service** | **Proprietary (Private)** | Closed-source hosted service. Access requires a verified ERC-8004 agent identity and an active on-chain subscription for action tools. |
+## Permitted use
 
----
+You may install and run the official packages on your machines, including in
+your own agents and commercial products, without a licensing charge.
+You may make copies technically necessary to install, run and back up the
+packages for that use. Keep the package license with permitted copies.
 
-## 2. Plain-English Summary of the npm Package Terms
+Normal setup uses `oak mcp` and creates a local wallet automatically.
+Wallet initialization and key export are owner-terminal operations, not
+agent setup steps. See [client setup](docs/client-setup/README.md).
 
-### What You Can Do (Free to Use)
+## Copying and distribution
 
-1. **Install and run:** Download and install `@oakagentkit/addon` (and its dependency `@oakagentkit/core`) from the official npm registry on your machines at no licensing cost.
-2. **Operate AI agents:** Run `oak init`, `oak setup`, `oak subscribe`, `oak mcp`, and `oak call` to manage local agent wallets and interact with Robinhood Chain (`4663`) and Testnet (`46630`) for personal or commercial use.
-3. **Build and share examples or recipes:** Write, publish, and distribute your own examples, agent prompts, and declarative `oak-recipe/v1` JSON recipes that invoke `@oakagentkit/addon` as an external dependency.
+The package license does not otherwise permit copying, modification,
+distribution, resale, sublicensing or rehosting of the package code,
+whether original, minified or derived.
+A product may depend on the official package; that does not permit
+redistributing its code inside another package, bundle, service download
+or hosted mirror. The license grants no trademark rights.
 
-### What You Cannot Do (No Copying)
+## Dependencies and service access
 
-1. **No redistribution or rehosting:** You may not copy, republish, mirror, sublicense, sell, or redistribute the `@oakagentkit/addon` or `@oakagentkit/core` packages or their compiled code outside standard npm installation on your own systems.
-2. **No extraction or derivative SDKs:** You may not extract, bundle, or repurpose Oak's 25 ecosystem connectors, transaction-building logic, or MCP bridge into a competing package, SDK, or hosted service.
-3. **No reverse engineering:** Except to the extent such restrictions are prohibited by applicable law, you may not decompile, disassemble, or reconstruct the private source code of `@oakagentkit/addon` or `@oakagentkit/core`.
+Third-party dependencies are separate works governed by their own licenses.
+Oak's package terms do not replace those terms.
+Free package use does not include paid hosted actions. Those require identity
+and subscription access once [launch access opens](docs/access-and-pricing.md).
+Hosted access is currently limited to the Oak team.
 
----
+## Warranty and custody
 
-## 3. Third-Party Open-Source Dependencies
-
-The published npm packages declare runtime dependencies on third-party open-source packages (such as `viem`, `@modelcontextprotocol/sdk`, `@noble/*`, `@scure/*`, and `ajv`). Those third-party packages remain governed by their respective permissive open-source licenses (`MIT`, `Apache-2.0`, `ISC`, `BSD-2-Clause`, and `BSD-3-Clause`).
-
----
-
-## 4. Disclaimers
-
-- **Provided "AS IS":** The npm packages are provided without warranty of any kind, express or implied.
-- **Access only, no safety checks:** Oak adds no spending caps, allowlists, or safety checks of its own. You and your agent are responsible for inspecting every `preview` simulation before signing.
-- **No promised returns & non-affiliation:** Oak never promises returns, does not provide financial advice, and is not affiliated with Robinhood. You are responsible for complying with the laws and third-party terms in your jurisdiction.
+The packages are provided as is, without warranty. See the shipped license
+for its liability terms. Read [security](docs/security.md) for 0.1.1's pending
+confirmation and local checks, custody responsibilities and their limits.
+Oak is independent and is not affiliated with Robinhood.

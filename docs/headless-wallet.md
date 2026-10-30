@@ -10,7 +10,6 @@ Backups are optional. When you hold more than pocket change, run `oak export` **
 
 ## Existing passphrase wallets and optional migration
 
-
 An existing keychain wallet needs access to its original persistent OS keychain. New automatic wallets also support owner-only file storage.
 On Linux, install and unlock Secret Service in the same user and D-Bus session as the MCP client.
 macOS uses Keychain; Windows uses Credential Manager.
@@ -23,5 +22,15 @@ To migrate a passphrase wallet, configure a persistent keychain, then run `oak i
 Confirm the recovered address, keep the encrypted backup, and store your recovery words offline.
 Recovery restores the same wallet and sends no transaction. Oak cannot recover a lost key.
 
-Starting `oak mcp` can renew subscriptions with local signing and available USDG when renewal is due.
+Starting `oak mcp` can renew subscriptions with local signing and available USDG when renewal is due. In **0.1.1 (release candidate)**, new renewal signatures prompt in default ask mode.
 Use the [client setup prerequisites](client-setup/README.md) before connecting a host.
+
+## Unattended operation — 0.1.1 (release candidate)
+
+Automatic wallet creation works without a terminal. Action signing in default
+`confirm ask` mode still needs an MCP client that supports form elicitation.
+A headless process without that form refuses new action signatures.
+The owner can deliberately select `oak config set confirm auto` in their own
+terminal to skip prompts; local transaction checks remain. Restore prompts with
+`oak config set confirm ask`. Never have an agent allocate a PTY to choose auto.
+See [security](security.md) for what is checked and what remains outside those checks.

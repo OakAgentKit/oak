@@ -20,7 +20,7 @@ We pledge to make participation in the Oak Agent Kit community a harassment-free
 
 ## Enforcement and Reporting
 
-- **Security vulnerabilities:** Report privately at https://github.com/OakAgentKit/oak/security/advisories/new (see [`docs/security.md`](docs/security.md)).
+- **Security vulnerabilities:** Report through [private vulnerability reporting](https://github.com/OakAgentKit/oak/security/advisories/new) (see [`docs/security.md`](docs/security.md)).
 - **Code of Conduct issues:** Report violations by contacting the maintainers via [@OakAgentKit](https://x.com/OakAgentKit) or through a private repository report. Maintainers may remove offending content and ban accounts that violate these standards.
 
 ## Attribution

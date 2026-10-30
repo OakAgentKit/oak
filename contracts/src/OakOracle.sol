@@ -7,9 +7,13 @@ import {IOakOracle} from "./interfaces/IOakOracle.sol";
 import {IPons} from "./interfaces/IPons.sol";
 import {PriceNote, OakPriceNote} from "./libraries/OakPriceNote.sol";
 
-/// @dev Minimal tick conversion for the immutable ETH/USDG pool, adapted from Uniswap v3-core
-///      contracts/libraries/TickMath.sol at commit 5ea68a77cb541c6b3812df783be71ba8c081e25f.
-///      Constants and rounding match that source's getSqrtRatioAtTick implementation.
+/// @dev Adapted from Uniswap v4-core src/libraries/TickMath.sol at commit
+///      0f17b65aa61edee384d5129b7ea080f22905faa0 (https://github.com/Uniswap/v4-core), MIT.
+///      Modifications: renamed the library and getSqrtPriceAtTick function; replaced
+///      CustomRevert and InvalidTick(int24) with the plain TickOutOfBounds error; removed
+///      unused constants, imports, spacing helpers, and sqrt-price-to-tick conversion; and
+///      pinned the file's existing Solidity 0.8.26 pragma. The algorithm and constants in
+///      sqrtRatioAtTick are otherwise unchanged.
 library OakTickMath {
     int24 internal constant MIN_TICK = -887272;
     int24 internal constant MAX_TICK = 887272;
@@ -17,32 +21,54 @@ library OakTickMath {
     error TickOutOfBounds();
 
     function sqrtRatioAtTick(int24 tick) internal pure returns (uint160 sqrtPriceX96) {
-        uint256 absTick = tick < 0 ? uint256(-int256(tick)) : uint256(int256(tick));
-        if (absTick > uint256(uint24(MAX_TICK))) revert TickOutOfBounds();
+        unchecked {
+            uint256 absTick;
+            assembly ("memory-safe") {
+                tick := signextend(2, tick)
+                // mask = 0 if tick >= 0 else -1 (all 1s)
+                let mask := sar(255, tick)
+                // if tick >= 0, |tick| = tick = 0 ^ tick
+                // if tick < 0, |tick| = ~~|tick| = ~(-|tick| - 1) = ~(tick - 1) = (-1) ^ (tick - 1)
+                // either way, |tick| = mask ^ (tick + mask)
+                absTick := xor(mask, add(mask, tick))
+            }
 
-        uint256 ratio = absTick & 0x1 != 0 ? 0xfffcb933bd6fad37aa2d162d1a594001 : 0x100000000000000000000000000000000;
-        if (absTick & 0x2 != 0) ratio = (ratio * 0xfff97272373d413259a46990580e213a) >> 128;
-        if (absTick & 0x4 != 0) ratio = (ratio * 0xfff2e50f5f656932ef12357cf3c7fdcc) >> 128;
-        if (absTick & 0x8 != 0) ratio = (ratio * 0xffe5caca7e10e4e61c3624eaa0941cd0) >> 128;
-        if (absTick & 0x10 != 0) ratio = (ratio * 0xffcb9843d60f6159c9db58835c926644) >> 128;
-        if (absTick & 0x20 != 0) ratio = (ratio * 0xff973b41fa98c081472e6896dfb254c0) >> 128;
-        if (absTick & 0x40 != 0) ratio = (ratio * 0xff2ea16466c96a3843ec78b326b52861) >> 128;
-        if (absTick & 0x80 != 0) ratio = (ratio * 0xfe5dee046a99a2a811c461f1969c3053) >> 128;
-        if (absTick & 0x100 != 0) ratio = (ratio * 0xfcbe86c7900a88aedcffc83b479aa3a4) >> 128;
-        if (absTick & 0x200 != 0) ratio = (ratio * 0xf987a7253ac413176f2b074cf7815e54) >> 128;
-        if (absTick & 0x400 != 0) ratio = (ratio * 0xf3392b0822b70005940c7a398e4b70f3) >> 128;
-        if (absTick & 0x800 != 0) ratio = (ratio * 0xe7159475a2c29b7443b29c7fa6e889d9) >> 128;
-        if (absTick & 0x1000 != 0) ratio = (ratio * 0xd097f3bdfd2022b8845ad8f792aa5825) >> 128;
-        if (absTick & 0x2000 != 0) ratio = (ratio * 0xa9f746462d870fdf8a65dc1f90e061e5) >> 128;
-        if (absTick & 0x4000 != 0) ratio = (ratio * 0x70d869a156d2a1b890bb3df62baf32f7) >> 128;
-        if (absTick & 0x8000 != 0) ratio = (ratio * 0x31be135f97d08fd981231505542fcfa6) >> 128;
-        if (absTick & 0x10000 != 0) ratio = (ratio * 0x9aa508b5b7a84e1c677de54f3e99bc9) >> 128;
-        if (absTick & 0x20000 != 0) ratio = (ratio * 0x5d6af8dedb81196699c329225ee604) >> 128;
-        if (absTick & 0x40000 != 0) ratio = (ratio * 0x2216e584f5fa1ea926041bedfe98) >> 128;
-        if (absTick & 0x80000 != 0) ratio = (ratio * 0x48a170391f7dc42444e8fa2) >> 128;
+            if (absTick > uint256(int256(MAX_TICK))) revert TickOutOfBounds();
 
-        if (tick > 0) ratio = type(uint256).max / ratio;
-        sqrtPriceX96 = uint160((ratio >> 32) + (ratio & type(uint32).max == 0 ? 0 : 1));
+            // The tick is decomposed into bits, and for each bit with index i that is set, the product of
+            // 1/sqrt(1.0001^(2^i)) is calculated (using Q128.128). The constants are rounded to the nearest integer.
+            uint256 price;
+            assembly ("memory-safe") {
+                price := xor(shl(128, 1), mul(xor(shl(128, 1), 0xfffcb933bd6fad37aa2d162d1a594001), and(absTick, 0x1)))
+            }
+            if (absTick & 0x2 != 0) price = (price * 0xfff97272373d413259a46990580e213a) >> 128;
+            if (absTick & 0x4 != 0) price = (price * 0xfff2e50f5f656932ef12357cf3c7fdcc) >> 128;
+            if (absTick & 0x8 != 0) price = (price * 0xffe5caca7e10e4e61c3624eaa0941cd0) >> 128;
+            if (absTick & 0x10 != 0) price = (price * 0xffcb9843d60f6159c9db58835c926644) >> 128;
+            if (absTick & 0x20 != 0) price = (price * 0xff973b41fa98c081472e6896dfb254c0) >> 128;
+            if (absTick & 0x40 != 0) price = (price * 0xff2ea16466c96a3843ec78b326b52861) >> 128;
+            if (absTick & 0x80 != 0) price = (price * 0xfe5dee046a99a2a811c461f1969c3053) >> 128;
+            if (absTick & 0x100 != 0) price = (price * 0xfcbe86c7900a88aedcffc83b479aa3a4) >> 128;
+            if (absTick & 0x200 != 0) price = (price * 0xf987a7253ac413176f2b074cf7815e54) >> 128;
+            if (absTick & 0x400 != 0) price = (price * 0xf3392b0822b70005940c7a398e4b70f3) >> 128;
+            if (absTick & 0x800 != 0) price = (price * 0xe7159475a2c29b7443b29c7fa6e889d9) >> 128;
+            if (absTick & 0x1000 != 0) price = (price * 0xd097f3bdfd2022b8845ad8f792aa5825) >> 128;
+            if (absTick & 0x2000 != 0) price = (price * 0xa9f746462d870fdf8a65dc1f90e061e5) >> 128;
+            if (absTick & 0x4000 != 0) price = (price * 0x70d869a156d2a1b890bb3df62baf32f7) >> 128;
+            if (absTick & 0x8000 != 0) price = (price * 0x31be135f97d08fd981231505542fcfa6) >> 128;
+            if (absTick & 0x10000 != 0) price = (price * 0x9aa508b5b7a84e1c677de54f3e99bc9) >> 128;
+            if (absTick & 0x20000 != 0) price = (price * 0x5d6af8dedb81196699c329225ee604) >> 128;
+            if (absTick & 0x40000 != 0) price = (price * 0x2216e584f5fa1ea926041bedfe98) >> 128;
+            if (absTick & 0x80000 != 0) price = (price * 0x48a170391f7dc42444e8fa2) >> 128;
+
+            assembly ("memory-safe") {
+                // if (tick > 0) price = type(uint256).max / price;
+                if sgt(tick, 0) { price := div(not(0), price) }
+
+                // Divide by 1 << 32 and round up from Q128.128 to Q128.96.
+                sqrtPriceX96 := shr(32, add(price, sub(shl(32, 1), 1)))
+            }
+        }
     }
 }
 

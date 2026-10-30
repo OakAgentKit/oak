@@ -12,10 +12,10 @@ Examples check the exact versions in examples/package.json against npm. Only
 Network errors, HTTP 5xx/auth failures and malformed JSON/metadata fail; none
 are treated as an unpublished-version skip. Set the repository Actions
 variable OAK_EXAMPLES_REQUIRE_PUBLISHED=true at launch to forbid that skip, and
-update examples/package.json to real published versions (currently 0.0.0).
+keep examples/package.json pinned to the candidate versions (currently 0.1.1; registry checks skip exact 404s until publication).
 Local packed-package testing remains documented in examples/README.md.
 
-Contracts require contracts/foundry.toml or packages/contracts/foundry.toml.
+Contracts compile only from the authoritative contracts/foundry.toml project.
 A missing contract tree fails explicitly. The candidate includes the contract
 sources, tests, deployment scripts used by tests, remappings and a dependency
 manifest. deployments/ is a placeholder, not a claim of live deployment.

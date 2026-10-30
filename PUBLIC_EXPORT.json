@@ -4,23 +4,23 @@
   "files": [
     {
       "path": ".github/CI-NOTES.md",
-      "sha256": "63f094d65aa6efe697fe37fac3ce8c3cab2fb363e2535f1d761309a59b247746"
+      "sha256": "f4fa0eccd14c1aac9b00ce803632f95e6ddb21db6f5da6183b16262ad1e8d7fd"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/bug_report.md",
-      "sha256": "e692e26ba28b904bf4ffaae5456754294ab59b31b5a7cada549cb0b8b94bf4fa"
+      "sha256": "c38098aa0c828f489b52921476b6d50eb0b90754b76ad40076f26a3df215db9b"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/feature_request.md",
-      "sha256": "0dfc1243e9aa86ff3d89f813c567c8f66b06e22115fd88c33414770937e40030"
+      "sha256": "1f72e72e2a505f643ed96e126adfc4195399c37e5c7db914185d5337855843f2"
     },
     {
       "path": ".github/PULL_REQUEST_TEMPLATE.md",
-      "sha256": "e208dd453f626d0dfb79b520cc4f53095a13d3d1268842a155f284e044c3ebc1"
+      "sha256": "74967353026239218c76518eb2dea8492984d709a94dea6a732348987e9ee137"
     },
     {
       "path": ".github/dependabot.yml",
-      "sha256": "407bedd609e50d1333465cdc33ed60c453e9b7208154240298ae0d3fec348df0"
+      "sha256": "a700fe91b3fce94270b3e6b918f6378edca7a9606c38f00aa89133f01a2d23ce"
     },
     {
       "path": ".github/gitleaks.toml",
@@ -32,7 +32,7 @@
     },
     {
       "path": ".github/scripts/contracts-path.sh",
-      "sha256": "3eaa3c767c60a92875c9cceb7975f4f46ff28f7f71918e61aabc487db7eec4de"
+      "sha256": "32bee838816e82abac8f501276016e5dfd1c716ca1717010960a2c3fb62c4191"
     },
     {
       "path": ".github/scripts/secret-scan.sh",
@@ -52,7 +52,7 @@
     },
     {
       "path": ".github/workflows/ci-examples.yml",
-      "sha256": "9540f9be498324d82e798d32ec0a8aaaf31d77462c47e36014537f7e82e761d5"
+      "sha256": "793bfe3f94f483216b0e3a2b4d072433d6bc8c60d1c45ea8f221cf5ebbe87fec"
     },
     {
       "path": ".github/workflows/docs-links.yml",
@@ -68,15 +68,15 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "e5b59b24c31f213e8f19ef666137c11532d4ba1a08cbaacaeb11033e89bcd8e4"
+      "sha256": "d91c2021136237587faf225d91f80fc692fbdd1edbaa842c34bff5ab38e23be9"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
-      "sha256": "add8c8b8c40fab7c041fdba1174b55b4d7aedaf5ef8186491b3c792c951d6258"
+      "sha256": "869fa701b1be0395e43146a00936d43a4e52607f6e0e8bbc7f84dd023c7e057e"
     },
     {
       "path": "CONTRIBUTING.md",
-      "sha256": "a8261d6cac6eb5b48b8a24cde2963abdc3114942166a7bfbd362baa6aed1023b"
+      "sha256": "72293f31c7284133eee3f99c300a50ec409bb2af729a101c5970f2560012fde3"
     },
     {
       "path": "LICENSE",
@@ -84,19 +84,23 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "a1eb68061ec58a1c259e595fd4abb48ce81e3ea3153317dcc667dcfece635076"
+      "sha256": "21f3c71a4c78b3729ef8a08639e38806863616c3b2c17cd4fe2b39ad7a9a0f88"
     },
     {
       "path": "README.md",
-      "sha256": "a3bf7fd10dbd60f2609a12f99137b324d4df1db1d3bb477c9799af89bd4171e5"
+      "sha256": "b24cd8ce097e204515b5a4df0c7fff59afc5386c92a73540ecf863c1a2db22d7"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "0f80a4c1362f26326f088a2a7b4b9ab254bf7db28f808f7467f70ffd886ca2d5"
     },
     {
       "path": "assets/arch-dark.svg",
-      "sha256": "4cf0ee1f2e6de98452437ab3f3dc1d69e0fdb5b24a9813804203779b0154dc32"
+      "sha256": "18064730369045e29462c5db26b02b7ab37dab3c2dd67d7d4aff49ac5a09f447"
     },
     {
       "path": "assets/arch-light.svg",
-      "sha256": "2f5ae73155d592a18a5389a4e3dcfc18c8b17f14b1701ebe2b854c83936fa1ca"
+      "sha256": "4537ef268b139a93da5b9a813ec6365028662fc962108b5f585a2f8ed036ca94"
     },
     {
       "path": "assets/boundary-dark.svg",
@@ -107,8 +111,20 @@
       "sha256": "47642784200c8a1a3f935ef4f28b7307c5dd730be057321c3d8b099e506efa45"
     },
     {
+      "path": "assets/oak-cover.webp",
+      "sha256": "d23c03763d278feb83b4a62061ee9179f289ba6b0a84d9f6fd965b9cc143055a"
+    },
+    {
+      "path": "assets/oak-world.webp",
+      "sha256": "782f6e197b2da6493288b0e38398d40145d8f2b0bec7da89a2d1e79320c31030"
+    },
+    {
       "path": "contracts/.gitignore",
       "sha256": "8d1d6a7b892a886cf064bf61e8af6d0eb86cc1f0778633105536afbcdfa70397"
+    },
+    {
+      "path": "contracts/AUTHORITATIVE_SOURCE.md",
+      "sha256": "a6fbb91f13be7ea595d69d09d99897924cc4c858ea35d2a4c18fcf1fd04ec39c"
     },
     {
       "path": "contracts/LICENSE",
@@ -148,7 +164,7 @@
     },
     {
       "path": "contracts/foundry.toml",
-      "sha256": "f6442dbe1c336c09a1472f57bd0c88cce61f80dd63aa6d3fd4d97c98b575de34"
+      "sha256": "b440d4ebf4b258aea63cb3f8821f9db5e465919070c3c8d6ec5f3a4e9f6be09e"
     },
     {
       "path": "contracts/package.json",
@@ -175,6 +191,10 @@
       "sha256": "0136de7a629b616089d42d6849664629c25fc527da63feb8c7256712524d41ca"
     },
     {
+      "path": "contracts/script/DeploymentDryRun.s.sol",
+      "sha256": "f2bd024e73f654960a4e9899f92fd621a5348e684e3eef2bad80b1b87c05a045"
+    },
+    {
       "path": "contracts/script/LaunchOakToken.s.sol",
       "sha256": "88a5403492212a71f7af0ac3c32e5b6307f67477da5f9d2161a7cde9d7f33aa9"
     },
@@ -184,7 +204,7 @@
     },
     {
       "path": "contracts/src/OakOracle.sol",
-      "sha256": "82572fe848fd9e12c6ba646027058969f2c820523b707c6ac10d3e7780c1acca"
+      "sha256": "488915dce321693a7a804e3d91f0a792eee7323dee9b2fe8f16b7f93e3fc8663"
     },
     {
       "path": "contracts/src/OakSubscription.sol",
@@ -251,6 +271,10 @@
       "sha256": "4a93f0eaf2a741a6eb6371daba2fe0ce527972363349256e7ddd58baf7b753c8"
     },
     {
+      "path": "contracts/test/OakTickMathDifferential.t.sol",
+      "sha256": "60cc9855933e4dafa6d92860d106e924df776adbd1e98f9783cbd2f303e5f85f"
+    },
+    {
       "path": "contracts/test/RedTeamB.t.sol",
       "sha256": "7cee5325a23723092167aa8d1ba57e922af36410dd7f78d57d10ddaa26062fae"
     },
@@ -276,43 +300,55 @@
     },
     {
       "path": "docs/INVARIANTS.md",
-      "sha256": "2c16f62304e640ac03bf27dc6948e94e451a463a62bef67d2744b754763b566f"
+      "sha256": "6cb3f2e540cb6eb45b7bdad74fc2629cb8bfaf2adb9baba89079321d877372d9"
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "de031e56f89fc0724a2d3d91637c71552374829389be62e2f57092fb6b7ef7cd"
+    },
+    {
+      "path": "docs/access-and-pricing.md",
+      "sha256": "40690648477e9cd233647bc89703ebf55dc6e15fdeda93377380fd5ac6f4c1a1"
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "aed7c630a065f0114926229b01acc78d38a38b82678434e93edc02ff6ac80ec8"
+      "sha256": "e801bb5d1b33e86d1675cc2316e673502a613685eaedddaa1bddebafc9a17af5"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "7e51bfde843b5710ffe51ccf3a43ffd8585b4ff26a34890b138047c9cdfd9dcd"
+      "sha256": "9b3613256c0a9746dffb2bef7da4a28c50894f01f036bba9e5bb670f53d02738"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
-      "sha256": "6a2c496e68560c9c63ade7cd1051c5c65795f4e5ac22007cebad159646062432"
+      "sha256": "dd791f4490d523db7dd2100cae6942008673fdb90bd5ab394615df10b0e51819"
     },
     {
       "path": "docs/client-setup/codex.md",
-      "sha256": "c5b6123ebc379bf8328b3f66088b2e4a614b060e51d3f5afb138543fcf0f797c"
+      "sha256": "420d2ed87ae99775cdd37882108c6317f1d9ee5df2087e23880332c496007ee7"
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "8f09b6ed5033ca59333cbda0694edc03dde04baa8050808acf0fcacb6c6120c3"
+      "sha256": "3c198aa5c5e4cb5feb90a2f8ae953169c4e0b754e24e02b682bcb4938303bfe2"
     },
     {
       "path": "docs/client-setup/gemini.md",
-      "sha256": "4b5152ebf56e485b12d77ff39bbf1e7d5fcea721a7ed0eb4334b3b3e7e6cb81f"
+      "sha256": "d0fc247e5367ac0590002b5225b41c3f538c7ec093a6357a3ff7476ef7d628ff"
     },
     {
       "path": "docs/client-setup/generic-mcp.md",
-      "sha256": "34a94ada67bfc04c2180035489eda8ede6aa8a5ac65966e750be76f44e4b8d92"
+      "sha256": "7df32500198b9dd1c18614c564510a268a65b22b1a6c7473b807381b41d12f1d"
+    },
+    {
+      "path": "docs/contract-development.md",
+      "sha256": "05e65e26b68d0d55560986cef1e1f00b0fd5e8a66e48a367aac689cfe040ce70"
     },
     {
       "path": "docs/headless-wallet.md",
-      "sha256": "ee1b74b617500b603113f2e7d1ad10cba21fd0d854ebad7611abf7f802196424"
+      "sha256": "fdfb26cd592d5307be87e70d2e5215468f113a268b0142478e489341da75af62"
     },
     {
       "path": "docs/mcp-tools-reference.md",
-      "sha256": "cbfd28db12816fc43911a6947b2f496024542cb617b0bd761aaeff4c7d8632d7"
+      "sha256": "94383141c832045701e53be26452764a2850f391c445f4e09e742ff03741849e"
     },
     {
       "path": "docs/reviews.md",
@@ -320,15 +356,19 @@
     },
     {
       "path": "docs/robinhood-chain-projects.md",
-      "sha256": "d4fec589d65557e109c7ac53a0d18fefff1441eccef9b32c3ec78ce2b2f06073"
+      "sha256": "828a2bc6ee9b98531afc9dd4da3c7d1dace67007a95854cf357ea0e91e3f25b0"
     },
     {
       "path": "docs/security.md",
-      "sha256": "c126aaa622f12f208a93d2f03ff033c5fe7f6e620a0f00c8a2738d5868aa68fc"
+      "sha256": "377397fcbf794b451a87b5b535e6250359cd0fd5df545652379996792fb82782"
+    },
+    {
+      "path": "docs/what-is-oak.md",
+      "sha256": "4209ad399cbd6beab3884d9f7a96ff181fee7f7cc60c1b14edd474f99e5a4e04"
     },
     {
       "path": "examples/.gitignore",
-      "sha256": "2180e975c08799d29543520e2707ff44c6aa95570859e234f40cddda71f6c194"
+      "sha256": "6604dedd2ad981bcba748283173d152c8731a3c8c4a8e35df16ec2e2c1f47df5"
     },
     {
       "path": "examples/01-quickstart-mcp/.env.example",
@@ -384,15 +424,19 @@
     },
     {
       "path": "examples/README.md",
-      "sha256": "8ccbd85a0f8a8ce6214d87596b1a31a446ec313d10727b2492c5849b742ef4f0"
+      "sha256": "873ca6c854b3212d9e1c01a02e26d5bdbc29ff72e25096369e338aaaeb41c74a"
     },
     {
       "path": "examples/eval-design.md",
       "sha256": "642f74d9b7fc2af0219563527dab3e3c4a7c710101571a93e7deaa6b9f29d31e"
     },
     {
+      "path": "examples/package-lock.json",
+      "sha256": "498d66fe27a1ce57d136e425cad1fafc726faa934479d42120669a0a169d4214"
+    },
+    {
       "path": "examples/package.json",
-      "sha256": "dc85d21e5abb1e82356c45af0c41521d7fa02387bbf8e097dfa1896385c8fb66"
+      "sha256": "ce7a2aa1a9d8587c8a631f754e56d57db124961edf8eb9d7452cbbc04d6ef3b6"
     },
     {
       "path": "examples/shared/client.mjs",

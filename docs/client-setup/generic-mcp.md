@@ -30,7 +30,7 @@ Or in standard MCP JSON format:
 
 ## 2. Direct CLI Tool Invocation (`oak call`)
 
-You can also invoke any of the 100 MCP tools directly from a script or terminal via `oak call <tool> '<json>'`:
+You can also invoke read tools directly from a script or terminal via `oak call <tool> '<json>'`:
 
 ```bash
 # Check subscription status, $OAK held vs required, launch phase, and indicative no-hold price
@@ -40,14 +40,20 @@ oak status
 oak call balances '{}'
 oak call positions '{}'
 
-# Four-step swap on mainnet (4663): find_token -> quote -> preview -> swap
+# Read-only token lookup and quote on mainnet (4663)
 oak call find_token '{"query":"TSLA"}'
 oak call quote '{"from":"USDG","to":"TSLA","amountIn":"10000000","slippageBps":50}'
-oak call preview '{"txs":[...]}'
-oak call swap '{"quoteId":"<quoteId>"}'
+
+# For signing, use an MCP client that supports form elicitation.
+# oak call has no confirmation form; ask mode refuses action signatures.
 ```
 
 ---
+
+The CLI can read and prepare quotes, but its lack of a confirmation form means
+it cannot sign actions in default 0.1.1 ask mode. Use a compatible MCP client to
+request a fresh quote, inspect the preview and confirm each signature. Placeholder
+transaction arrays are not executable commands.
 
 ## 3. Troubleshooting & Recovery Reference
 
@@ -70,3 +76,11 @@ Every error message in Oak is a plain sentence naming the cause and the exact co
 | ``your paid days carry over with `oak renew` when it is due`` | Grandfathered holder on a retired contract ran `oak subscribe` instead of `oak renew`. | Wait until `<= 3 days` remain and run `oak renew` to migrate with zero burn and carried paid time. |
 | `Wallet journal is unresolved; wait for the pending transaction before a new action.` | An in-flight transaction in `~/.oak/<address>.pending.json` has not yet been reconciled. | Run `oak renew` or start `oak mcp` to reconcile or fee-bump the pending transaction. |
 | `Already subscribed; use oak renew, or oak cancel before switching plans.` | `oak subscribe` called while a plan is already active. | Use `oak renew`, or run `oak cancel` (forfeiting remaining paid days) before switching plans. |
+
+## Confirmation and current access
+
+Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+action signing requires your client's MCP confirmation form by default. A missing
+form, decline or timeout stops signing. Verify form support in your installed client;
+a connection or tool list alone does not establish action support.
+Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.

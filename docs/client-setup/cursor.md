@@ -19,7 +19,7 @@ Add Oak to your workspace `.cursor/mcp.json` (or global `~/.cursor/mcp.json`):
 
 ## 2. Reload MCP Servers and Verify
 
-Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (exposing 100 tools on mainnet `4663`, or 14 tools on testnet `46630`), and test in Cursor Agent mode:
+Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (exposing 102 tools on mainnet `4663`, or 16 tools on testnet `46630`), and test in Cursor Agent mode:
 
 1. **Read test:** *"Run `balances` and `positions` to inspect my Robinhood Chain portfolio."*
 2. **Action test:** *"Use `find_token` to verify TSLA, `quote` `10000000` USDG (`10 USDG`) to TSLA at `50` bps slippage, and show the `preview` before calling `swap`."*
@@ -27,4 +27,12 @@ Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (exposi
 ## Safety & Custody Reminders
 
 - Always run `oak init`, `oak export`, and owner-signed `oak setup link <agentId>` in your own external terminal, never through Cursor's integrated agent terminal.
-- Active subscriptions auto-renew within 3 days of expiry while `oak mcp` is running using local wallet signing and available USDG.
+- Renewal can run within 3 days of expiry while `oak mcp` is running. In 0.1.1 (release candidate), new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting.
+
+## Confirmation and current access
+
+Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+action signing requires your client's MCP confirmation form by default. A missing
+form, decline or timeout stops signing. Verify form support in your installed client;
+a connection or tool list alone does not establish action support.
+Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.

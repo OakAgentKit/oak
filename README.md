@@ -1,129 +1,168 @@
-> **Banner added at launch.**
-> Oak Agent Kit: local wallet and pre-sign previews.
-> The launch banner will appear here.
-> No banner image is included in this snapshot.
+![Your AI agent, on Robinhood Chain: a felt oak tree with glowing roots, wooden houses and a hooded figure](assets/oak-cover.webp)
 
 # Oak Agent Kit
 
-[![npm](https://img.shields.io/badge/npm-available_at_launch-E2AA5B?labelColor=062F27)](LICENSE-PACKAGES.md)
-[![CI](https://img.shields.io/badge/CI-examples_%26_contracts-C3F56B?labelColor=062F27)](#contracts-deployments--pricing)
-[![Chain](https://img.shields.io/badge/Robinhood_Chain-4663-E2AA5B?labelColor=062F27)](docs/robinhood-chain-projects.md)
-[![License](https://img.shields.io/badge/License-MIT_·_Free--to--Use-C3F56B?labelColor=062F27)](LICENSE)
+**Give your AI agent one connection to explore and use 25 configured Robinhood Chain projects.**
 
-**One MCP for the whole chain.** Oak (`@oakagentkit/addon`, available at launch) gives your AI agent a local wallet, pre-sign `eth_simulateV1` previews, and **102 MCP tools** across **25 projects** on **Robinhood Chain** (`4663`, `0x1237`; **16 tools** on testnet `46630`).
+One MCP — an agent tool connection — with a wallet that stays on your machine,
+102 tools, and a shared way to read information and prepare actions.
+Oak is independent and is not affiliated with Robinhood.
 
-## 60-Second Quickstart
+[What is Oak?](docs/what-is-oak.md) · [Connect your agent](docs/client-setup/README.md) · [Docs](docs/README.md)
 
-Requires **Node.js 22 LTS** (`>=22.12.0 <23`); `@oakagentkit/addon` is **available at launch**:
+## How it works
 
-```bash
-npm install -g @oakagentkit/addon   # available at launch on npm
-oak address                         # auto-create; show the public funding address
-# Ask your agent to re-check balances after you fund ETH and USDG.
-# Authorize oak_setup and approve a plan with oak_subscribe in MCP.
-claude mcp add oak -- oak mcp
+1. **Connect your agent.** Install Oak and add it to your AI app. Oak creates a local wallet automatically.
+2. **Ask for what you need.** Look up a project, check balances, compare routes or prepare an action.
+3. **Review, then confirm.** In 0.1.1, Oak checks the transaction locally and shows what it would do. You confirm before it signs on your machine by default.
+
+**Status:** The core and add-on packages are published on npm. Hosted actions are
+limited to the Oak team until the token and subscription launch.
+**0.1.1 is a prepared release candidate:** the confirmation and local checks described here are for
+0.1.1; installing the currently published version does not establish those features.
+
+## What you can do
+
+- Give agents and builders one connection to the projects, tools and information on Robinhood Chain.
+- Read balances and positions across projects, look up tokens, and request project research.
+- Compare swap routes, manage vault positions, bridge assets, and use names and agent identities.
+- Build your own agent workflows, including owner-configured autonomous setups.
+- Explore token launches and pre-graduation trading on Pons as one of the 25 integrations.
+
+[See every project and capability](docs/robinhood-chain-projects.md).
+Actions depend on project availability and permissions, identity, and subscription access.
+The catalogue describes configured tools, not a guarantee that every project action is
+available to every wallet or validated end to end.
+
+## Quick start for builders
+
+Requires **Node.js 22** (`>=22.12.0 <23`) and an MCP client.
+These are the same install and connect commands as the [client guides](docs/client-setup/README.md):
+
+```sh
+npm install -g @oakagentkit/addon
+oak --version
 ```
+
+For Claude Code:
+
+```sh
+claude mcp add oak -- oak mcp
+claude mcp list
+```
+
+For clients using MCP JSON:
 
 ```json
-{"mcpServers":{"oak":{"command":"oak","args":["mcp"]}}}
+{
+  "mcpServers": {
+    "oak": { "command": "oak", "args": ["mcp"] }
+  }
+}
 ```
 
-Prompt: *"Quote 10 USDG (`10000000`) to TSLA and show the preview before signing."* Client guides: [`docs/client-setup/`](docs/client-setup/).
+[Claude Desktop](docs/client-setup/claude-desktop.md) · [Cursor](docs/client-setup/cursor.md) · [Codex](docs/client-setup/codex.md) · [Gemini](docs/client-setup/gemini.md) · [Other clients](docs/client-setup/generic-mcp.md)
 
-## How Oak Works
+Start with a read:
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/arch-dark.svg" width="1200" height="460">
-  <img src="assets/arch-light.svg" width="1200" height="460" alt="Signing flow: Agent to Oak MCP to Preview to Local Wallet to 25 Projects">
-</picture>
+> Call account and tell me my public wallet address and network. Then check balances and positions. Explain any unavailable service results.
 
-1. **Local wallet (`~/.oak/wallet.enc`):** Created automatically on first run, with OS keychain or owner-only file storage and no prompts. Recovery words and private keys never leave your computer; Oak cannot recover a lost key.
-2. **Hosted service:** Serves token, price, position, and route reads, verifies ERC-8004 identities and subscriptions, builds unsigned transactions and previews, and signs 30-minute `$OAK` price notes. Never sees your key, signs, or sends transactions.
-3. **Preview & local signing:** Action tools build exact approvals (never unlimited), run `preview` (reusing a same-block preview within 12s), and sign locally. Subscriptions auto-renew within 3 days of expiry while `oak mcp` runs using local signing and USDG.
+Wallet creation needs no `oak init` step. Hosted reads may be restricted before launch;
+local wallet setup and the [offline examples](examples/README.md) can be explored now.
+At launch, fund the returned address with ETH for network fees and USDG for subscriptions,
+then re-check `balances`. Obtain permission for public identity registration and recurring payments.
+[Setup and access](docs/client-setup/README.md) explains the full sequence.
 
-## Pre-Sign Preview Demo
+Pass token amounts as decimal base-unit strings: `"10000000"` means 10 USDG
+(6 decimals). Mainnet is `4663`; testnet `46630` has basic and identity tools,
+without swap routes or the other ecosystem modules.
 
-> **Demo video added at launch.** A pre-sign preview recording will appear here; this snapshot includes no video.
+## 25 configured projects, one connection
 
-Every action simulates unsigned calldata via `eth_simulateV1` (`traceTransfers: true`), showing simulated transfer deltas before local signing. Quotes carry `minimumOutput` and warn above 2% price impact against fresh reference prices; simulation excludes gas and cannot prove external settlement or sellability.
-
-## Open vs. Closed
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/boundary-dark.svg" width="1200" height="320">
-  <img src="assets/boundary-light.svg" width="1200" height="320" alt="Trust boundary: MIT open repository versus free-to-use npm packages and hosted service">
-</picture>
-
-| Surface | Availability | License | Scope |
-|---|---|---|---|
-| `docs/`, `examples/` | Public in repo | [MIT](LICENSE) | Guides and tool reference (102 mainnet, 16 testnet), and examples. Recipe packages are opt-in data (`as-is, not reviewed by Oak`); no recipe package ships in this snapshot. |
-| `contracts/` | Public in repo | [MIT](LICENSE) | `OakSubscription.sol`, `OakOracle.sol`, `OakBurner.sol`, ABIs, Foundry tests (`forge test`). |
-| `@oakagentkit/addon`, `@oakagentkit/core` | npm (available at launch) | [Free-to-Use, No Copying](LICENSE-PACKAGES.md) | Compiled CLI, local wallet, `oak mcp` bridge, and 25 connectors. Source is private. |
-| Oak Hosted Service | Hosted (available at launch) | Proprietary (Private) | Token/route/position reads, identity/subscription checks, preview simulation, price-note signing. |
-
-## Examples & 25 Projects
-
-Runnable Node 22 packages in [`examples/`](examples/) (`node test-packed.mjs <core.tgz> <addon.tgz>` or `npm test`; offline fixtures by default):
-
-- **[`examples/01-quickstart-mcp/`](examples/01-quickstart-mcp/)** — Connect an MCP client and list tool names and schemas (`npm run quickstart`, `node --test 01-quickstart-mcp/example.test.mjs`).
-- **[`examples/02-preview-sign-swap/`](examples/02-preview-sign-swap/)** — Run `find_token` → `quote` → `preview` with exact approvals and stop before signing (`npm run preview`, `node --test 02-preview-sign-swap/example.test.mjs`).
-- **[`examples/03-portfolio-agent/`](examples/03-portfolio-agent/)** — Read `balances` and `positions` across the 25 modules (`npm run portfolio`, `node --test 03-portfolio-agent/example.test.mjs`).
-
-| Category | Robinhood Chain (`4663`) Projects |
-|---|---|
-| Swap & Trade | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (`v3`/`v4`) |
-| Vaults & Rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl (Powered by Merkl — https://app.merkl.xyz) |
+| Category | Projects on Robinhood Chain mainnet |
+| --- | --- |
+| Swap & Trade | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4) |
+| Vaults & Rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl |
 | Borrow & Lend | Morpho Blue, Priors |
 | Move Money | Relay |
-| Markets & Data | Meridian, Lighter, HeyResearch (with HeyResearch attribution) |
+| Markets & Data | Meridian, Lighter, HeyResearch |
 | Identity & Tools | ERC-8004, hood.ag, HoodLock, Orbio (AI compute credits) |
 
-Pons includes launch discovery (`pons_launch_options`), launch (`pons_launch`), and creator controls (`pons_transfer_creator_fee_recipient`, `pons_set_buyback`) plus curve/graduated trading, graduation, and claims. Catalogs: [`docs/robinhood-chain-projects.md`](docs/robinhood-chain-projects.md) · [`docs/mcp-tools-reference.md`](docs/mcp-tools-reference.md).
+Merkl tools: Powered by Merkl — [https://app.merkl.xyz](https://app.merkl.xyz).
+HeyResearch tools retain their attribution and citations.
+[Project details](docs/robinhood-chain-projects.md) · [Tool reference](docs/mcp-tools-reference.md)
 
-## Contracts, Deployments & Pricing
+## Before anything signs — 0.1.1
 
-Run `cd contracts && forge test --offline` after installing the pinned contract dependencies and Solidity 0.8.26. Read the [independent review summaries](docs/reviews.md); no audit PDFs ship in this snapshot. `$OAK`, `OakSubscription`, `OakOracle`, and `OakBurner` addresses on `4663` and `46630` are **published at launch** in [`contracts/deployments/4663.json`](contracts/deployments/4663.json) and [`contracts/deployments/46630.json`](contracts/deployments/46630.json) (dormant `OAK` `0x38fE199550E677Fa9caC196495460dfF97BCe28F` is unrelated; `4663` USDG `0x5fc5360d0400a0fd4f2af552add042d716f1d168`, `46630` USDG `0x7E955252E15c84f5768B83c41a71F9eba181802F`, ETH/USDG pool `0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca`, ERC-8004 `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`).
+**Local checks:** The add-on checks swap routes against the locally held quote,
+including tokens, exact input, recipient and minimum output. Other actions check
+module destinations and approval spenders against local deployment definitions,
+and simulated wallet outflows against requested inputs and public chain reads.
+Swaps approve the quoted input and holder sign-up approves the quoted burn. A
+bounded-price flow may approve a finite capped maximum and then request cleanup;
+Oak makes no unconditional zero-residual-allowance promise. Unlimited and
+incremental grants, unsupported permits, and blanket operator approvals are refused.
+Transaction paths require successful `eth_simulateV1` results with complete logs and
+transfer estimates. When `debug_traceCall` is supported, Oak also checks nested
+delegate targets; an explicitly unsupported tracer selects simulation-only mode with
+that residual risk. Malformed results and transport failures stop signing.
 
-- **Pricing (0% trade fee, no per-call fees):** 30-day USDG cycle (90-day prepay cap; `oak cancel` forfeits remaining days), splitting **25% to `OakBurner`** and **75% to the single-owner treasury wallet**.
-- **Holder plan (9 USDG / 30d):** Hold entry-price count `N` of `$OAK`; a one-time sign-up burn burns 5% (`ceil(N * 5 / 100)`) and tracks `N - burn` as `signupOakCount` (e.g., hold 20,000, 1,000 burns, 19,000 tracked). Renewals burn nothing and need no note. Holding `$OAK` buys access and nothing else.
-- **No-hold plan (9 USDG + 1/6 entry price / 30d):** **12.333333 USDG** at the $20 floor, re-priced each renewal.
-- **Entry curve (`totalSupply()` × `$OAK` USD price; USDG = $1):** <$100k: $20 ($12.33 no-hold); $100k–$500k: $20→$75 ($12.33→$21.50); $500k–$1M: $75→$100 ($21.50→$25.67); $1M–$10M: $100→$300 ($25.67→$59); >$10M: $300 ($59).
-- **Phases & 50% guard:** `curve` (`phase != 2`): only no-hold open at `12.333333 USDG`, holder closed. `warmup` (<30m history): both wait. `ready` (>=30m): holder open; 30-minute signed `$OAK` price notes (5-minute life) + on-chain ETH/USDG 30-minute average, guarded within **50% of live pool price**. These are service phases: the oracle itself becomes ready on graduation; the service waits for 30 minutes of history before issuing notes. Contract checks are documented in [security](docs/security.md).
+**Your confirmation:** The default `confirm ask` uses your client's confirmation
+form. It shows simulated transfers, approvals, destination contracts, native value,
+gas limit and maximum gas cost. Approval binds to the exact transaction or typed
+action signature. Decline, cancel, timeout or an unavailable form stops signing.
+The bridge may reuse an identical hosted preview from the same block for up to 12
+seconds, but the local sender still simulates the ordered transaction sequence and
+freshly simulates the exact transaction after confirmation. It refuses changed
+transfers, approvals, missing logs or a revert before signing. Gasless identity-link
+and RFQ continuations bind and confirm their EIP-712 typed data instead of pretending
+to have an EVM transaction preview; reads and session authentication do not prompt.
 
-## Contract Deployment Steps
+Reads and session authentication do not prompt. Subscription payments and renewals
+can prompt. Only the owner should select `oak config set confirm auto` in their
+own terminal for unattended operation; auto skips prompts and retains local checks.
+Clients without MCP form elicitation cannot sign in default ask mode.
 
-Deployments are operator-controlled and must be rehearsed before any broadcast. From `contracts/`:
+**Limits:** A preview is an estimate, not a promise of execution or sellability.
+Transfer traces exclude gas; the confirmation shows gas separately. Checks do not
+prove Relay destination fills or Meridian relayer execution. Oak adds no daily
+spending caps or operator asset policy. Your computer, RPC and external projects
+remain trust boundaries. There is no completed third-party audit.
 
-1. Install the pinned dependencies, copy `../deploy.env.sample` to an ignored `.env`, and fill the required public addresses and launch parameters locally. The sample contains variable names only and intentionally has no key field.
-2. Run `forge build --offline` and `forge test --offline`.
-3. Load the local environment and simulate `LaunchOakToken` when a token launch is required. Then simulate `DeployOracle`, `DeployBurner`, and `DeploySubscription` in that order, using `forge script script/<name>.s.sol:<name> --rpc-url "$OAK_RPC_URL"` without `--broadcast`.
-4. Verify the simulated chain, immutable addresses, token decimals, signer, payees, predecessor, and transaction previews. Record each deployed address for the next step.
-5. Only the human operator may select a local keystore or hardware signer and repeat each reviewed command with `--broadcast`. Never put a private key or recovery phrase in `.env`, command arguments, agent prompts, or logs.
+Keep keys out of agent chats and logs. Backups are optional: `oak backup` gives
+guidance; run `oak export` or recovery only yourself in your own terminal.
+Oak cannot recover a lost key. [Security, custody and reporting](docs/security.md)
 
-Deployment JSON files are placeholders until an operator records verified receipts. Nothing in this repository deploys automatically.
+## Architecture and source boundaries
 
-## Security & Community
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/arch-dark.svg">
+  <img src="assets/arch-light.svg" width="1200" height="460" alt="Your agent connects through Oak to 25 configured projects. Transaction previews estimate transfers; ask mode prompts before local signing, while owner-configured auto mode skips the prompt but retains checks. The hosted service supplies stateful quotes, prices and unsigned routing.">
+</picture>
 
-Treasury and contract admin is single-owner wallet `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`. One owner key can spend treasury funds, redirect future subscription payments, replace the price signer, and retire subscriptions (no second-signature requirement; cannot spend user balances).
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/boundary-dark.svg">
+  <img src="assets/boundary-light.svg" width="1200" height="320" alt="Public MIT docs, examples and contracts; separate free-to-use npm packages and private hosted service.">
+</picture>
 
-Oak is not affiliated with Robinhood, shows a region notice by default, adds no safety checks or spending caps, and never promises returns.
+The hosted service builds unsigned transactions; the add-on checks, signs and
+broadcasts locally. Swaps and deposits go from your wallet to the project.
+Subscriptions split 25% to `OakBurner` and 75% to the single-owner treasury.
+One owner key controls treasury and contract administration; it cannot spend
+user wallet balances. [Authority details](docs/security.md#4-keys-and-authority-matrix)
 
-[`docs/security.md`](docs/security.md) · [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) · [`LICENSE`](LICENSE) · [`LICENSE-PACKAGES.md`](LICENSE-PACKAGES.md) · [@OakAgentKit](https://x.com/OakAgentKit)
+## Access at launch
 
-Run `oak init --recover` in your own terminal to restore your 24-word backup on a new computer. To replace an existing wallet, use `oak init --recover --replace`; Oak preserves an encrypted backup and asks you to confirm the recovered address. Never enter recovery words in an agent chat, arguments, environment variables or MCP tools.
+No-hold access starts at **12.333333 USDG per 30 days** during the launch curve.
+The holder plan opens after graduation and 30 minutes of pool history:
+**9 USDG per 30 days**, an OAK holding requirement and a one-time 5% sign-up burn.
+Both plans wait during that 30-minute warmup. ETH network and project fees are separate.
+Oak charges no per-call fee or additional trade fee.
+[Plans, renewal and cancellation](docs/access-and-pricing.md)
 
-New automatic wallets support piped MCP with the OS keychain or an owner-only random file key. Backups are optional: run `oak backup` for guidance, and `oak export` only in your own terminal. Automatic wallets have no recovery phrase; recovery accepts the exported private key. Existing passphrase wallets remain unchanged and still need terminal unlock.
+The [deployment files](contracts/deployments/README.md) are placeholders until launch.
+Public docs, examples and contracts use [MIT](LICENSE). The published
+`@oakagentkit/core` and `@oakagentkit/addon` packages are free to use under their
+[own license](LICENSE-PACKAGES.md); their implementation source and the hosted service are private.
 
-Mainnet uses `https://api.oakagentkit.org` by default. Override it with `oak config set OAK_SERVER_URL <https-url>` or `OAK_SERVER_URL`; testnet requires an explicit matching service URL. The deployed service supplies public contract pins via `/v1/config` when needed; explicit overrides remain available. Operators must deploy and upgrade the hosted service before paid actions work.
-
-Headless setup: [automatic and legacy wallet guidance](docs/headless-wallet.md). Deployment JSON files are launch placeholders, not usable configuration.
-
-## Set Up Oak with Any Agent
-
-> Set up Oak for this AI agent. Install @oakagentkit/addon (Node.js 22) and connect the local MCP command `oak mcp`. Call account, tell me the public wallet address and network, and ask me to send a little ETH for gas and USDG. Re-check balances after I fund it. Do not run oak init or oak export, read wallet/key files, or ask for keys or recovery words. Explain identity registration and subscription costs, then get my approval before registering and subscribing. Tell me optional backup guidance with oak backup.
-
-After funding, ask the agent to register a public ERC-8004 identity with `oak_setup {"mode":"register"}`. Oak supplies a default registration-v1 profile; you can provide your own `profile`. Registration costs ETH and publishes the profile. It does not require a subscription. Linking an existing ID uses `oak_setup {"mode":"link","agentId":"<id>"}`; if this wallet owns it, signing is automatic. An external NFT owner must sign in their own terminal because the agent does not control that owner's wallet.
-
-The agent reads `account` for phase and price, explains the recurring payment, and gets your plan approval before calling `oak_subscribe {"plan":"nohold"}` (or `holder`). Launch curve: no-hold only, 12.333333 USDG per 30 days. Warmup: both plans wait for 30 minutes of history. Ready: both plans follow the quoted terms; holder requires OAK and a one-time sign-up burn. `oak_renew {}` reconciles or renews. All transactions retain previews and local signing. Merely funding a wallet does not authorize a paid subscription.
-
-The remaining user steps are funding, authorizing public registration and the recurring plan, and signing for an external identity owner when applicable. These steps move funds, publish data, or require an independently controlled wallet. Read tools remain available without identity or subscription.
+[Examples](examples/README.md) · [Contract setup](docs/contract-development.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security](SECURITY.md) · [Oak website](https://oakagentkit.org) · [@OakAgentKit](https://x.com/OakAgentKit)

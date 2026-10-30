@@ -1,8 +1,8 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon`, available at launch) exposes **102 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **4 local lifecycle tools**, and **89 ecosystem tools** across **25 projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon`, available at launch) exposes **102 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **4 local lifecycle tools**, and **89 ecosystem tools** across **25 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 active tools**: the 9 basic tools, the 3 ERC-8004 identity tools, and the 4 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, and `oak_renew`). Swap routes and the other 24 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 active tools**: the 9 basic tools, the 3 ERC-8004 identity tools, and the 4 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe` and `oak_renew`). Swap routes and the other 24 ecosystem modules are mainnet-only.
 
 ---
 
@@ -11,7 +11,10 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 acti
 - **Decimal base-unit strings:** Every token amount in tool inputs and outputs is a decimal base-unit string (for example, `"9000000"` for `9 USDG` with 6 decimals; `"1000000000000000000"` for `1 ETH` or `1 OAK` with 18 decimals). Never pass floating-point numbers.
 - **Token metadata:** Tool outputs identify the EIP-55 checksummed token `address` (`0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee` for native ETH), `symbol`, `decimals`, and `chainId` (`4663` or `46630`).
 - **Reads vs. actions:** Read tools work without an ERC-8004 identity and even when a subscription is lapsed. Action tools require both a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) and an active subscription on the wallet's authoritative lineage contract.
-- **Pre-sign preview & exact approvals:** Every action tool runs `preview` (`eth_simulateV1` with `traceTransfers: true`) before signing locally, reuses a matching same-block preview within 12 seconds so `swap` does not simulate twice, and builds exact token approvals (`amountIn`) — never unlimited approvals.
+- **Private hosted access:** Installing or listing tools does not grant action access. A stranger can call read tools such as `find_token`; an unallowlisted private-mode action returns "Not submitted. This wallet is not on the server private test allow-list. Ask the operator to configure private test access or use the normal paid setup." Public paid actions wait for token/subscription launch.
+- **Hosted preview vs. local simulations:** Transaction builders run a hosted `preview` (`eth_simulateV1` with `traceTransfers: true`). The bridge may reuse an identical same-block hosted preview for up to 12 seconds, but this does not remove the sender's local ordered simulation, exact-transaction simulation, or fresh post-confirmation simulation. Transfer changes are estimates, exclude gas, and cannot prove inclusion, sellability, or external settlement.
+- **Finite approvals:** Swaps approve the quoted input and holder sign-up approves the quoted burn. Bounded-price flows may approve a finite capped maximum and request cleanup afterward. Unlimited grants are refused, but Oak makes no unconditional promise that every successful flow leaves zero residual allowance.
+- **Typed data and gasless paths:** Identity link/unlink challenges and Meridian RFQ continuations sign EIP-712 typed data rather than an EVM transaction, so they do not claim a transaction preview or gas estimate. Ask mode binds confirmation to the typed-data hash when a prompt is required; owner-selected auto mode skips prompts while retaining applicable checks. Reads and session/request authentication signatures do not prompt.
 
 ---
 
@@ -23,8 +26,8 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 acti
 | `balances` | Read native ETH and configured token/stock balances in one multicall. |
 | `price` | Read token USD price, token metadata and staleness. |
 | `quote` | Quote the best supported swap route for exact input base units and slippage. |
-| `swap` | Build the saved quote, inspect/reuse preview, then sign locally and broadcast exact approvals and swap. |
-| `preview` | Simulate an unsigned transaction sequence and report token/native transfer changes (gas excluded). |
+| `swap` | Build the saved quote, inspect/reuse preview, then sign locally and broadcast the quoted-input approval and swap. |
+| `preview` | Simulate an unsigned transaction sequence and estimate token/native transfer changes (gas and external settlement excluded). |
 | `history` | Read recent wallet subscription and ecosystem contract events. |
 | `positions` | Read wallet positions across all configured ecosystem modules. |
 | `account` | Read subscription, holdings requirement, launch phase and indicative plan state. |
@@ -37,8 +40,8 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 acti
 | :--- | :--- |
 | `oak_setup` | Register or link an ERC-8004 ID; external-owner signing stays in the owner terminal. |
 | `oak_identity_unlink` | Revoke the linked identity without gas; owner revocation requires owner-terminal signing. |
-| `oak_subscribe` | Start a recurring holder or no-hold subscription after user approval; preview and sign locally. |
-| `oak_renew` | Reconcile or renew the current subscription with local signing. |
+| `oak_subscribe` | Start an authorized recurring holder or no-hold subscription with local preview and signing. |
+| `oak_renew` | Reconcile or renew an existing subscription with local preview and signing. |
 
 ---
 
@@ -265,9 +268,3 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 acti
 | Tool | One-line public description |
 | :--- | :--- |
 | `<project>.<name>` | Run an installed data-only recipe, labelled as-is, not reviewed by Oak; names depend on installed recipes. |
-
-## Automatic Wallet and Paid Setup
-
-`account {}` always includes the local public address, network, ETH/USDG funding message, region notice and optional backup guidance, even when hosted subscription status is unavailable. Re-check `balances` after the user funds the address. `oak_setup {"mode":"register"}` supplies a default public profile; registration requires user authorization and ETH for gas.
-
-`oak_subscribe {"plan":"nohold"}` or `oak_subscribe {"plan":"holder"}` previews and locally signs a subscription after the user approves the recurring payment. `oak_renew {}` reconciles or renews the current plan. Both require verified identity. `oak backup` prints guidance; never run `oak export` or recovery through an agent.

@@ -20,10 +20,10 @@ jobs:
         env:
           OAK_EXAMPLES_REQUIRE_PUBLISHED: ${{ vars.OAK_EXAMPLES_REQUIRE_PUBLISHED }}
         run: node .github/scripts/check-packages.mjs
-      - name: Install examples without lifecycle scripts
+      - name: Install locked examples without lifecycle scripts
         if: steps.packages.outputs.ready == 'true'
         working-directory: examples
-        run: npm install --ignore-scripts --no-audit --no-fund --package-lock=false
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Offline example tests
         if: steps.packages.outputs.ready == 'true'
         working-directory: examples

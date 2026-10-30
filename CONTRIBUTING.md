@@ -1,9 +1,11 @@
 # Contributing to Oak Agent Kit
 
+Small fixes are welcome: a clearer sentence, a reproducible bug or a useful example is a good first contribution. Describe the problem and what your change improves.
+
 Oak Agent Kit uses a split public/private model:
 
-- **Open source in this repository ([MIT](LICENSE)):** Documentation (`docs/`), runnable examples (`examples/`), declarative project recipes (`recipes/`), and smart contracts (`contracts/`).
-- **Published npm packages ([`LICENSE-PACKAGES.md`](LICENSE-PACKAGES.md)):** `@oakagentkit/addon` and `@oakagentkit/core` ship on npm at launch as compiled packages under a free-to-use, no-copying license. Their TypeScript source is private.
+- **Open source in this repository ([MIT](LICENSE)):** Documentation (`docs/`), runnable examples (`examples/`), and smart contracts (`contracts/`). Recipes are separate opt-in packages.
+- **Published npm packages ([`LICENSE-PACKAGES.md`](LICENSE-PACKAGES.md)):** `@oakagentkit/addon` and `@oakagentkit/core` are published on npm as compiled packages under a free-to-use, no-copying license. Their TypeScript source is private.
 - **Hosted service (private):** The Oak hosted service (which reads chain and project APIs, verifies ERC-8004 identities and subscription access, runs transaction previews, and issues signed price notes) is private and closed source.
 
 ---
@@ -28,7 +30,8 @@ Requires **Foundry (`forge`) `1.5.1`** (`Solidity ^0.8.26`).
 
 ```bash
 cd contracts
-forge test
+npm install --ignore-scripts --no-audit --no-fund --package-lock=false
+forge test --offline
 ```
 
 Contract contribution rules:
@@ -82,3 +85,7 @@ Ecosystem builders on Robinhood Chain (`4663`) can publish standalone declarativ
 
 - Do not open public issues for security vulnerabilities. Report vulnerabilities privately via [GitHub Security Advisories](https://github.com/OakAgentKit/oak/security/advisories/new) as described in [`docs/security.md`](docs/security.md).
 - All contributors follow our [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
+For full compiler prerequisites, see [contract development](docs/contract-development.md).
+Documentation changes should keep relative links working and label pending **0.1.1** behavior.
+Examples use fixtures by default; include the commands you ran and any checks you could not run.

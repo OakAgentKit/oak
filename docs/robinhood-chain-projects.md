@@ -1,10 +1,12 @@
-# Robinhood Chain Ecosystem Projects (25 Modules)
+# Robinhood Chain Ecosystem Projects (25 Configured Modules)
 
-Oak Agent Kit (`@oakagentkit/addon`, available at launch) provides normalized MCP modules for **25 ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
+Oak Agent Kit (`@oakagentkit/addon`, published on npm) provides normalized MCP modules for **25 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
 
-Instead of configuring 25 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, exact token approvals (never unlimited), and pre-sign `eth_simulateV1` previews. Projects keep their own protocol fees; Oak charges **0%** on your trades and no per-call fees.
+Instead of configuring 25 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, holder sign-up approves its quoted burn, and bounded-price flows may approve a finite cap followed by cleanup. In **0.1.1 (release candidate)**, local transaction checks and human confirmation precede signing by default. Hosted actions are team-only until token and subscription launch. Projects keep their own protocol fees; Oak charges **0%** on your trades and no per-call fees.
 
-> **Network scope:** All 25 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the 9 basic tools, the 3 ERC-8004 identity tools, and the 2 local identity lifecycle tools (`oak_setup`, `oak_identity_unlink`).
+> **Network scope:** All 25 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the 9 basic tools, the 3 ERC-8004 identity tools, the 2 local identity lifecycle tools (`oak_setup`, `oak_identity_unlink`), and 2 subscription lifecycle tools (`oak_subscribe`, `oak_renew`): 16 tools total.
+
+> **Qualification scope:** A public-RPC, unsigned-preview sweep measured at least one guarded action in 21 action modules, including Morpho collateral supply, Longbow wrap/deposit, the supported Beefy LP deposit, and Uniswap v3/v4 liquidity addition after allowance-consumption handling was fixed. That does not validate every listed verb: Lighter and HeyResearch are read-only; Merkl claim, Meridian RFQ/settlement, withdrawals, debt changes, fills/exits, creator claims, and ownership-dependent actions were unavailable or unmeasured in that sweep. Combined Relay swap/bridge remains fail-closed; use a separately quoted swap and then bridge. Availability still depends on live project state, wallet authority, service access, and local guard evidence.
 
 ---
 
@@ -35,7 +37,7 @@ All six vault modules integrate into the one-call `positions` tool so an agent c
 | **Longbow** | `longbow_list`, `longbow_deposit`, `longbow_withdraw` | Core and Frontier USDG and ETH/WETH ERC-4626 vaults. |
 | **Grove** | `grove_list`, `grove_deposit`, `grove_withdraw` | Grove x Steakhouse USDG public ERC-4626 vault. |
 | **Beefy** | `beefy_list`, `beefy_deposit`, `beefy_withdraw` | UP–WETH vault adapter (`deposit` and `withdraw` shares). |
-| **Merkl** | `merkl_rewards`, `merkl_claim` | Campaign reward lookup and cumulative Distributor claims. *Powered by Merkl — https://app.merkl.xyz* |
+| **Merkl** | `merkl_rewards`, `merkl_claim` | Campaign reward lookup and cumulative Distributor claims. *Powered by Merkl — [https://app.merkl.xyz](https://app.merkl.xyz)* |
 
 ---
 
@@ -87,3 +89,4 @@ Any Robinhood Chain (`4663`) project can ship opt-in declarative JSON recipes (`
 
 - **Buyability does not prove sellability:** A token you can buy is not always one you can sell. A successful buy `preview` does not prove you can exit later; transfer restrictions, token taxes, or changing token rules can block a sale.
 - **Simulation boundaries:** `preview` (`eth_simulateV1`) simulates on-chain execution at the current block and excludes gas fees. It does not prove off-chain settlement for external relayers (such as Relay cross-chain fills or Meridian RFQ execution).
+- **Typed-data paths:** Gasless identity linking/unlinking and Meridian RFQ continuations bind EIP-712 typed data and do not claim an EVM transaction preview. Ask mode confirms typed actions when a signing prompt is required; owner-selected auto mode skips the prompt while retaining the applicable local checks.

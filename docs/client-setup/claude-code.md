@@ -39,4 +39,12 @@ Then run a first read or action inside Claude Code:
 ## Safety & Custody Reminders
 
 - **Never allow Claude Code's Bash tool to run `oak init` or `oak export`.** Even though an agent with shell access can allocate a pseudo-terminal (`PTY`), `oak init`, `oak export`, and external-owner `oak setup link <agentId>` signing must be run by you directly in your own system terminal so recovery words and keys never enter agent context or logs.
-- Active subscriptions auto-renew within 3 days of expiry while `oak mcp` is running using local wallet signing and available USDG.
+- Renewal can run within 3 days of expiry while `oak mcp` is running. In 0.1.1 (release candidate), new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting.
+
+## Confirmation and current access
+
+Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+action signing requires your client's MCP confirmation form by default. A missing
+form, decline or timeout stops signing. Verify form support in your installed client;
+a connection or tool list alone does not establish action support.
+Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.

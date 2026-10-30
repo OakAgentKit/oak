@@ -12,3 +12,10 @@ fs_permissions = [{ access = "read", path = "test" }]
 # Deployment fixtures use vm.setEnv, which is shared across test suites.
 # Serialize those suites so plain forge test --offline is reproducible.
 threads = 1
+
+[profile.default.fuzz]
+runs = 256
+
+# Run the TickMath differential property with an explicit 100,000 random cases.
+[profile.tickmath.fuzz]
+runs = 100000

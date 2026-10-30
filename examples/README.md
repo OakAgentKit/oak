@@ -9,13 +9,13 @@ Three small Node.js 22 examples using only exported npm package APIs:
 ## Install and test packed packages
 
 Prerequisites: Node.js **22.12+ / 22.x**, npm, and the two release `.tgz` files.
-The Oak packages are not yet published. Obtain the core and add-on archives
-from the release pack output; no private repository source is needed.
+The core and add-on 0.1.0 packages are published; 0.1.1 awaits operator publication. You can use
+matching release archives for checks; no private repository source is needed.
 From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-node test-packed.mjs /path/to/oakagentkit-core-0.0.0.tgz /path/to/oakagentkit-addon-0.0.0.tgz
+node test-packed.mjs /path/to/oakagentkit-core-0.1.1.tgz /path/to/oakagentkit-addon-0.1.1.tgz
 ```
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
@@ -27,8 +27,8 @@ pinned to 1.32.2). After `.cache` is populated, prefix the command with
 No dependency lifecycle scripts execute. The sandbox and cache stay ignored.
 
 For a direct install instead, run `npm install --ignore-scripts /path/to/CORE.tgz
-/path/to/ADDON.tgz` here, followed by `npm test`. Once published, those archives
-can be replaced with matching released versions of `@oakagentkit/core` and
+/path/to/ADDON.tgz` here, followed by `npm test`. Those archives
+can also be replaced with matching published versions of `@oakagentkit/core` and
 `@oakagentkit/addon`.
 
 ## Optional live reads (run yourself)
@@ -43,7 +43,8 @@ your terminal. The service receives your wallet address and read arguments.
 The shared client connects the MCP SDK to the exported `createBridge` through
 `InMemoryTransport`. It deliberately supplies a disabled sender and renewal
 callback, and loads no recipes. It does **not** launch the normal `oak mcp`
-CLI, whose startup/hourly subscription renewal can send payments. Live reads
+CLI, whose startup/hourly subscription renewal can send payments (and requires
+human confirmation for new signatures in 0.1.1 default mode). Live reads
 load the local signer solely for Oak session/request authentication messages;
 transaction and typed-data signing are disabled. These examples do not register
 identities, renew subscriptions, sign transactions, or send them, even after
@@ -57,12 +58,29 @@ module error rows are surfaced, not reported as empty successful portfolios.
 
 Tests use the real packed add-on bridge, real MCP client/transport, and real
 core quote/calldata/amount helpers. The HTTP service responses and session
-headers are fixtures. They prove client wiring, exact approvals, confirmation
+headers are fixtures. They prove client wiring, expected finite approvals, confirmation
 ordering, action rejection, and partial-error handling. They do not prove live
 RPC availability, execution, auth/keychain access, prices or external settlement.
 A successful buy simulation does not establish sellability; simulation excludes
 gas. See [eval-design.md](eval-design.md) for failure controls.
 
-The bridge currently lists 100 mainnet tools when both identity callbacks are
-present, including the three Pons creator tools. Discovery tests pin the actual
+The full CLI lists 102 mainnet tools, including four local lifecycle tools
+and the three Pons creator tools. The read-only example bridge omits the two
+subscription callbacks and lists 100; testnet CLI discovery lists 16. Discovery tests pin the actual
 packed-package manifest; compare your installed version when checking tool counts.
+
+## Direct installation from npm
+
+The manifest and reviewed lockfile pin the **0.1.1 release candidate** and its
+resolved dependency graph:
+
+```sh
+npm ci --ignore-scripts --no-audit --no-fund
+npm test
+```
+
+Registry installation requires operator publication of 0.1.1; use matching local
+archives for the release-candidate checks before publication.
+These examples deliberately disable signing; their review prompt is not the
+0.1.1 wallet's MCP confirmation form. Hosted read calls such as `find_token` are available to strangers; private-mode
+actions require server allowlisting. Public paid access waits for launch.
