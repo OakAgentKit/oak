@@ -6,6 +6,7 @@ solc_version = "0.8.26"
 evm_version = "cancun"
 optimizer = true
 optimizer_runs = 200
+bytecode_hash = "none"
 fs_permissions = [{ access = "read", path = "test" }]
 
 # Deployment fixtures use vm.setEnv, which is shared across test suites.

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity 0.8.26;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
@@ -7,8 +7,9 @@ import {IOakOracle} from "./interfaces/IOakOracle.sol";
 import {IPons} from "./interfaces/IPons.sol";
 import {PriceNote, OakPriceNote} from "./libraries/OakPriceNote.sol";
 
-/// @dev Minimal Uniswap-v3-compatible tick conversion for the immutable ETH/USDG pool.
-///      Constants and rounding match the canonical MIT-licensed TickMath implementation.
+/// @dev Minimal tick conversion for the immutable ETH/USDG pool, adapted from Uniswap v3-core
+///      contracts/libraries/TickMath.sol at commit 5ea68a77cb541c6b3812df783be71ba8c081e25f.
+///      Constants and rounding match that source's getSqrtRatioAtTick implementation.
 library OakTickMath {
     int24 internal constant MIN_TICK = -887272;
     int24 internal constant MAX_TICK = 887272;

@@ -33,8 +33,8 @@ can be replaced with matching released versions of `@oakagentkit/core` and
 
 ## Optional live reads (run yourself)
 
-Use a configured **mainnet** Oak wallet created by running `oak init` in your
-own terminal, never through an agent. Set `OAK_EXAMPLE_LIVE=1` and
+Use a configured **mainnet** Oak wallet created automatically by `oak address`
+or the first MCP startup, never through an agent. Set `OAK_EXAMPLE_LIVE=1` and
 `OAK_SERVER_URL` to the published service URL, then run an example. Never put
 wallet secrets in environment variables. `.env.example` files list names only;
 these scripts do not automatically read `.env` files. Export the variables in

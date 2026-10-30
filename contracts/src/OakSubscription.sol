@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity 0.8.26;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -213,6 +213,7 @@ contract OakSubscription is IOakSubscription, ReentrancyGuard {
     function renew() external override nonReentrant {
         _requireNotRetired();
         if (plan[msg.sender] != PLAN_HOLDER) revert WrongPlan();
+        _requireOakBalance(msg.sender, signupOakCount[msg.sender]);
 
         Settlement memory settlement = _renewalSettlement(msg.sender, PLAN_HOLDER, PRICE);
         _collectAllowance(msg.sender, PRICE);
@@ -224,6 +225,7 @@ contract OakSubscription is IOakSubscription, ReentrancyGuard {
         _requireAuthorizationCaller(auth);
         _requireNotRetired();
         if (plan[msg.sender] != PLAN_HOLDER) revert WrongPlan();
+        _requireOakBalance(msg.sender, signupOakCount[msg.sender]);
 
         Settlement memory settlement = _renewalSettlement(msg.sender, PLAN_HOLDER, PRICE);
         _collectAuthorization(PRICE, auth, usdgAuth);

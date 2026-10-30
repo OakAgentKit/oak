@@ -1,8 +1,8 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon`, available at launch) exposes **100 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 local identity lifecycle tools**, and **89 ecosystem tools** across **25 projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon`, available at launch) exposes **102 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **4 local lifecycle tools**, and **89 ecosystem tools** across **25 projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **14 active tools**: the 9 basic tools, the 3 ERC-8004 identity tools, and the 2 local identity lifecycle tools (`oak_setup` and `oak_identity_unlink`). Swap routes and the other 24 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **16 active tools**: the 9 basic tools, the 3 ERC-8004 identity tools, and the 4 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, and `oak_renew`). Swap routes and the other 24 ecosystem modules are mainnet-only.
 
 ---
 
@@ -31,12 +31,14 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **14 acti
 
 ---
 
-## Local Identity Lifecycle Tools (2)
+## Local Lifecycle Tools (4)
 
 | Tool | One-line public description |
 | :--- | :--- |
 | `oak_setup` | Register or link an ERC-8004 ID; external-owner signing stays in the owner terminal. |
 | `oak_identity_unlink` | Revoke the linked identity without gas; owner revocation requires owner-terminal signing. |
+| `oak_subscribe` | Start a recurring holder or no-hold subscription after user approval; preview and sign locally. |
+| `oak_renew` | Reconcile or renew the current subscription with local signing. |
 
 ---
 
@@ -263,3 +265,9 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **14 acti
 | Tool | One-line public description |
 | :--- | :--- |
 | `<project>.<name>` | Run an installed data-only recipe, labelled as-is, not reviewed by Oak; names depend on installed recipes. |
+
+## Automatic Wallet and Paid Setup
+
+`account {}` always includes the local public address, network, ETH/USDG funding message, region notice and optional backup guidance, even when hosted subscription status is unavailable. Re-check `balances` after the user funds the address. `oak_setup {"mode":"register"}` supplies a default public profile; registration requires user authorization and ETH for gas.
+
+`oak_subscribe {"plan":"nohold"}` or `oak_subscribe {"plan":"holder"}` previews and locally signs a subscription after the user approves the recurring payment. `oak_renew {}` reconciles or renews the current plan. Both require verified identity. `oak backup` prints guidance; never run `oak export` or recovery through an agent.

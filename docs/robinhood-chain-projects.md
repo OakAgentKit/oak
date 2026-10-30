@@ -48,12 +48,11 @@ All six vault modules integrate into the one-call `positions` tool so an agent c
 
 ---
 
-## 4. Move Money (2 Projects)
+## 4. Move Money (1 Project)
 
 | Project | Tools | Capabilities & Protocol Notes |
 | :--- | :--- | :--- |
 | **Relay** | `relay_bridge_in`, `relay_bridge_out`, `relay_status` | Cross-chain bridging into and out of Robinhood Chain (`4663`). Inbound bridges sign on the quoted origin chain (`OAK_RPC_URL_<chainId>`). Note: `preview` simulates origin-chain transfers and cannot prove off-chain destination settlement; use `relay_status` to track fills. |
-| **Orbio** | `orbio_buy_credit`, `orbio_credit_status` | Purchase AI credits via Orbio Exchange and inspect credit balances on-chain. |
 
 ---
 
@@ -67,13 +66,14 @@ All six vault modules integrate into the one-call `positions` tool so an agent c
 
 ---
 
-## 6. Identity and Tools (3 Projects)
+## 6. Identity and Tools (4 Projects)
 
 | Project | Tools | Capabilities & Protocol Notes |
 | :--- | :--- | :--- |
 | **ERC-8004** | `erc8004_register`, `erc8004_update`, `erc8004_identity` | On-chain agent identity NFT registration, metadata updates, and ownership lookups on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`). Paired with `oak setup` / `oak_setup` and `oak identity unlink` / `oak_identity_unlink`. |
 | **hood.ag** | `hoodag_register`, `hoodag_resolve`, `hoodag_name_info` | Register `.hood` names with USDG, configure primary reverse records, and resolve names and registration metadata. |
 | **HoodLock** | `hoodlock_lock`, `hoodlock_burn`, `hoodlock_list_locks`, `hoodlock_airdrop_create`, `hoodlock_airdrop_claim` | Token, v2 LP, and v3 position locks (`unlockTime` capped at `now + 100 years`), token burns, lock queries, and Merkle airdrop creation and claiming (omit `id` on `hoodlock_airdrop_claim` to query eligible airdrops). |
+| **Orbio** | `orbio_buy_credit`, `orbio_credit_status` | Purchase AI credits via Orbio Exchange and inspect credit balances on-chain. |
 
 ---
 

@@ -57,6 +57,8 @@ Across all of Oak, the **only service-held signing key is the sign-only price si
 | **Agent wallets** | Their own key in `~/.oak/wallet.enc` on the user's machine | Control their own funds; register/link/unlink ERC-8004 identity; subscribe, renew, cancel; sign previewed module transactions and enabled recipes | Control another wallet; administer Oak; use another wallet's price note | That single agent wallet's funds and permissions |
 | **Pons owner** (external, `0x263ed295dAFaE1d9AAdD6E56c4B6F9f38eE019Dd`) | External Pons admin key outside Oak's control | Propose a new creator-fee recipient for `$OAK` (`setCreatorFeeRecipient`), executable after a **3-day** public timelock that Oak cannot cancel | Touch Oak's contracts or funds already claimed by the treasury wallet | Redirect future `$OAK` creator fees 3 days after a public proposal |
 
+Holder-plan renewal is payment-safe: both `renew()` and `renewWithAuthorization()` check that the wallet still holds at least its recorded post-burn `signupOakCount` before collecting USDG. A shortfall reverts with `InsufficientOak(balance, required)`, leaving paid time and payment state unchanged. The [allowance](../contracts/test/OakSubscription.t.sol#L388) and [authorization](../contracts/test/OakSubscription.t.sol#L406) regression tests cover both paths; [no-hold renewal](../contracts/test/OakSubscription.t.sol#L454) has no OAK-balance requirement.
+
 ---
 
 ## 5. Burner 90-Day Armed Sweep Rule
@@ -85,3 +87,15 @@ The [fee-margin and zero-wallet tests](../contracts/test/RedTeamB.t.sol) and [pa
 The 0.5% chunk check uses live, oracle-reported liquidity. Just-in-time (JIT) liquidity can lift its absolute amount; it is not a fixed spending cap.
 Payment splitting uses `burn = amount / 4` (rounded down in USDG base units), with the remainder sent to treasury.
 The on-chain oracle latches graduation; it does not enforce a 30-minute OAK history window. The service's warmup policy supplies that wait.
+
+## Automatic Wallet Creation and Optional Backups
+
+Oak creates a wallet automatically when `oak mcp`, `oak address`, or another wallet command first runs. There are no recovery-word challenges or passphrase prompts. The agent calls `account`, relays the public address and selected network, asks you to fund it with a little ETH for gas and USDG, then calls `balances` again after you fund it.
+
+The private key stays local in `~/.oak/wallet.enc` (AES-256-GCM, `0600`, inside `~/.oak` at `0700`). A random encryption key is stored in macOS Keychain, Linux persistent Secret Service, or Windows Credential Manager when available. Otherwise Oak saves a random file key in the same owner-only directory (`wallet-key-<id>`, `0600`). This fallback relies on your OS account and filesystem permissions: someone who can read both files can unlock the wallet. No passphrase is requested. Keep only the funds your agent needs.
+
+Later runs reuse the wallet. A corrupt wallet or unavailable existing keychain never creates a replacement. Existing keychain and passphrase wallets keep their format; legacy passphrase wallets still need terminal unlock and cannot run piped MCP.
+
+Backups are optional. When you hold more than pocket change, run `oak export` **in your own terminal, never through the agent** and keep the exported key offline. `oak backup` prints guidance without unlocking or exporting anything. Automatic wallets have no recovery phrase. `oak init --recover` accepts an exported private key or a legacy 24-word phrase, hidden in your terminal; `--replace` preserves the previous encrypted wallet. Oak cannot recover a lost key.
+
+Key data flows from local cryptographic generation to authenticated local storage, then to frozen signing closures in the add-on. Only the public address, signing results and public transaction data cross into MCP/HTTP; raw keys and storage keys are not tool results. Wallets persist until the owner manages their files. Recovery replacement retains old encrypted bytes and the required keychain entry or file key; Oak performs no automatic wallet deletion or key rotation. File fallback encryption does not protect against a reader of the whole Oak directory.

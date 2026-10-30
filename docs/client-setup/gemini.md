@@ -1,6 +1,6 @@
 # Gemini CLI Setup
 
-Complete the [Shared Prerequisites](README.md#shared-prerequisites-do-this-once) (`oak init`, network config, `oak setup`, and `oak subscribe` once `@oakagentkit/addon` is available at launch) in your own terminal first.
+Install Oak and connect the MCP below. The wallet creates itself on first use; your agent calls `account`, asks you to fund the returned address with ETH and USDG on the named network, then re-checks `balances`. See [shared setup](README.md#shared-prerequisites-do-this-once) for identity registration, subscription approval and optional backup guidance.
 
 ## 1. Add Oak to `~/.gemini/settings.json`
 

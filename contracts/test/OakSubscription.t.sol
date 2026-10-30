@@ -385,6 +385,62 @@ contract OakSubscriptionTest is StdInvariant, Test {
         subscription.subscribe(HOLDER, type(uint256).max, 0, note, sig);
     }
 
+    function test_HolderRenewRevertsBeforeAllowancePaymentWhenBalanceBelowTrackedCount() public {
+        _subscribeHolder(subscription, user, bytes32(uint256(8001)));
+        uint256 required = subscription.signupOakCount(user);
+        uint256 walletBalance = oak.balanceOf(user);
+        vm.prank(user);
+        assertTrue(oak.transfer(attacker, walletBalance - required + 1));
+
+        uint64 paidBefore = subscription.paidUntil(user);
+        uint256 usdgBefore = usdg.balanceOf(user);
+        vm.prank(user);
+        vm.expectRevert(abi.encodeWithSelector(OakSubscription.InsufficientOak.selector, required - 1, required));
+        subscription.renew();
+
+        assertEq(subscription.paidUntil(user), paidBefore);
+        assertEq(usdg.balanceOf(user), usdgBefore);
+        assertEq(usdg.balanceOf(address(subscription)), 0);
+    }
+
+    function test_HolderRenewWithAuthorizationRevertsBeforePaymentWhenBalanceBelowTrackedCount() public {
+        _subscribeHolder(subscription, user, bytes32(uint256(8002)));
+        uint256 required = subscription.signupOakCount(user);
+        uint256 walletBalance = oak.balanceOf(user);
+        vm.prank(user);
+        assertTrue(oak.transfer(attacker, walletBalance - required + 1));
+
+        uint64 paidBefore = subscription.paidUntil(user);
+        bytes32 authNonce = bytes32(uint256(8003));
+        bytes memory auth = _authorization(user, address(subscription), subscription.PRICE(), authNonce);
+        vm.prank(user);
+        vm.expectRevert(abi.encodeWithSelector(OakSubscription.InsufficientOak.selector, required - 1, required));
+        subscription.renewWithAuthorization(auth);
+
+        assertEq(subscription.paidUntil(user), paidBefore);
+        assertFalse(usdg.authorizationState(user, authNonce));
+        assertEq(usdg.balanceOf(address(subscription)), 0);
+    }
+
+    function testFuzz_HolderRenewSucceedsAtOrAboveTrackedCount(uint96 rawExcess) public {
+        _subscribeHolder(subscription, user, bytes32(uint256(8004)));
+        uint256 required = subscription.signupOakCount(user);
+        uint256 excess = bound(uint256(rawExcess), 0, oak.balanceOf(user) - required);
+        uint256 transferAmount = oak.balanceOf(user) - required - excess;
+        if (transferAmount != 0) {
+            vm.prank(user);
+            assertTrue(oak.transfer(attacker, transferAmount));
+        }
+
+        uint64 paidBefore = subscription.paidUntil(user);
+        vm.prank(user);
+        subscription.renew();
+
+        assertEq(oak.balanceOf(user), required + excess);
+        assertEq(subscription.paidUntil(user), paidBefore + 30 days);
+        assertTrue(subscription.hasAccess(user));
+    }
+
     function test_NoHoldNeverBurnsOrRequiresHolding() public {
         (PriceNote memory note, bytes memory sig) = _note(subscription, user3, bytes32(uint256(10)));
         uint256 supplyBefore = oak.totalSupply();
@@ -393,6 +449,18 @@ contract OakSubscriptionTest is StdInvariant, Test {
         assertEq(oak.balanceOf(user3), 0);
         assertEq(oak.totalSupply(), supplyBefore);
         assertEq(subscription.signupOakCount(user3), 0);
+    }
+
+    function test_NoHoldRenewStillRequiresNoOak() public {
+        _subscribeNoHold(subscription, user3, bytes32(uint256(8005)), type(uint256).max);
+        uint64 paidBefore = subscription.paidUntil(user3);
+        (PriceNote memory note, bytes memory sig) = _note(subscription, user3, bytes32(uint256(8006)));
+        vm.prank(user3);
+        subscription.renewNoHold(type(uint256).max, note, sig);
+
+        assertEq(oak.balanceOf(user3), 0);
+        assertEq(subscription.paidUntil(user3), paidBefore + 30 days);
+        assertTrue(subscription.hasAccess(user3));
     }
 
     function test_CurveState_NoHoldFloor12_333_333_NoNoteNeeded_HolderClosedPlainRevert() public {

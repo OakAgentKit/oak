@@ -1,0 +1,11 @@
+.DS_Store
+.env
+node_modules/
+contracts/node_modules/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+examples/node_modules/
+examples/.cache/
+examples/.packed-*/
+examples/.release-work/

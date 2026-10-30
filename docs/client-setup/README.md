@@ -1,6 +1,6 @@
 # MCP Client Setup Guides
 
-Oak Agent Kit (`@oakagentkit/addon`, available at launch) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and **100 MCP tools** across **25 ecosystem projects** on **Robinhood Chain** (`4663`).
+Oak Agent Kit (`@oakagentkit/addon`, available at launch) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and **102 MCP tools** across **25 ecosystem projects** on **Robinhood Chain** (`4663`).
 
 ---
 
@@ -14,47 +14,33 @@ Requires **Node.js 22 LTS** (`>=22.12.0 <23`):
 npm install -g @oakagentkit/addon
 ```
 
-### 2. Create Your Wallet in Your Own Terminal
+### 2. Connect the MCP; the Wallet Creates Itself
 
-Run `oak init` **directly in your own system terminal, never through the AI agent**:
+Oak creates a wallet automatically when `oak mcp`, `oak address`, or another wallet command first runs. There are no recovery-word challenges or passphrase prompts. The agent calls `account`, relays the public address and selected network, asks you to fund it with a little ETH for gas and USDG, then calls `balances` again after you fund it.
 
-```bash
-oak init
-```
+The private key stays local in `~/.oak/wallet.enc` (AES-256-GCM, `0600`, inside `~/.oak` at `0700`). A random encryption key is stored in macOS Keychain, Linux persistent Secret Service, or Windows Credential Manager when available. Otherwise Oak saves a random file key in the same owner-only directory (`wallet-key-<id>`, `0600`). This fallback relies on your OS account and filesystem permissions: someone who can read both files can unlock the wallet. No passphrase is requested. Keep only the funds your agent needs.
 
-- Displays a 24-word recovery phrase once and prompts you to confirm three random words. Write the recovery phrase down offline; **Oak cannot recover a lost key**.
-- Encrypts your private key with `AES-256-GCM` in `~/.oak/wallet.enc` (`0600`) and stores the encryption key in your OS keychain (or derives it from a `>= 12`-character terminal passphrase via `scrypt`).
-- Your private key never leaves your computer, and the hosted Oak service never sees your key and never signs or sends a transaction.
+Later runs reuse the wallet. A corrupt wallet or unavailable existing keychain never creates a replacement. Existing keychain and passphrase wallets keep their format; legacy passphrase wallets still need terminal unlock and cannot run piped MCP.
 
-### 3. Configure Your Network and RPC
+Backups are optional. When you hold more than pocket change, run `oak export` **in your own terminal, never through the agent** and keep the exported key offline. `oak backup` prints guidance without unlocking or exporting anything. Automatic wallets have no recovery phrase. `oak init --recover` accepts an exported private key or a legacy 24-word phrase, hidden in your terminal; `--replace` preserves the previous encrypted wallet. Oak cannot recover a lost key.
 
-Oak defaults to **Robinhood Chain mainnet** (`OAK_NETWORK=mainnet`, chain ID `4663`, `0x1237`). To test Oak's contracts and ERC-8004 identity on **Robinhood Chain Testnet** (`46630`, `0xb626`), opt in explicitly with `OAK_NETWORK=testnet` and `OAK_CHAIN_ID=46630`. If environment variables disagree with `~/.oak/config.json`, Oak refuses to start.
+### 3. Fund and Approve Setup
 
-```bash
-oak config set OAK_NETWORK mainnet
-oak config set OAK_CHAIN_ID 4663
-oak config set OAK_RPC_URL <your-robinhood-chain-4663-rpc-url>
-oak config set OAK_USDG_ADDRESS 0x5fc5360d0400a0fd4f2af552add042d716f1d168
-oak config set OAK_ETH_USDG_POOL_ADDRESS 0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca
-# Contract addresses for OAK_SUBSCRIPTION_ADDRESS, OAK_TOKEN_ADDRESS, and OAK_ORACLE_ADDRESS are published at launch
-```
+After funding, ask the agent to register a public ERC-8004 identity with `oak_setup {"mode":"register"}`. Oak supplies a default registration-v1 profile; you can provide your own `profile`. Registration costs ETH and publishes the profile. It does not require a subscription. Linking an existing ID uses `oak_setup {"mode":"link","agentId":"<id>"}`; if this wallet owns it, signing is automatic. An external NFT owner must sign in their own terminal because the agent does not control that owner's wallet.
 
-### 4. Set Up Your ERC-8004 Identity and Subscribe
+The agent reads `account` for phase and price, explains the recurring payment, and gets your plan approval before calling `oak_subscribe {"plan":"nohold"}` (or `holder`). Launch curve: no-hold only, 12.333333 USDG per 30 days. Warmup: both plans wait for 30 minutes of history. Ready: both plans follow the quoted terms; holder requires OAK and a one-time sign-up burn. `oak_renew {}` reconciles or renews. All transactions retain previews and local signing. Merely funding a wallet does not authorize a paid subscription.
 
-Read tools (`find_token`, `balances`, `price`, `quote`, `preview`, `history`, `positions`, `account`, and module reads) work immediately without an identity or subscription. Action tools require a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) and an active subscription:
+The remaining user steps are funding, authorizing public registration and the recurring plan, and signing for an external identity owner when applicable. These steps move funds, publish data, or require an independently controlled wallet. Read tools remain available without identity or subscription.
 
-```bash
-# Link an existing ERC-8004 agent ID (gasless; owner signs an EIP-712 challenge in your terminal)
-oak setup link <agentId>
+### 4. Service Defaults
 
-# Or mint a new ERC-8004 agent ID on-chain (needs ETH for gas)
-oak config set profile '{"type":"https://eips.ethereum.org/EIPS/eip-8004#registration-v1","name":"my-agent","description":"My Oak agent","image":"https://example.com/my-agent.png","services":[],"x402Support":false,"active":true,"registrations":[]}'
-oak setup register
+Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak subscription, token, oracle and pool addresses when a subscription operation needs them; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. A keyed RPC remains an optional reliability override.
 
-# Fund your wallet (ETH for gas, USDG for subscription/trading, and $OAK if joining the holder plan)
-oak address
-oak subscribe --plan nohold   # launch curve: holder is closed
-```
+Before launch, the operator must deploy Oak's contracts and upgrade the hosted service to expose `/v1/config`. Wallet creation, MCP discovery and local funding guidance work before that deployment; paid actions cannot work until the actual contracts and service are ready. Testnet still requires explicitly matching service, RPC and deployment settings. The commands below are advanced operator overrides, not the normal first-run path.
+
+### Copy-paste Setup Prompt
+
+> Set up Oak for this AI agent. Install @oakagentkit/addon (Node.js 22) and connect the local MCP command `oak mcp`. Call account, tell me the public wallet address and network, and ask me to send a little ETH for gas and USDG. Re-check balances after I fund it. Do not run oak init or oak export, read wallet/key files, or ask for keys or recovery words. Explain identity registration and subscription costs, then get my approval before registering and subscribing. Tell me optional backup guidance with oak backup.
 
 ---
 
@@ -81,6 +67,6 @@ On startup and once every hour, `oak mcp`:
 
 Run `oak init --recover` in your own terminal to restore your 24-word backup on a new computer. To replace an existing wallet, use `oak init --recover --replace`; Oak preserves an encrypted backup and asks you to confirm the recovered address. Never enter recovery words in an agent chat, arguments, environment variables or MCP tools.
 
-For stdio MCP, Oak needs an accessible persistent OS keychain (Linux: Secret Service in the same unlocked user/D-Bus session as the MCP client). A passphrase-only wallet currently supports interactive CLI commands in your own terminal; it cannot start `oak mcp` through a pipe. Do not send the passphrase through MCP or store it in argv/environment variables. To enable MCP for an existing fallback wallet, first configure a persistent keychain, then restore with `oak init --recover --replace` yourself in your terminal and confirm the address. Keep the old encrypted backup and recovery words offline.
+New automatic wallets work without a keychain using owner-only file storage. Existing passphrase wallets still require terminal unlock; see [headless guidance](../headless-wallet.md).
 
-Mainnet uses `https://api.oakagentkit.org` by default. Override it with `oak config set OAK_SERVER_URL <https-url>` or `OAK_SERVER_URL`; testnet requires an explicit matching service URL. Configure the published deployment addresses and your RPC before starting MCP.
+Mainnet uses `https://api.oakagentkit.org` by default. Override it with `oak config set OAK_SERVER_URL <https-url>` or `OAK_SERVER_URL`; testnet requires an explicit matching service URL. The service supplies public deployment pins when needed; explicit overrides remain available.
