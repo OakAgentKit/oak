@@ -31,9 +31,8 @@ research, names and agent identities. Pons token launches are one example.
 **Today:** the npm packages are published, but hosted actions are limited to the Oak team
 until the token and subscription launch. You can install, connect, see your local
 wallet address and run fixture examples; hosted calls may report unavailable access.
-**0.1.1 is a prepared release candidate.** The confirmation and local checks below describe 0.1.1.
 
-## Before your agent acts — 0.1.1
+## Before your agent acts
 
 Oak prepares a preview — an estimate of wallet changes — and checks the transaction
 on your machine. Your app shows the transfers, approvals, destinations and estimated
@@ -70,7 +69,7 @@ Your agent must explain these steps and get permission first.
 
 Both plans wait during the 30-minute warmup. ETH network fees and project fees are
 separate; Oak adds no per-call or trade fee. Running Oak can trigger renewals near
-expiry, with human confirmation in 0.1.1's default mode. Cancelling ends access
+expiry, with human confirmation in default ask mode. Cancelling ends access
 immediately and forfeits unused paid days. Holding OAK buys access and nothing else.
 [Full plan terms](access-and-pricing.md)
 

@@ -4,7 +4,7 @@ pragma solidity 0.8.26;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IOakOracle} from "./interfaces/IOakOracle.sol";
-import {IPons} from "./interfaces/IPons.sol";
+import {IPons, PonsRead} from "./interfaces/IPons.sol";
 import {PriceNote, OakPriceNote} from "./libraries/OakPriceNote.sol";
 
 /// @dev Adapted from Uniswap v4-core src/libraries/TickMath.sol at commit
@@ -99,6 +99,10 @@ contract OakOracle is IOakOracle {
     bool public readyLatched;
 
     error OnlySafe();
+    error InvalidAddress();
+    error LaunchRecordUnreadable(address factory);
+    error LaunchRecordMismatch(address expectedToken, address actualToken, bool exists);
+    error PoolIdentityMismatch(address pairToken, uint24 poolFee, int24 tickSpacing, address hook);
 
     constructor(
         address ponsFactory_,
@@ -108,6 +112,12 @@ contract OakOracle is IOakOracle {
         address safe_,
         address priceSigner_
     ) {
+        if (
+            ponsFactory_ == address(0) || oakToken_ == address(0) || poolManager_ == address(0)
+                || ethUsdgPool_ == address(0) || safe_ == address(0) || priceSigner_ == address(0)
+        ) revert InvalidAddress();
+        _validatePoolIdentity(ponsFactory_, oakToken_);
+
         ponsFactory = ponsFactory_;
         oakToken = oakToken_;
         poolManager = poolManager_;
@@ -118,6 +128,19 @@ contract OakOracle is IOakOracle {
         bytes32 id = keccak256(abi.encode(address(0), oakToken_, uint24(0), int24(200), PONS_HOOK));
         poolId = id;
         spotStorageSlot = keccak256(abi.encodePacked(id, uint256(6)));
+    }
+
+    function _validatePoolIdentity(address factory, address token) private view {
+        (bool readable, address actualToken, address pairToken, uint24 poolFee, int24 tickSpacing,, bool exists) =
+            PonsRead.launchRecordSummary(factory, token);
+        if (!readable) revert LaunchRecordUnreadable(factory);
+        if (!exists || actualToken != token) revert LaunchRecordMismatch(token, actualToken, exists);
+
+        (bool hookReadable, address hook) = PonsRead.memeHook(factory);
+        if (!hookReadable) revert LaunchRecordUnreadable(factory);
+        if (pairToken != address(0) || poolFee != 0 || tickSpacing != 200 || hook != PONS_HOOK) {
+            revert PoolIdentityMismatch(pairToken, poolFee, tickSpacing, hook);
+        }
     }
 
     function phase() public view returns (uint8) {

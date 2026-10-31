@@ -22,10 +22,10 @@ To migrate a passphrase wallet, configure a persistent keychain, then run `oak i
 Confirm the recovered address, keep the encrypted backup, and store your recovery words offline.
 Recovery restores the same wallet and sends no transaction. Oak cannot recover a lost key.
 
-Starting `oak mcp` can renew subscriptions with local signing and available USDG when renewal is due. In **0.1.1 (release candidate)**, new renewal signatures prompt in default ask mode.
+Starting `oak mcp` can renew subscriptions with local signing and available USDG when renewal is due. Since **0.1.1**, new renewal signatures prompt in default ask mode.
 Use the [client setup prerequisites](client-setup/README.md) before connecting a host.
 
-## Unattended operation — 0.1.1 (release candidate)
+## Unattended operation
 
 Automatic wallet creation works without a terminal. Action signing in default
 `confirm ask` mode still needs an MCP client that supports form elicitation.

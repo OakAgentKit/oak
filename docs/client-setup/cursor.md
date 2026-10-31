@@ -27,12 +27,12 @@ Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (exposi
 ## Safety & Custody Reminders
 
 - Always run `oak init`, `oak export`, and owner-signed `oak setup link <agentId>` in your own external terminal, never through Cursor's integrated agent terminal.
-- Renewal can run within 3 days of expiry while `oak mcp` is running. In 0.1.1 (release candidate), new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting.
+- Renewal can run within 3 days of expiry while `oak mcp` is running. Since 0.1.1, new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting.
 
 ## Confirmation and current access
 
-Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+Hosted actions are team-only until token and subscription launch. Since **0.1.1**,
 action signing requires your client's MCP confirmation form by default. A missing
 form, decline or timeout stops signing. Verify form support in your installed client;
 a connection or tool list alone does not establish action support.
-Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.
+Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.

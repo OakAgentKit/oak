@@ -12,7 +12,7 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 ## Understand access and custody
 
 - [Plans and pricing](access-and-pricing.md): launch phases, renewal and cancellation.
-- [Security](security.md): 0.1.1 confirmation, local checks, custody, authority and private reporting.
+- [Security](security.md): confirmation, local checks, custody, authority and private reporting.
 - [Headless wallets](headless-wallet.md): key storage, legacy wallets and unattended operation.
 - [Review summaries](reviews.md): what was reviewed and what remains unmeasured.
 
@@ -24,4 +24,3 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Changelog](../CHANGELOG.md): released and pending versions.
 
 Packages are published; hosted actions are team-only until token and subscription launch.
-The default confirmation and local checks documented for **0.1.1** await that release.

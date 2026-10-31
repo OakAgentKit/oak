@@ -46,6 +46,6 @@ Hosted access is currently limited to the Oak team.
 ## Warranty and custody
 
 The packages are provided as is, without warranty. See the shipped license
-for its liability terms. Read [security](docs/security.md) for 0.1.1's pending
+for its liability terms. Read [security](docs/security.md) for the
 confirmation and local checks, custody responsibilities and their limits.
 Oak is independent and is not affiliated with Robinhood.

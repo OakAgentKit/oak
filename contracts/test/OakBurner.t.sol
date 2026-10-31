@@ -18,6 +18,7 @@ import {
 } from "../src/OakBurner.sol";
 import {IOakOracle} from "../src/interfaces/IOakOracle.sol";
 import {IOakBurner} from "../src/interfaces/IOakBurner.sol";
+import {IPonsHookView, PonsLaunchRecord} from "../src/interfaces/IPons.sol";
 import {OakPriceNote, PriceNote} from "../src/libraries/OakPriceNote.sol";
 import {OakPricing} from "../src/libraries/OakPricing.sol";
 import {MockOracle} from "./mocks/MockOracle.sol";
@@ -208,6 +209,44 @@ contract MockSubscriptionPayment {
     }
 }
 
+contract MockPonsHook {
+    uint256 internal defaultHookFeeBps;
+    mapping(bytes32 poolId => uint256 feeBps) internal launchHookFeeBps;
+    mapping(bytes32 poolId => bool initialized) internal launchInitialized;
+
+    function setHookFeeBps(uint256 value) external {
+        defaultHookFeeBps = value;
+    }
+
+    function setLaunch(bytes32 poolId, uint256 feeBps, bool initialized) external {
+        launchHookFeeBps[poolId] = feeBps;
+        launchInitialized[poolId] = initialized;
+    }
+
+    function currentFeePolicy() external view returns (address, uint256, uint256, uint256, uint256) {
+        return (address(0xFEE), 3_000, 5_000, defaultHookFeeBps, 300);
+    }
+
+    function launches(bytes32 poolId) external view returns (uint256[13] memory words) {
+        words[0] = launchInitialized[poolId] ? 1 : 0;
+        words[10] = launchHookFeeBps[poolId];
+    }
+}
+
+contract MockPonsLaunchRecords {
+    PonsLaunchRecord internal record;
+
+    function setRecord(address token, uint16 creatorTaxBps, bool exists) external {
+        record.token = token;
+        record.creatorTaxBps = creatorTaxBps;
+        record.exists = exists;
+    }
+
+    function getLaunchedToken(address) external view returns (PonsLaunchRecord memory) {
+        return record;
+    }
+}
+
 abstract contract OakBurnerAssertions is Test {
     function _assertBurnedSupply(
         IERC20 token,
@@ -243,6 +282,8 @@ contract OakBurnerTest is OakBurnerAssertions {
     uint256 internal constant DEFAULT_LIQUIDITY_USDG_E6 = 200_000_000_000;
     uint256 internal constant DEFAULT_V3_OUT = 1 ether;
     uint256 internal constant DEFAULT_OAK_OUT = 1_000_000e18;
+    address internal constant PONS_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
+    address internal constant PONS_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
 
     address internal safe;
     address internal treasury;
@@ -345,7 +386,9 @@ contract OakBurnerTest is OakBurnerAssertions {
 
     function test_BurnerChecksOutputEvenIfRouterIgnoresMinimum() public {
         uint256 usdgIn = 1_000_000;
-        uint256 minimum = OakPricing.burnerMinOut(usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18);
+        uint256 minimum = OakPricing.burnerMinOut(
+            usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18, OakPricing.burnerFloorBps(100, 100)
+        );
         MockUniversalRouter router = MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2()));
         router.setIgnoreMinimum(true);
         router.setAmountOut(minimum - 1);
@@ -367,13 +410,13 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertTrue(burner.noteUsed(note.wallet, note.nonce));
     }
 
-    function test_MinOutFromNoteTimes49Over51_VectorExact_At18Decimals() public {
+    function test_MinOutUsesGraduationFeeFloor_VectorExact_At18Decimals() public {
         uint256 usdgIn = 100_000_000;
         (PriceNote memory note18, bytes memory sig18) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
         burner.buyAndBurn(usdgIn, note18, sig18);
         assertEq(
             MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountOutMinimum(),
-            96_078_431_372_549_019_607_843
+            96_070_000_000_000_000_000_000
         );
 
         OakBurner sixDecimalBurner = _newBurner(6);
@@ -382,12 +425,81 @@ contract OakBurnerTest is OakBurnerAssertions {
             _signedNoteFor(sixDecimalBurner, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
         MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).setAmountOut(DEFAULT_OAK_OUT);
         sixDecimalBurner.buyAndBurn(usdgIn, note6, sig6);
-        assertEq(MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountOutMinimum(), 96_078_431_372);
+        assertEq(MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountOutMinimum(), 96_070_000_000);
+    }
+
+    function test_RaisedGraduationFeeLowersFloorAndStillBurns() public {
+        MockPonsHook(PONS_HOOK).setLaunch(_poolId(address(oak)), 350, true);
+        uint256 usdgIn = 100_000_000;
+        uint256 expectedMinimum = OakPricing.burnerMinOut(
+            usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18, OakPricing.burnerFloorBps(350, 100)
+        );
+        MockUniversalRouter(payable(burnerRouter())).setAmountOut(95_000e18);
+
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        burner.buyAndBurn(usdgIn, note, sig);
+
+        assertEq(expectedMinimum, 94_000e18);
+        assertEq(MockUniversalRouter(payable(burnerRouter())).lastAmountOutMinimum(), expectedMinimum);
+    }
+
+    function test_GraduationFeeBeyondFloorBoundRevertsClearly() public {
+        MockPonsHook(PONS_HOOK).setLaunch(_poolId(address(oak)), 751, true);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+
+        vm.expectRevert(abi.encodeWithSelector(OakPricing.FeePolicyOutOfBounds.selector, 751, 100));
+        burner.buyAndBurn(1_000_000, note, sig);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
+    }
+
+    function test_GlobalDefaultFeeDoesNotChangeGraduatedPoolFloor() public {
+        MockPonsHook(PONS_HOOK).setHookFeeBps(1_000);
+        uint256 usdgIn = 100_000_000;
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+
+        burner.buyAndBurn(usdgIn, note, sig);
+
+        assertEq(
+            MockUniversalRouter(payable(burnerRouter())).lastAmountOutMinimum(),
+            OakPricing.burnerMinOut(
+                usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18, OakPricing.burnerFloorBps(100, 100)
+            )
+        );
+    }
+
+    function test_UnreadableGraduationFeePolicyRevertsClearly() public {
+        vm.mockCallRevert(
+            PONS_HOOK,
+            abi.encodeWithSelector(IPonsHookView.launches.selector, _poolId(address(oak))),
+            bytes("unreadable")
+        );
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.FeePolicyUnreadable.selector, PONS_HOOK));
+        burner.buyAndBurn(1_000_000, note, sig);
+    }
+
+    function test_MissingOrMismatchedLaunchRecordRevertsClearly() public {
+        MockPonsLaunchRecords records = MockPonsLaunchRecords(PONS_FACTORY);
+        records.setRecord(address(0), 100, false);
+        (PriceNote memory missing, bytes memory missingSig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        vm.expectRevert(
+            abi.encodeWithSelector(OakBurner.LaunchRecordMismatch.selector, address(oak), address(0), false)
+        );
+        burner.buyAndBurn(1_000_000, missing, missingSig);
+
+        address wrongToken = makeAddr("wrong-launch-record-token");
+        records.setRecord(wrongToken, 100, true);
+        (PriceNote memory mismatch, bytes memory mismatchSig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.LaunchRecordMismatch.selector, address(oak), wrongToken, true));
+        burner.buyAndBurn(1_000_000, mismatch, mismatchSig);
     }
 
     function test_RevertsWorseThanLimit_WaitsDoesNotBrick_NonceNotConsumed() public {
         uint256 usdgIn = 100_000_000;
-        uint256 minimum = OakPricing.burnerMinOut(usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18);
+        uint256 minimum = OakPricing.burnerMinOut(
+            usdgIn, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD, 18, OakPricing.burnerFloorBps(100, 100)
+        );
         (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
         uint256 balanceBefore = usdg.balanceOf(address(burner));
 
@@ -497,24 +609,43 @@ contract OakBurnerTest is OakBurnerAssertions {
         burner.buyAndBurn(1_000_000, note, sig);
     }
 
-    function test_NoteOutsideGuardRejected_EndpointsAccepted() public {
+    function test_BurnerSpotAgreementAcceptsNinePercentAndRejectsElevenPercent() public {
         uint256 spot = DEFAULT_OAK_PER_ETH;
-        uint256 lower = spot / 2;
-        uint256 upper = spot * 3 / 2;
+        uint256 ninePercent = spot * 9 / 100;
+        uint256 elevenPercent = spot * 11 / 100;
 
-        (PriceNote memory lowRejected, bytes memory lowRejectedSig) = _signedNote(lower - 1, address(this));
-        vm.expectPartialRevert(IOakOracle.NoteOutsideGuard.selector);
-        burner.buyAndBurn(1_000_000, lowRejected, lowRejectedSig);
-
-        (PriceNote memory lowAccepted, bytes memory lowAcceptedSig) = _signedNote(lower, address(this));
-        burner.buyAndBurn(1_000_000, lowAccepted, lowAcceptedSig);
-
-        (PriceNote memory highAccepted, bytes memory highAcceptedSig) = _signedNote(upper, address(this));
+        (PriceNote memory highAccepted, bytes memory highAcceptedSig) = _signedNote(spot + ninePercent, address(this));
         burner.buyAndBurn(1_000_000, highAccepted, highAcceptedSig);
 
-        (PriceNote memory highRejected, bytes memory highRejectedSig) = _signedNote(upper + 1, address(this));
-        vm.expectPartialRevert(IOakOracle.NoteOutsideGuard.selector);
+        (PriceNote memory highRejected, bytes memory highRejectedSig) = _signedNote(spot + elevenPercent, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, spot, spot + elevenPercent));
         burner.buyAndBurn(1_000_000, highRejected, highRejectedSig);
+
+        (PriceNote memory lowAccepted, bytes memory lowAcceptedSig) = _signedNote(spot - ninePercent, address(this));
+        burner.buyAndBurn(1_000_000, lowAccepted, lowAcceptedSig);
+
+        (PriceNote memory lowRejected, bytes memory lowRejectedSig) = _signedNote(spot - elevenPercent, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, spot, spot - elevenPercent));
+        burner.buyAndBurn(1_000_000, lowRejected, lowRejectedSig);
+    }
+
+    function test_BurnerSpotAgreementAcceptsExactTenPercent_RejectsOneUnitOutside() public {
+        uint256 spot = oracle.spotOakPerEthE18();
+        uint256 tolerance = spot / 10;
+        MockUniversalRouter(payable(burnerRouter())).setAmountOut(DEFAULT_OAK_OUT * 2);
+
+        (PriceNote memory exactHigh, bytes memory exactHighSig) = _signedNote(spot + tolerance, address(this));
+        burner.buyAndBurn(1_000_000, exactHigh, exactHighSig);
+        (PriceNote memory exactLow, bytes memory exactLowSig) = _signedNote(spot - tolerance, address(this));
+        burner.buyAndBurn(1_000_000, exactLow, exactLowSig);
+
+        (PriceNote memory highOutside, bytes memory highOutsideSig) = _signedNote(spot + tolerance + 1, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, spot, spot + tolerance + 1));
+        burner.buyAndBurn(1_000_000, highOutside, highOutsideSig);
+
+        (PriceNote memory lowOutside, bytes memory lowOutsideSig) = _signedNote(spot - tolerance - 1, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, spot, spot - tolerance - 1));
+        burner.buyAndBurn(1_000_000, lowOutside, lowOutsideSig);
     }
 
     function test_SignerSwapOnOracleInvalidatesOldNotes_FreshAccepted() public {
@@ -549,21 +680,21 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(usdg.balanceOf(address(burner)), balanceBefore + 2_250_000);
     }
 
-    function test_BadNoteInsideGuardBoundsChunkLoss() public {
+    function test_LaggingNoteAfterLargeMoveRejectedBeforeSwap() public {
         uint256 usdgIn = 100_000_000;
         oracle.setLiquidityUsdgE6(usdgIn * 200);
         uint256 lowerGuardNote = DEFAULT_OAK_PER_ETH / 2;
-        uint256 spotFairOut = Math.mulDiv(usdgIn * 1e12, DEFAULT_OAK_PER_ETH, DEFAULT_ETH_USD);
-        uint256 expectedMinimum = Math.mulDiv(spotFairOut, 49, 102);
-        MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).setAmountOut(expectedMinimum);
+        uint256 balanceBefore = usdg.balanceOf(address(burner));
 
         (PriceNote memory note, bytes memory sig) = _signedNote(lowerGuardNote, address(this));
+        vm.expectRevert(
+            abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, DEFAULT_OAK_PER_ETH, lowerGuardNote)
+        );
         burner.buyAndBurn(usdgIn, note, sig);
 
-        uint256 observedMinimum = MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountOutMinimum();
-        assertEq(observedMinimum, expectedMinimum);
-        assertEq(observedMinimum * 100 / spotFairOut, 48);
-        assertEq(usdgIn, oracle.liquidityUsdgE6() / 200);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
+        assertEq(usdg.balanceOf(address(burner)), balanceBefore);
+        assertEq(MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountIn(), 0);
     }
 
     function test_ArmOnlySafe_RequiresBalance_RecordsBalance_ArmTwiceReverts() public {
@@ -638,18 +769,89 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(burner.lastBurnAt(), block.timestamp);
     }
 
-    function test_SuccessfulBurnDisarms_SweepThenReverts() public {
+    function test_OneBaseUnitBurnDoesNotDisarmSweep() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 100_000_000);
         vm.prank(safe);
-        burner.armSweep();
-        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
-        burner.buyAndBurn(1_000_000, note, sig);
-        assertEq(burner.armedAt(), 0);
-        assertEq(burner.armedBalance(), 0);
+        target.armSweep();
+        uint64 armedAt = target.armedAt();
+        (PriceNote memory note, bytes memory sig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(1, note, sig);
+
+        assertEq(target.armedAt(), armedAt);
+        assertEq(target.armedBalance(), 100_000_000);
+    }
+
+    function test_MaterialBurnBelowOnePercentDoesNotDisarmSweep() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 100_000_000);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 armedAt = target.armedAt();
+        (PriceNote memory note, bytes memory sig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(500_000, note, sig);
+
+        assertEq(target.armedAt(), armedAt);
+        assertEq(target.armedBalance(), 100_000_000);
+    }
+
+    function test_NonMultipleArmedBalanceRoundsDisarmThresholdUp() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 101);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 armedAt = target.armedAt();
+
+        (PriceNote memory below, bytes memory belowSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(1, below, belowSig);
+        assertEq(target.armedAt(), armedAt);
+
+        (PriceNote memory exact, bytes memory exactSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(2, exact, exactSig);
+        assertEq(target.armedAt(), 0);
+        assertEq(target.armedBalance(), 0);
+    }
+
+    function test_OnePercentBurnDisarmsSweep() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 100_000_000);
+        vm.prank(safe);
+        target.armSweep();
+        (PriceNote memory note, bytes memory sig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(1_000_000, note, sig);
+        assertEq(target.armedAt(), 0);
+        assertEq(target.armedBalance(), 0);
 
         vm.warp(block.timestamp + 90 days);
         vm.prank(safe);
         vm.expectRevert(OakBurner.NotArmed.selector);
-        burner.sweepStuck();
+        target.sweepStuck();
+    }
+
+    function test_ChunkCapIsAttainableDisarmThresholdWhenOnePercentIsLarger() public {
+        uint256 maximum = 1_000_000;
+        oracle.setLiquidityUsdgE6(maximum * 200);
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), maximum * 200);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 armedAt = target.armedAt();
+
+        (PriceNote memory below, bytes memory belowSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(maximum - 1, below, belowSig);
+        assertEq(target.armedAt(), armedAt);
+
+        (PriceNote memory exact, bytes memory exactSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(maximum, exact, exactSig);
+        assertEq(target.armedAt(), 0);
+        assertEq(target.armedBalance(), 0);
     }
 
     function test_FailedBurnDoesNotDisarm() public {
@@ -744,12 +946,23 @@ contract OakBurnerTest is OakBurnerAssertions {
         MockWeth wethImplementation = new MockWeth();
         MockSwapRouter02 v3Implementation = new MockSwapRouter02();
         MockUniversalRouter v4Implementation = new MockUniversalRouter();
+        MockPonsHook feePolicyImplementation = new MockPonsHook();
+        MockPonsLaunchRecords launchRecordsImplementation = new MockPonsLaunchRecords();
         vm.etch(0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73, address(wethImplementation).code);
         vm.etch(0xCaf681a66D020601342297493863E78C959E5cb2, address(v3Implementation).code);
         vm.etch(0x204FAca1764B154221e35c0d20aBb3c525710498, address(v4Implementation).code);
+        vm.etch(PONS_HOOK, address(feePolicyImplementation).code);
+        vm.etch(PONS_FACTORY, address(launchRecordsImplementation).code);
         vm.deal(0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73, 10_000 ether);
         MockSwapRouter02(0xCaf681a66D020601342297493863E78C959E5cb2).setAmountOut(DEFAULT_V3_OUT);
         MockUniversalRouter(payable(0x204FAca1764B154221e35c0d20aBb3c525710498)).setAmountOut(DEFAULT_OAK_OUT);
+        MockPonsHook(PONS_HOOK).setHookFeeBps(100);
+        MockPonsHook(PONS_HOOK).setLaunch(_poolId(address(oak)), 100, true);
+        MockPonsLaunchRecords(PONS_FACTORY).setRecord(address(oak), 100, true);
+    }
+
+    function _poolId(address token) internal pure returns (bytes32) {
+        return keccak256(abi.encode(address(0), token, uint24(0), int24(200), PONS_HOOK));
     }
 
     function burnerRouter() internal pure returns (address) {

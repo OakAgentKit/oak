@@ -18,9 +18,12 @@ import {Test} from "forge-std/Test.sol";
 
 contract RedTeamBBurnerTest is OakBurnerTest {
     function test_B_FeeMarginArithmetic() public pure {
-        uint256 minimum = OakPricing.burnerMinOut(100_000_000, 2_000_000e18, 2_000e18, 18);
+        uint256 minimum =
+            OakPricing.burnerMinOut(100_000_000, 2_000_000e18, 2_000e18, 18, OakPricing.MAX_BURNER_FLOOR_BPS);
         assertLe(minimum, 97_000e18);
-        assertGt(OakPricing.burnerMinOut(100_000_000, 2_060_000e18, 2_000e18, 18), 97_000e18);
+        assertGt(
+            OakPricing.burnerMinOut(100_000_000, 2_060_000e18, 2_000e18, 18, OakPricing.MAX_BURNER_FLOOR_BPS), 97_000e18
+        );
     }
 
     function test_B_ZeroWalletNoteRefuses() public {
@@ -43,7 +46,7 @@ contract RedTeamBBurnerTest is OakBurnerTest {
         assertEq(oak.totalSupply(), supply - output);
     }
 
-    function test_B_CopiedKeeperNoteCannotDisarm_OriginalCallerCan() public {
+    function test_B_CopiedKeeperNoteCannotSpendAndDustBurnDoesNotDisarm() public {
         vm.prank(safe);
         burner.armSweep();
         (PriceNote memory n, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
@@ -52,8 +55,8 @@ contract RedTeamBBurnerTest is OakBurnerTest {
         burner.buyAndBurn(1_000_000, n, sig);
         assertGt(burner.armedAt(), 0);
         burner.buyAndBurn(1_000_000, n, sig);
-        assertEq(burner.armedAt(), 0);
-        assertEq(burner.armedBalance(), 0);
+        assertGt(burner.armedAt(), 0);
+        assertGt(burner.armedBalance(), 0);
         vm.expectRevert(IOakBurner.NoteUsed.selector);
         burner.buyAndBurn(1_000_000, n, sig);
     }
@@ -186,13 +189,15 @@ contract RedTeamBDeploymentTest is DeployBurnerTest {
     function test_B_DeployOrderAndTokenGuards() public {
         OakBurner deployedBurner = deployer.deploy(address(oak), oracle, safe);
         DeploySubscription deploySub = new DeploySubscription();
-        vm.setEnv("OAK_USDG_ADDRESS", vm.toString(USDG));
-        vm.setEnv("OAK_TOKEN_ADDRESS", vm.toString(address(oak)));
-        vm.setEnv("OAK_ORACLE_ADDRESS", vm.toString(oracle));
-        vm.setEnv("OAK_BURNER_ADDRESS", vm.toString(address(deployedBurner)));
-        vm.setEnv("OAK_SAFE_ADDRESS", vm.toString(safe));
-        vm.setEnv("OAK_RETIRED_SUBSCRIPTION_ADDRESSES", "");
-        OakSubscription deployed = deploySub.run();
+        DeploySubscription.Config memory config = DeploySubscription.Config({
+            usdg: USDG,
+            oak: address(oak),
+            oracle: oracle,
+            burner: address(deployedBurner),
+            safe: safe,
+            previous: address(0)
+        });
+        OakSubscription deployed = deploySub.deploy(config);
         assertEq(deployed.burner(), address(deployedBurner));
         assertEq(address(deployed.oak()), address(oak));
         assertEq(address(deployed.oracle()), oracle);
@@ -200,17 +205,17 @@ contract RedTeamBDeploymentTest is DeployBurnerTest {
         vm.expectRevert(
             abi.encodeWithSelector(DeploySubscription.TokenMismatch.selector, address(deployedBurner), address(123))
         );
-        deploySub.run();
+        deploySub.deploy(config);
         vm.mockCall(address(deployedBurner), abi.encodeWithSignature("oak()"), abi.encode(address(oak)));
         vm.mockCall(oracle, abi.encodeWithSignature("oakToken()"), abi.encode(address(123)));
         vm.expectRevert(abi.encodeWithSelector(DeploySubscription.TokenMismatch.selector, oracle, address(123)));
-        deploySub.run();
+        deploySub.deploy(config);
         vm.mockCallRevert(oracle, abi.encodeWithSignature("oakToken()"), bytes("unreadable"));
         vm.expectRevert(bytes("unreadable"));
-        deploySub.run();
+        deploySub.deploy(config);
         vm.mockCall(oracle, abi.encodeWithSignature("oakToken()"), abi.encode(address(oak)));
         vm.mockCall(address(deployedBurner), abi.encodeWithSignature("oak()"), hex"00");
         vm.expectRevert();
-        deploySub.run();
+        deploySub.deploy(config);
     }
 }

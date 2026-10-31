@@ -1,5 +1,10 @@
 .DS_Store
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
 node_modules/
 contracts/node_modules/
 contracts/out/

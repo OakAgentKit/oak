@@ -40,7 +40,7 @@ a 50% live-pool guard; see the exact [checks and limits](security.md).
 - Each payment splits in the same transaction: 25% to `OakBurner`, 75% to the single-owner treasury.
 - Prepayment is capped at 90 days ahead. Oak adds no per-call or trade fee; ETH gas and project fees are separate.
 - `oak mcp` checks on startup and hourly; a plan with 3 days or less remaining can renew using local USDG and ETH.
-- In **0.1.1 (release candidate)**, new renewal signatures require human confirmation by default. Unattended renewal requires the owner's explicit auto setting.
+- Since **0.1.1**, new renewal signatures require human confirmation by default. Unattended renewal requires the owner's explicit auto setting.
 - `oak renew` reconciles pending payments and renews when due. Missing funds or an unresolved journal pause actions.
 - `oak cancel` ends access immediately and forfeits remaining paid days. Cancel before switching plans.
 - An authoritative grandfathered holder on a retired contract uses `oak renew` when due to migrate with carried paid time, its recorded post-burn count and zero burn.

@@ -1,13 +1,20 @@
 # Changelog
 
-## 0.1.1 — Release candidate (2026-10-30)
+## 0.1.2
+
+- [Changed] The send tool is not offered in this version, and direct calls are refused.
+- [Changed] Longbow deposits are enabled after fork verification of deposits, full withdrawals and zero leftover allowance. Meridian buys remain coming soon and are refused before signing.
+- [Added] Startup instructions and project playbooks ship as MCP resources in the add-on.
+- [Changed] Confirmation and signing guards are unchanged from 0.1.1. Discovery still lists 102 mainnet tools and 16 testnet tools.
+
+## 0.1.1 (2026-10-30)
 
 Oak now asks before signing an action by default. Review the MCP confirmation
 form, or answer the terminal prompt for renewal and cancellation. The local wallet
 checks what a transaction spends and who it calls, then simulates it again before
 signing. Transaction results show whether they were submitted or mined and include
 hashes; confirmations can take longer with the new 30-confirmation default.
-This candidate is prepared for operator publication; hosted access remains team-only.
+Hosted access remains team-only.
 Automatic first-start wallet creation already shipped in 0.1.0.
 
 Technical changes:

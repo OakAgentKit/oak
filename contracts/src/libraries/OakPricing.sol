@@ -6,8 +6,12 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 /// @notice Shared, deterministic pricing arithmetic for Oak contracts and parity vectors.
 library OakPricing {
     uint256 internal constant NOHOLD_FLOOR = 12_333_333;
+    uint256 internal constant MIN_BURNER_FLOOR_BPS = 9_000;
+    uint256 internal constant MAX_BURNER_FLOOR_BPS = 9_607;
+    uint256 internal constant BURNER_IMPACT_ALLOWANCE_BPS = 150;
 
     uint256 private constant USD_E18 = 1e18;
+    uint256 private constant BPS_DENOMINATOR = 10_000;
     uint256 private constant ENTRY_FLOOR = 20e18;
     uint256 private constant ENTRY_500K = 75e18;
     uint256 private constant ENTRY_1M = 100e18;
@@ -18,6 +22,8 @@ library OakPricing {
     uint256 private constant CAP_10M = 10_000_000e18;
 
     error UnsupportedDecimals(uint8 decimals);
+    error FeePolicyOutOfBounds(uint256 hookFeeBps, uint256 creatorTaxBps);
+    error InvalidBurnerFloor(uint256 floorBps);
 
     /// @dev Continuous piecewise-linear entry price from $20 to $300, all values E18.
     function entryUsdE18(uint256 marketCap) internal pure returns (uint256) {
@@ -59,15 +65,31 @@ library OakPricing {
         return Math.mulDiv(supplyNet, oakUsdE18_, _pow10(oakDecimals));
     }
 
-    function burnerMinOut(uint256 usdgIn, uint256 oakPerEthE18, uint256 ethUsdE18, uint8 oakDecimals)
+    /// @dev The 90% lower bound limits fee-policy tolerance. The 96.07% upper bound is
+    ///      never higher than the previous 49/51 floor after basis-point rounding.
+    function burnerFloorBps(uint256 hookFeeBps, uint256 creatorTaxBps) internal pure returns (uint256 floorBps) {
+        if (hookFeeBps > BPS_DENOMINATOR || creatorTaxBps > BPS_DENOMINATOR) {
+            revert FeePolicyOutOfBounds(hookFeeBps, creatorTaxBps);
+        }
+        uint256 totalAllowance = hookFeeBps + creatorTaxBps + BURNER_IMPACT_ALLOWANCE_BPS;
+        if (totalAllowance > BPS_DENOMINATOR - MIN_BURNER_FLOOR_BPS) {
+            revert FeePolicyOutOfBounds(hookFeeBps, creatorTaxBps);
+        }
+        floorBps = BPS_DENOMINATOR - totalAllowance;
+        if (floorBps > MAX_BURNER_FLOOR_BPS) floorBps = MAX_BURNER_FLOOR_BPS;
+    }
+
+    function burnerMinOut(uint256 usdgIn, uint256 oakPerEthE18, uint256 ethUsdE18, uint8 oakDecimals, uint256 floorBps)
         internal
         pure
         returns (uint256)
     {
         if (oakDecimals < 6) revert UnsupportedDecimals(oakDecimals);
+        if (floorBps < MIN_BURNER_FLOOR_BPS || floorBps > MAX_BURNER_FLOOR_BPS) {
+            revert InvalidBurnerFloor(floorBps);
+        }
         uint256 decimalScale = _pow10(oakDecimals - 6);
-        // 49/51 = 96.0784%: accommodates hook/creator fees plus bounded route impact.
-        return Math.mulDiv(usdgIn * decimalScale, oakPerEthE18 * 49, ethUsdE18 * 51);
+        return Math.mulDiv(usdgIn * decimalScale, oakPerEthE18 * floorBps, ethUsdE18 * BPS_DENOMINATOR);
     }
 
     function _pow10(uint8 decimals) private pure returns (uint256) {

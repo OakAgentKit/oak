@@ -51,7 +51,7 @@ oak call quote '{"from":"USDG","to":"TSLA","amountIn":"10000000","slippageBps":5
 ---
 
 The CLI can read and prepare quotes, but its lack of a confirmation form means
-it cannot sign actions in default 0.1.1 ask mode. Use a compatible MCP client to
+it cannot sign actions in default ask mode. Use a compatible MCP client to
 request a fresh quote, inspect the preview and confirm each signature. Placeholder
 transaction arrays are not executable commands.
 
@@ -79,8 +79,8 @@ Every error message in Oak is a plain sentence naming the cause and the exact co
 
 ## Confirmation and current access
 
-Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+Hosted actions are team-only until token and subscription launch. Since **0.1.1**,
 action signing requires your client's MCP confirmation form by default. A missing
 form, decline or timeout stops signing. Verify form support in your installed client;
 a connection or tool list alone does not establish action support.
-Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.
+Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.
