@@ -38,7 +38,7 @@ The remaining user steps are funding, authorizing public registration and the re
 Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak subscription, token, oracle and pool addresses when a subscription operation needs them; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. Transaction signing requires `eth_simulateV1` with complete per-call logs and `traceTransfers`; the default public RPC supplies that evidence. `debug_traceCall`/`callTracer` is optional extra coverage: when supported Oak validates nested delegate targets, while an explicit unsupported-method response selects simulation-only mode and leaves that documented residual risk. A keyed RPC is therefore an optional reliability and extra-coverage override, not a prerequisite for the default simulation-only path. Malformed responses, transport errors, or loss of a tracer previously shown available fail closed.
 
 Hosted actions are currently limited to the Oak team. Strangers can use read
-tools such as `find_token`; private-mode actions return a server allow-list message. Before public launch, the operator must deploy Oak's contracts and upgrade the hosted service to expose `/v1/config`. Wallet creation, MCP discovery and local funding guidance work before that deployment; paid actions cannot work until the actual contracts and service are ready. Testnet still requires explicitly matching service, RPC and deployment settings. The commands below are advanced operator overrides, not the normal first-run path.
+tools such as `find_token`; private-mode actions return a server allow-list message. Paid actions start once Oak's contracts are deployed and the hosted service publishes their configuration at `/v1/config`. Wallet creation, MCP discovery and local funding guidance work before that deployment; paid actions cannot work until the actual contracts and service are ready. Testnet still requires explicitly matching service, RPC and deployment settings. The commands below are advanced operator overrides, not the normal first-run path.
 
 ### Copy-paste Setup Prompt
 
@@ -65,7 +65,7 @@ On startup and once every hour, `oak mcp`:
 
 1. Reconciles any pending local transaction journal entry (`~/.oak/<address>.pending.json`).
 2. Verifies your ERC-8004 identity status (if the NFT is transferred or burned, or you run `oak identity unlink`, action tools pause and local `identity` is cleared while reads stay open; during a temporary RPC or service outage, local `identity` is preserved while reads stay open).
-3. Attempts renewal when `<= 3 days` remain before `paidUntil`, using local wallet signing and available USDG. In 0.1.1 default mode, new payment signatures require human confirmation; unattended renewal requires the owner's explicit auto setting. `oak cancel` ends access immediately and forfeits paid days.
+3. Attempts renewal when `<= 3 days` remain before `paidUntil`, using local wallet signing and available USDG. In default ask mode, new payment signatures require human confirmation; unattended renewal requires the owner's explicit auto setting. `oak cancel` ends access immediately and forfeits paid days.
 
 Run `oak init --recover` in your own terminal to restore an exported private key or a legacy 24-word backup on a new computer. To replace an existing wallet, use `oak init --recover --replace`; Oak preserves an encrypted backup and asks you to confirm the recovered address. Never enter recovery words in an agent chat, arguments, environment variables or MCP tools.
 
@@ -73,7 +73,7 @@ New automatic wallets work without a keychain using owner-only file storage. Exi
 
 Mainnet uses `https://api.oakagentkit.org` by default. Override it with `oak config set OAK_SERVER_URL <https-url>` or `OAK_SERVER_URL`; testnet requires an explicit matching service URL. The service supplies public deployment pins when needed; explicit overrides remain available.
 
-## Confirmation support — 0.1.1 (release candidate)
+## Confirmation support
 
 Use a client that supports **MCP form elicitation** — the protocol's confirmation form.
 Ask mode is the default. Decline, timeout or a missing form stops action signing;
@@ -87,5 +87,5 @@ Only selecting auto requires a TTY; no MCP tool exposes this setting. Never ask 
 agent to allocate a PTY to change it. Auto retains local transaction checks.
 Do not enable it merely to make a connection test pass. See [security](../security.md).
 
-The 0.1.0 packages are published; 0.1.1 awaits operator publication. Verify your installed version;
-0.1.0 does not establish the confirmation or hardened local checks described here.
+Verify your installed version with `oak --version`; 0.1.0 does not include the
+confirmation or hardened local checks described here, which arrived in 0.1.1.

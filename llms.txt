@@ -1,0 +1,26 @@
+# Oak Agent Kit
+
+> Oak is one MCP install that connects an AI agent to 25 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally. Oak is independent and is not affiliated with Robinhood.
+
+Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
+
+## Docs
+
+- [What is Oak](https://github.com/OakAgentKit/oak/blob/main/docs/what-is-oak.md): plain-English introduction
+- [Connect your agent](https://github.com/OakAgentKit/oak/blob/main/docs/client-setup/README.md): install, wallet, funding and the copy-paste setup prompt
+- [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions
+- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 25 configured projects and their tools
+- [Access and pricing](https://github.com/OakAgentKit/oak/blob/main/docs/access-and-pricing.md): plans, renewal and cancellation
+- [Security, custody and authority](https://github.com/OakAgentKit/oak/blob/main/docs/security.md): local custody, confirmation, key authority and vulnerability reporting
+- [Headless wallet](https://github.com/OakAgentKit/oak/blob/main/docs/headless-wallet.md): unattended operation chosen by the owner
+
+## Contracts
+
+- [Contract source and tests](https://github.com/OakAgentKit/oak/tree/main/contracts): OakSubscription, OakOracle and OakBurner with Foundry tests and ABIs
+- [Deployments](https://github.com/OakAgentKit/oak/blob/main/contracts/deployments/README.md): published addresses per chain
+- [Contract invariants](https://github.com/OakAgentKit/oak/blob/main/docs/INVARIANTS.md)
+
+## Optional
+
+- [Examples](https://github.com/OakAgentKit/oak/blob/main/examples/README.md): runnable Node.js MCP examples
+- [Changelog](https://github.com/OakAgentKit/oak/blob/main/CHANGELOG.md)

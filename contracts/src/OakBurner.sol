@@ -7,6 +7,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 import {IOakBurner} from "./interfaces/IOakBurner.sol";
 import {IOakOracle} from "./interfaces/IOakOracle.sol";
+import {PonsRead} from "./interfaces/IPons.sol";
 import {PriceNote} from "./libraries/OakPriceNote.sol";
 import {OakPricing} from "./libraries/OakPricing.sol";
 
@@ -66,16 +67,21 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     address public constant WETH = 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73;
     address public constant SWAP_ROUTER_02 = 0xCaf681a66D020601342297493863E78C959E5cb2;
     address public constant UNIVERSAL_ROUTER_V2_1_2 = 0x204FAca1764B154221e35c0d20aBb3c525710498;
+    address public constant PONS_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
     address public constant PONS_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
 
     uint24 public constant V3_FEE = 100;
     uint24 public constant V4_FEE = 0;
     int24 public constant V4_TICK_SPACING = 200;
     uint256 public constant SWEEP_DELAY = 90 days;
+    /// @dev A burn must spend at least 1% of the armed balance, capped at the
+    ///      per-call maximum accepted for that burn, to disarm the sweep.
+    uint256 public constant SWEEP_DISARM_DENOMINATOR = 100;
 
     bytes1 private constant V4_SWAP_COMMAND = 0x10;
     bytes private constant V4_BUY_ACTIONS = hex"060c0f";
     uint256 private constant CHUNK_DENOMINATOR = 200;
+    uint256 private constant NOTE_SPOT_TOLERANCE_DENOMINATOR = 10;
 
     IERC20 public immutable usdg;
     IBurnableERC20 public immutable oak;
@@ -96,6 +102,9 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     error RouterAmountOverflow();
     error ZeroSwapOutput();
     error TooLittleOak(uint256 minimum, uint256 actual);
+    error NoteSpotMismatch(uint256 spot, uint256 note);
+    error FeePolicyUnreadable(address source);
+    error LaunchRecordMismatch(address expectedToken, address actualToken, bool exists);
     error UnexpectedNativeSender();
     error NoBalance();
     error AlreadyArmed();
@@ -127,11 +136,17 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         if (usdgIn > maximum) revert ChunkTooLarge(usdgIn, maximum);
 
         uint256 oakPerEthE18 = oracle.verifyNote(n, sig, msg.sender);
+        uint256 spotOakPerEthE18 = oracle.spotOakPerEthE18();
+        uint256 noteSpotTolerance = spotOakPerEthE18 / NOTE_SPOT_TOLERANCE_DENOMINATOR;
+        uint256 noteSpotDifference =
+            oakPerEthE18 > spotOakPerEthE18 ? oakPerEthE18 - spotOakPerEthE18 : spotOakPerEthE18 - oakPerEthE18;
+        if (noteSpotDifference > noteSpotTolerance) revert NoteSpotMismatch(spotOakPerEthE18, oakPerEthE18);
         if (noteUsed[msg.sender][n.nonce]) revert NoteUsed();
         noteUsed[msg.sender][n.nonce] = true;
 
         uint256 ethUsdE18 = oracle.ethUsdE18();
-        uint256 minOakOut = OakPricing.burnerMinOut(usdgIn, oakPerEthE18, ethUsdE18, oakDecimals);
+        uint256 floorBps = _burnerFloorBps();
+        uint256 minOakOut = OakPricing.burnerMinOut(usdgIn, oakPerEthE18, ethUsdE18, oakDecimals, floorBps);
         uint256 ethOut = _swapUsdgForWeth(usdgIn);
         if (ethOut == 0) revert ZeroSwapOutput();
         if (ethOut > type(uint128).max || minOakOut > type(uint128).max) revert RouterAmountOverflow();
@@ -145,12 +160,21 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         oak.burn(oakOut);
 
         lastBurnAt = uint64(block.timestamp);
-        if (armedAt != 0) {
+        _disarmSweepAfterBurn(usdgIn, maximum);
+        emit Burned(usdgIn, oakOut);
+    }
+
+    function _disarmSweepAfterBurn(uint256 usdgIn, uint256 maximum) private {
+        if (armedAt == 0) return;
+        uint256 armedBalance_ = armedBalance;
+        uint256 minimumDisarmAmount = armedBalance_ / SWEEP_DISARM_DENOMINATOR;
+        if (armedBalance_ % SWEEP_DISARM_DENOMINATOR != 0) ++minimumDisarmAmount;
+        if (minimumDisarmAmount > maximum) minimumDisarmAmount = maximum;
+        if (usdgIn >= minimumDisarmAmount) {
             armedAt = 0;
             armedBalance = 0;
             emit SweepDisarmed(0);
         }
-        emit Burned(usdgIn, oakOut);
     }
 
     /// @inheritdoc IOakBurner
@@ -182,6 +206,20 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     modifier onlySafe() {
         if (msg.sender != safe) revert OnlySafe();
         _;
+    }
+
+    function _burnerFloorBps() private view returns (uint256) {
+        bytes32 poolId = keccak256(abi.encode(address(0), address(oak), V4_FEE, V4_TICK_SPACING, PONS_HOOK));
+        (bool feeReadable, uint256 hookFeeBps) = PonsRead.launchHookFeeBps(PONS_HOOK, poolId);
+        if (!feeReadable) revert FeePolicyUnreadable(PONS_HOOK);
+
+        (bool recordReadable, address actualToken,,,, uint16 creatorTaxBps, bool exists) =
+            PonsRead.launchRecordSummary(PONS_FACTORY, address(oak));
+        if (!recordReadable) revert FeePolicyUnreadable(PONS_FACTORY);
+        if (!exists || actualToken != address(oak)) {
+            revert LaunchRecordMismatch(address(oak), actualToken, exists);
+        }
+        return OakPricing.burnerFloorBps(hookFeeBps, creatorTaxBps);
     }
 
     function _swapUsdgForWeth(uint256 amountIn) private returns (uint256 amountOut) {

@@ -35,6 +35,10 @@ contract OakFixtureToken is ERC20Burnable {
 contract OakFixtureFactory {
     uint8 public phase = 2;
 
+    function memeHook() external pure returns (address) {
+        return 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
+    }
+
     function setPhase(uint8 value) external {
         phase = value;
     }
@@ -46,6 +50,8 @@ contract OakFixtureFactory {
     function getLaunchedToken(address token) external view returns (IOakLaunchFactory.Record memory r) {
         r.token = token;
         r.curve = address(this);
+        r.poolFee = 0;
+        r.tickSpacing = 200;
         r.phase = phase;
         r.exists = true;
     }
@@ -523,8 +529,10 @@ contract OakOpsMainnetForkTest is OakOpsFixtureBase {
         vm.prank(newcomer);
         subscription.subscribe(1, type(uint256).max, 0, fresh, sig);
         _exec(address(burner), 0, abi.encodeCall(burner.armSweep, ()));
+        uint256 disarmAmount = burner.armedBalance() / burner.SWEEP_DISARM_DENOMINATOR();
+        if (burner.armedBalance() % burner.SWEEP_DISARM_DENOMINATOR() != 0) ++disarmAmount;
         (fresh, sig) = _note(address(burner), address(this), replacementKey, oracle.spotOakPerEthE18());
-        burner.buyAndBurn(1_000_000, fresh, sig);
+        burner.buyAndBurn(disarmAmount, fresh, sig);
         assertEq(burner.armedAt(), 0);
         assertEq(burner.armedBalance(), 0);
         vm.warp(block.timestamp + 90 days);
@@ -556,7 +564,7 @@ contract OakOpsMainnetForkTest is OakOpsFixtureBase {
         emit log_string("rotation rejects old notes in both consumers; controlled signer guard holds; zero pause preserves renew/floor; burn disarms");
     }
 
-    function test_CompromisedSignerLossIsBoundedPerChunkNotPerBalance() public {
+    function test_BurnerPriceAgreementRejectsLaggingNoteBeforeBalanceSpend() public {
         _installLocalRoute();
         uint256 cap = oracle.liquidityUsdgE6() / 200;
         uint256 chunk = 1_000_000;
@@ -575,35 +583,13 @@ contract OakOpsMainnetForkTest is OakOpsFixtureBase {
         assertEq(usdg.balanceOf(address(burner)), 3 * chunk);
         assertFalse(burner.noteUsed(n.wallet, n.nonce));
 
-        OakFixtureRoute route = OakFixtureRoute(burner.UNIVERSAL_ROUTER_V2_1_2());
-        route.setOutputBps(4800);
         (n, sig) = _note(address(burner), address(this), signerKey, low);
-        vm.expectRevert(bytes("minimum output"));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.NoteSpotMismatch.selector, spot, low));
         burner.buyAndBurn(chunk, n, sig);
         assertEq(usdg.balanceOf(address(burner)), 3 * chunk);
         assertFalse(burner.noteUsed(n.wallet, n.nonce));
-        // Lower guard edge plus the production 49/51 tolerance permits roughly 51.96% shortfall.
-        route.setOutputBps(4804);
-        uint256 ethOut = chunk * 1e30 / oracle.ethUsdE18();
-        uint256 fair = ethOut * spot / 1e18;
-        uint256 expected = fair * 4804 / 10_000;
-        uint256 minimum = OakPricing.burnerMinOut(chunk, low, oracle.ethUsdE18(), 18);
-        assertGe(expected, minimum);
-        uint256 beforeSupply = oak.totalSupply();
-        for (uint256 i; i < 3; ++i) {
-            (n, sig) = _note(address(burner), address(this), signerKey, low);
-            burner.buyAndBurn(chunk, n, sig);
-            assertTrue(burner.noteUsed(n.wallet, n.nonce));
-            assertEq(usdg.balanceOf(address(burner)), (2 - i) * chunk);
-            assertEq(beforeSupply - oak.totalSupply(), (i + 1) * expected);
-        }
-        assertEq(usdg.balanceOf(address(burner)), 0, "per-call cap is not a lifetime budget");
         emit log_named_uint("chunk cap USDG base units", cap);
-        emit log_named_uint("spent per chunk USDG base units", chunk);
-        emit log_named_uint("fair OAK per chunk", fair);
-        emit log_named_uint("adverse OAK burned per chunk", expected);
-        emit log_named_uint("signed minimum OAK per chunk", minimum);
-        emit log_string("BOUNDED per chunk: 50.98 percent OAK shortfall at fixed spot; three chunks spend full fixture balance; synthetic adverse route, not an MEV-profit measurement");
+        emit log_string("Burner rejects a signed note outside its 10 percent spot agreement before spending USDG.");
     }
 
     struct Population {

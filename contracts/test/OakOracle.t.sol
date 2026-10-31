@@ -6,12 +6,14 @@ import {stdJson} from "forge-std/StdJson.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {IOakOracle} from "../src/interfaces/IOakOracle.sol";
-import {IPons} from "../src/interfaces/IPons.sol";
+import {IPons, IPonsFactoryView, PonsLaunchRecord} from "../src/interfaces/IPons.sol";
 import {PriceNote, OakPriceNote} from "../src/libraries/OakPriceNote.sol";
 import {OakOracle, OakTickMath} from "../src/OakOracle.sol";
 import {DeployOracle} from "../script/DeployOracle.s.sol";
 
 contract MockPonsFactory {
+    address public memeHook = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
+
     /// @dev The decoded getLaunchedToken tuple from recorded Pons launch observations.
     struct LaunchedToken {
         address token;
@@ -36,8 +38,14 @@ contract MockPonsFactory {
     function setRecord(address token_, address curve_, uint8 phase_) external {
         launched.token = token_;
         launched.curve = curve_;
+        launched.poolFee = 0;
+        launched.tickSpacing = 200;
         launched.phase = phase_;
         launched.exists = true;
+    }
+
+    function setMemeHook(address hook) external {
+        memeHook = hook;
     }
 
     function setPhase(uint8 phase_) external {
@@ -61,6 +69,10 @@ contract RecordedPonsFactory {
     function load(bytes calldata calldata_, bytes calldata return_) external {
         recordedCalldata = calldata_;
         recordedReturn = return_;
+    }
+
+    function memeHook() external pure returns (address) {
+        return 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
     }
 
     fallback(bytes calldata input) external returns (bytes memory) {
@@ -231,12 +243,93 @@ contract OakOracleTest is Test {
         vm.warp(NOW);
     }
 
+    function test_ConstructorRejectsEveryZeroAddress() public {
+        for (uint256 i; i < 6; ++i) {
+            address ponsFactory = i == 0 ? address(0) : address(factory);
+            address oakToken = i == 1 ? address(0) : address(oak);
+            address manager = i == 2 ? address(0) : address(poolManager);
+            address observations = i == 3 ? address(0) : address(ethPool);
+            address safe = i == 4 ? address(0) : SAFE;
+            address priceSigner = i == 5 ? address(0) : vm.addr(SIGNER_KEY);
+            vm.expectRevert(OakOracle.InvalidAddress.selector);
+            new OakOracle(ponsFactory, oakToken, manager, observations, safe, priceSigner);
+        }
+    }
+
+    function test_ConstructorRejectsMismatchedTickSpacingOrHook() public {
+        MockPonsFactory.LaunchedToken memory record = factory.getLaunchedToken(address(oak));
+        record.tickSpacing = 100;
+        factory.setLaunched(record);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                OakOracle.PoolIdentityMismatch.selector, address(0), uint24(0), int24(100), PONS_HOOK
+            )
+        );
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        record.tickSpacing = 200;
+        factory.setLaunched(record);
+        address wrongHook = address(0xBAD);
+        factory.setMemeHook(wrongHook);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                OakOracle.PoolIdentityMismatch.selector, address(0), uint24(0), int24(200), wrongHook
+            )
+        );
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+    }
+
+    function test_ConstructorRejectsMissingWrongTokenNonNativePairOrPoolFee() public {
+        MockPonsFactory.LaunchedToken memory record = factory.getLaunchedToken(address(oak));
+
+        record.exists = false;
+        factory.setLaunched(record);
+        vm.expectRevert(
+            abi.encodeWithSelector(OakOracle.LaunchRecordMismatch.selector, address(oak), address(oak), false)
+        );
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        address wrongToken = makeAddr("wrong-oracle-token");
+        record.exists = true;
+        record.token = wrongToken;
+        factory.setLaunched(record);
+        vm.expectRevert(abi.encodeWithSelector(OakOracle.LaunchRecordMismatch.selector, address(oak), wrongToken, true));
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        address pairToken = makeAddr("non-native-pair");
+        record.token = address(oak);
+        record.pairToken = pairToken;
+        factory.setLaunched(record);
+        vm.expectRevert(
+            abi.encodeWithSelector(OakOracle.PoolIdentityMismatch.selector, pairToken, uint24(0), int24(200), PONS_HOOK)
+        );
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        record.pairToken = address(0);
+        record.poolFee = 1;
+        factory.setLaunched(record);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                OakOracle.PoolIdentityMismatch.selector, address(0), uint24(1), int24(200), PONS_HOOK
+            )
+        );
+        new OakOracle(address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        record.poolFee = 0;
+        factory.setLaunched(record);
+        OakOracle accepted = new OakOracle(
+            address(factory), address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY)
+        );
+        assertEq(accepted.oakToken(), address(oak));
+    }
+
     /// @dev Phases 0, 1 and 2 replay the recorded factory return bytes; only phase 3 (never observed)
     ///      is mocked, from the recorded phase-2 record with its phase field changed.
     function test_PhaseCurveWhileFactoryPhase0Or1_ReadyAt2_Phase3Unreadable() public {
         bytes memory recordedCall = abi.encodeWithSelector(IPons.getLaunchedToken.selector, RECORDED_COIN);
         assertEq(IPons.getLaunchedToken.selector, bytes4(0x3cf28b5a));
         RecordedPonsFactory recorded = new RecordedPonsFactory();
+        recorded.load(recordedCall, PHASE0_RECORD);
         OakOracle replay = new OakOracle(
             address(recorded), RECORDED_COIN, address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY)
         );
@@ -308,17 +401,12 @@ contract OakOracleTest is Test {
         assertEq(_oracleWithPool(address(fresh)).ethUsdE18(), 1e30);
     }
 
-    function test_UnreadableFactoryAndPoolManagerFailClosed_WithNamedErrors() public {
+    function test_UnreadableFactoryRejectedAtConstruction_PoolManagerFailsClosed() public {
         address unreadableFactory = address(0xFAc7);
-        OakOracle badFactory = new OakOracle(
+        vm.expectRevert(abi.encodeWithSelector(OakOracle.LaunchRecordUnreadable.selector, unreadableFactory));
+        new OakOracle(
             unreadableFactory, address(oak), address(poolManager), address(ethPool), SAFE, vm.addr(SIGNER_KEY)
         );
-        vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, unreadableFactory));
-        badFactory.phase();
-        vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, unreadableFactory));
-        badFactory.available();
-        vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, unreadableFactory));
-        badFactory.liquidityUsdgE6();
 
         address unreadableManager = address(0xBADC0DE);
         OakOracle badManager = new OakOracle(
@@ -763,6 +851,7 @@ contract DeployOracleTest is Test {
     function setUp() public {
         script = new DeployOracle();
         vm.etch(TOKEN, hex"00");
+        _mockIdentity(script.MAINNET_PONS_FACTORY(), TOKEN, 0, 200, script.PONS_HOOK(), true);
     }
 
     function test_DeployScript_MainnetPinsAccepted_DeploysExactImmutables() public {
@@ -770,16 +859,34 @@ contract DeployOracleTest is Test {
         _assertDeployed(script.deploy(_mainnetConfig()), _mainnetConfig());
     }
 
-    function test_DeployScript_RunReadsEnvironmentAndDeploys() public {
-        DeployOracle.Config memory config = _mainnetConfig();
-        vm.setEnv("OAK_PONS_FACTORY_ADDRESS", vm.toString(config.ponsFactory));
-        vm.setEnv("OAK_TOKEN_ADDRESS", vm.toString(config.oakToken));
-        vm.setEnv("OAK_POOL_MANAGER_ADDRESS", vm.toString(config.poolManager));
-        vm.setEnv("OAK_ETH_USDG_POOL_ADDRESS", vm.toString(config.ethUsdgPool));
-        vm.setEnv("OAK_SAFE_ADDRESS", vm.toString(config.safe));
-        vm.setEnv("OAK_PRICE_SIGNER_ADDRESS", vm.toString(config.priceSigner));
+    function test_DeployScriptRejectsMismatchedTickSpacingOrHook() public {
         vm.chainId(4663);
-        _assertDeployed(script.run(), config);
+        DeployOracle.Config memory config = _mainnetConfig();
+
+        vm.clearMockedCalls();
+        _mockIdentity(config.ponsFactory, TOKEN, 0, 100, script.PONS_HOOK(), true);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                DeployOracle.PoolIdentityMismatch.selector, address(0), uint24(0), int24(100), script.PONS_HOOK()
+            )
+        );
+        script.deploy(config);
+
+        address wrongHook = address(0xBAD);
+        vm.clearMockedCalls();
+        _mockIdentity(config.ponsFactory, TOKEN, 0, 200, wrongHook, true);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                DeployOracle.PoolIdentityMismatch.selector, address(0), uint24(0), int24(200), wrongHook
+            )
+        );
+        script.deploy(config);
+    }
+
+    function test_DeployScript_ExplicitConfigDeploys() public {
+        DeployOracle.Config memory config = _mainnetConfig();
+        vm.chainId(4663);
+        _assertDeployed(script.deploy(config), config);
     }
 
     function test_DeployScript_RefusesEveryOtherChain() public {
@@ -853,9 +960,12 @@ contract DeployOracleTest is Test {
         );
         script.deploy(config);
         vm.etch(testPool, hex"00");
+        _mockIdentity(testFactory, TOKEN, 0, 200, script.PONS_HOOK(), true);
         _assertDeployed(script.deploy(config), config);
 
         // The mainnet Pons factory has no code on 46630, so the production pins are refused there.
+        vm.clearMockedCalls();
+        vm.etch(script.MAINNET_PONS_FACTORY(), bytes(""));
         DeployOracle.Config memory production = _mainnetConfig();
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -896,5 +1006,17 @@ contract DeployOracleTest is Test {
         assertEq(deployed.ethUsdgPool(), config.ethUsdgPool);
         assertEq(deployed.safe(), config.safe);
         assertEq(deployed.priceSigner(), config.priceSigner);
+    }
+
+    function _mockIdentity(address factory, address token, uint24 poolFee, int24 tickSpacing, address hook, bool exists)
+        internal
+    {
+        PonsLaunchRecord memory record;
+        record.token = token;
+        record.poolFee = poolFee;
+        record.tickSpacing = tickSpacing;
+        record.exists = exists;
+        vm.mockCall(factory, abi.encodeCall(IPonsFactoryView.getLaunchedToken, (token)), abi.encode(record));
+        vm.mockCall(factory, abi.encodeCall(IPonsFactoryView.memeHook, ()), abi.encode(hook));
     }
 }

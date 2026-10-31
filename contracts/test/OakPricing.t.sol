@@ -191,7 +191,8 @@ contract OakPricingTest is Test {
                     _u(string.concat(base, ".usdgIn")),
                     _u(string.concat(base, ".oakPerEthE18")),
                     _u(string.concat(base, ".ethUsdE18")),
-                    uint8(_u(string.concat(base, ".oakDecimals")))
+                    uint8(_u(string.concat(base, ".oakDecimals"))),
+                    OakPricing.MAX_BURNER_FLOOR_BPS
                 ),
                 _u(string.concat(base, ".minOut"))
             );
@@ -207,10 +208,28 @@ contract OakPricingTest is Test {
         uint256 oakPerEth = bound(uint256(oakPerEthRaw), 1, type(uint128).max);
         uint256 ethUsd = bound(uint256(ethUsdRaw), 1, type(uint128).max);
         uint8 decimals = uint8(bound(uint256(decimalsRaw), 6, 18));
-        uint256 numerator = uint256(usdgInRaw) * (10 ** uint256(decimals - 6)) * oakPerEth * 98;
-        uint256 expected = numerator / (ethUsd * 102);
+        uint256 numerator =
+            uint256(usdgInRaw) * (10 ** uint256(decimals - 6)) * oakPerEth * OakPricing.MAX_BURNER_FLOOR_BPS;
+        uint256 expected = numerator / (ethUsd * 10_000);
 
-        assertEq(OakPricing.burnerMinOut(usdgInRaw, oakPerEth, ethUsd, decimals), expected);
+        assertEq(
+            OakPricing.burnerMinOut(usdgInRaw, oakPerEth, ethUsd, decimals, OakPricing.MAX_BURNER_FLOOR_BPS), expected
+        );
+    }
+
+    function test_BurnerFeeFloorBounds() public pure {
+        assertEq(OakPricing.burnerFloorBps(100, 100), OakPricing.MAX_BURNER_FLOOR_BPS);
+        assertEq(OakPricing.burnerFloorBps(350, 100), 9_400);
+        assertEq(OakPricing.burnerFloorBps(750, 100), OakPricing.MIN_BURNER_FLOOR_BPS);
+    }
+
+    function test_BurnerFeeFloorRejectsPolicyBelowDocumentedMinimum() public {
+        vm.expectRevert(abi.encodeWithSelector(OakPricing.FeePolicyOutOfBounds.selector, 751, 100));
+        this.burnerFloorBps(751, 100);
+    }
+
+    function burnerFloorBps(uint256 hookFeeBps, uint256 creatorTaxBps) external pure returns (uint256) {
+        return OakPricing.burnerFloorBps(hookFeeBps, creatorTaxBps);
     }
 
     function test_EthUsdAndSpotConversionVectors() public view {
