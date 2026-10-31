@@ -87,5 +87,5 @@ Ecosystem builders on Robinhood Chain (`4663`) can publish standalone declarativ
 - All contributors follow our [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 For full compiler prerequisites, see [contract development](docs/contract-development.md).
-Documentation changes should keep relative links working and label pending **0.1.1** behavior.
+Documentation changes should keep relative links working and name the version that introduces a behavior.
 Examples use fixtures by default; include the commands you ran and any checks you could not run.

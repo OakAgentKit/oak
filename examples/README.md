@@ -9,13 +9,13 @@ Three small Node.js 22 examples using only exported npm package APIs:
 ## Install and test packed packages
 
 Prerequisites: Node.js **22.12+ / 22.x**, npm, and the two release `.tgz` files.
-The core and add-on 0.1.0 packages are published; 0.1.1 awaits operator publication. You can use
+The core and add-on packages are published on npm. You can also use
 matching release archives for checks; no private repository source is needed.
 From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-node test-packed.mjs /path/to/oakagentkit-core-0.1.1.tgz /path/to/oakagentkit-addon-0.1.1.tgz
+node test-packed.mjs /path/to/oakagentkit-core-0.1.2.tgz /path/to/oakagentkit-addon-0.1.2.tgz
 ```
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
@@ -44,7 +44,7 @@ The shared client connects the MCP SDK to the exported `createBridge` through
 `InMemoryTransport`. It deliberately supplies a disabled sender and renewal
 callback, and loads no recipes. It does **not** launch the normal `oak mcp`
 CLI, whose startup/hourly subscription renewal can send payments (and requires
-human confirmation for new signatures in 0.1.1 default mode). Live reads
+human confirmation for new signatures in default ask mode). Live reads
 load the local signer solely for Oak session/request authentication messages;
 transaction and typed-data signing are disabled. These examples do not register
 identities, renew subscriptions, sign transactions, or send them, even after
@@ -71,7 +71,7 @@ packed-package manifest; compare your installed version when checking tool count
 
 ## Direct installation from npm
 
-The manifest and reviewed lockfile pin the **0.1.1 release candidate** and its
+The manifest and reviewed lockfile pin **0.1.2** and its
 resolved dependency graph:
 
 ```sh
@@ -79,8 +79,8 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm test
 ```
 
-Registry installation requires operator publication of 0.1.1; use matching local
-archives for the release-candidate checks before publication.
+If the pinned version is not on npm yet, use matching local archives with
+`test-packed.mjs` instead.
 These examples deliberately disable signing; their review prompt is not the
-0.1.1 wallet's MCP confirmation form. Hosted read calls such as `find_token` are available to strangers; private-mode
+wallet's MCP confirmation form. Hosted read calls such as `find_token` are available to strangers; private-mode
 actions require server allowlisting. Public paid access waits for launch.

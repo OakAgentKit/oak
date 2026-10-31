@@ -1,8 +1,18 @@
 {
   "name": "oak-public-examples",
+  "description": "Runnable Node.js examples that connect an MCP client to the Oak Agent Kit add-on.",
   "private": true,
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/OakAgentKit/oak/tree/main/examples#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OakAgentKit/oak.git",
+    "directory": "examples"
+  },
+  "bugs": {
+    "url": "https://github.com/OakAgentKit/oak/issues"
+  },
   "engines": { "node": ">=22.12.0 <23" },
   "scripts": {
     "test": "node --test */*.test.mjs",
@@ -13,7 +23,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
-    "@oakagentkit/core": "0.1.1",
-    "@oakagentkit/addon": "0.1.1"
+    "@oakagentkit/core": "0.1.2",
+    "@oakagentkit/addon": "0.1.2"
   }
 }

@@ -1,8 +1,18 @@
 {
   "name": "@oakagentkit/contracts",
+  "description": "Oak subscription, oracle and burner Solidity contracts with Foundry tests.",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
+  "homepage": "https://github.com/OakAgentKit/oak/tree/main/contracts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OakAgentKit/oak.git",
+    "directory": "contracts"
+  },
+  "bugs": {
+    "url": "https://github.com/OakAgentKit/oak/issues"
+  },
   "scripts": {
     "lint": "forge fmt --check"
   },

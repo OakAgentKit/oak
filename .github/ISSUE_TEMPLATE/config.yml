@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/OakAgentKit/oak/security/advisories/new
+    about: Report vulnerabilities privately. Never post keys, seed phrases or exploit details in a public issue.
+  - name: Documentation
+    url: https://github.com/OakAgentKit/oak/tree/main/docs
+    about: Setup guides, the tool reference and the security policy.

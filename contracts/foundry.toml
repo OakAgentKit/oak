@@ -9,10 +9,6 @@ optimizer_runs = 200
 bytecode_hash = "none"
 fs_permissions = [{ access = "read", path = "test" }]
 
-# Deployment fixtures use vm.setEnv, which is shared across test suites.
-# Serialize those suites so plain forge test --offline is reproducible.
-threads = 1
-
 [profile.default.fuzz]
 runs = 256
 

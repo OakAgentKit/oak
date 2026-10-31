@@ -4,11 +4,15 @@
   "files": [
     {
       "path": ".github/CI-NOTES.md",
-      "sha256": "f4fa0eccd14c1aac9b00ce803632f95e6ddb21db6f5da6183b16262ad1e8d7fd"
+      "sha256": "4a489d98d28a9d519cf935abd4e4da00939fefc8d5f40f03e989744bd70bb4d3"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/bug_report.md",
       "sha256": "c38098aa0c828f489b52921476b6d50eb0b90754b76ad40076f26a3df215db9b"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "sha256": "36a2ec73c0829db9b76b644461145c08684aaddad0e0dc8965d17bf9db8364ef"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/feature_request.md",
@@ -64,11 +68,15 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "c3adb0d6a79004727ef623e68b2b0e9ef009564581f9c4fc8b16f91a85a76e7e"
+      "sha256": "754f26a0498d0fa3c3d5fa4c4495b7b80812cafbddf59382fba099e78ade3b34"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "4f51ab56ffe58ebfe0c33f4f91a492722eae0e4a498a159c59345d499e1fa9bf"
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "d91c2021136237587faf225d91f80fc692fbdd1edbaa842c34bff5ab38e23be9"
+      "sha256": "e9ee455982f81eb48cece8c367cd0eb6979dd50d2843e5b45d79999b9b581ac9"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -76,7 +84,7 @@
     },
     {
       "path": "CONTRIBUTING.md",
-      "sha256": "72293f31c7284133eee3f99c300a50ec409bb2af729a101c5970f2560012fde3"
+      "sha256": "6ed46d5befea07ea3bfc8e3892c8e0c0e9d2ea24e9753381e9d2331430ad6e9a"
     },
     {
       "path": "LICENSE",
@@ -84,15 +92,19 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "21f3c71a4c78b3729ef8a08639e38806863616c3b2c17cd4fe2b39ad7a9a0f88"
+      "sha256": "62573809410a15ee72097fcaff55252dcd837334c3621383471dd51624412366"
     },
     {
       "path": "README.md",
-      "sha256": "b24cd8ce097e204515b5a4df0c7fff59afc5386c92a73540ecf863c1a2db22d7"
+      "sha256": "82ae6577a65a64f1a04763241bf704b1c144312bb902cb9372548d9636f8ecb6"
     },
     {
       "path": "SECURITY.md",
-      "sha256": "0f80a4c1362f26326f088a2a7b4b9ab254bf7db28f808f7467f70ffd886ca2d5"
+      "sha256": "b6c3e3b45b45b9c5ed76f836e589995a4864b3e0629bc945cb23b3dbfff19f99"
+    },
+    {
+      "path": "THREAT_MODEL.md",
+      "sha256": "d24aba5f27bc19e32b9d8dd4815fb3872e1d9e7200487cff2af67963be6022b0"
     },
     {
       "path": "assets/arch-dark.svg",
@@ -112,7 +124,7 @@
     },
     {
       "path": "assets/oak-cover.webp",
-      "sha256": "d23c03763d278feb83b4a62061ee9179f289ba6b0a84d9f6fd965b9cc143055a"
+      "sha256": "8ad5d9eb6f2d69a2653e954b934b41e4e2cbde448e0548438a9ab79dc9d7cc65"
     },
     {
       "path": "assets/oak-world.webp",
@@ -164,11 +176,11 @@
     },
     {
       "path": "contracts/foundry.toml",
-      "sha256": "b440d4ebf4b258aea63cb3f8821f9db5e465919070c3c8d6ec5f3a4e9f6be09e"
+      "sha256": "59d9359458f846d52393adcf5f283c9b02fc1ed5adf974a4f091444e44a95d0e"
     },
     {
       "path": "contracts/package.json",
-      "sha256": "98fff8bb81d515b7b8d2d85d1e33ab12dd4914a6fa3f859369054151d0ba6257"
+      "sha256": "07e2e6f96a54c0103727a1b0d08a6914c058f8c32d0487167a68cb3d05aad80c"
     },
     {
       "path": "contracts/remappings.txt",
@@ -180,11 +192,11 @@
     },
     {
       "path": "contracts/script/DeployOracle.s.sol",
-      "sha256": "bf7a6201ccc6627ceae68cb3305d16f9b45fd32a6c6533bbc4310a3ee569a7cc"
+      "sha256": "9245735a426fc7400aaa6b541cdc778e4ba795e16719b0235436c94a9477e68a"
     },
     {
       "path": "contracts/script/DeploySubscription.s.sol",
-      "sha256": "57809e0f156e875b96a4c0b0291403e2b56bc82a46bcd95ac3b248a3984f0dba"
+      "sha256": "5a99b44914dc4b60ccf880c2700ac93563dab88972377b6117d65cf147130e59"
     },
     {
       "path": "contracts/script/DeployTestFixtures.s.sol",
@@ -200,11 +212,11 @@
     },
     {
       "path": "contracts/src/OakBurner.sol",
-      "sha256": "0cbc26d08796fb0ce2b7cadf5209713220f7c693c82a255ab9ffab314fbea426"
+      "sha256": "229d4fcffd3694838512c3604b862047f1832fc4a06b83362c9827f935489f96"
     },
     {
       "path": "contracts/src/OakOracle.sol",
-      "sha256": "488915dce321693a7a804e3d91f0a792eee7323dee9b2fe8f16b7f93e3fc8663"
+      "sha256": "d37fd4a93738abe78a3439dcba9205526529f7d477e95dc6e1ddd1aa80f96cb7"
     },
     {
       "path": "contracts/src/OakSubscription.sol",
@@ -228,7 +240,7 @@
     },
     {
       "path": "contracts/src/interfaces/IPons.sol",
-      "sha256": "9ff169c3bc56b7ff833500d8dd1325a09414e26a03b29efc32d7961a57dd819a"
+      "sha256": "875f3fafd10b66bb779513e3318e5688e5c6cc8a5723f870ec89b2c7d6cd697c"
     },
     {
       "path": "contracts/src/libraries/OakMerkle.sol",
@@ -240,11 +252,11 @@
     },
     {
       "path": "contracts/src/libraries/OakPricing.sol",
-      "sha256": "111b665afe0be7f4346e73078a7ee1ee246a3f3aae06cab2e485809fced4d31e"
+      "sha256": "318c803c4cebbb6c219fa37c20e6992f66a8867c5585bc30b1f419bd0c2460d5"
     },
     {
       "path": "contracts/test/OakBurner.t.sol",
-      "sha256": "06786558c2296ecfd5bdacf1b3c23e035bae8d4e01deab227594ee6961dbf28a"
+      "sha256": "527a375f43c5d9db338db70cd0908c2e2e1e0589ad0f63cbdbe119eaf7de0e2c"
     },
     {
       "path": "contracts/test/OakMerkle.t.sol",
@@ -252,7 +264,7 @@
     },
     {
       "path": "contracts/test/OakOracle.t.sol",
-      "sha256": "7000943bebc4d859d5f54d091e1065a45b895b7aeea92114b88e354d9e895305"
+      "sha256": "2c3425040431ae7a125f28d506a539bc48f2ef7a08cdc4f6e1607350effc5a51"
     },
     {
       "path": "contracts/test/OakPriceNote.t.sol",
@@ -260,7 +272,7 @@
     },
     {
       "path": "contracts/test/OakPricing.t.sol",
-      "sha256": "2b023801808c11cfd687db5d80aed0963d286aebb07f427759b3f3189be5a5d1"
+      "sha256": "e9e866f123406892995df08714ba4f33b0fc2e7505bf548f2787578fe7baf75b"
     },
     {
       "path": "contracts/test/OakSubscription.t.sol",
@@ -275,12 +287,16 @@
       "sha256": "60cc9855933e4dafa6d92860d106e924df776adbd1e98f9783cbd2f303e5f85f"
     },
     {
+      "path": "contracts/test/PonsRead.t.sol",
+      "sha256": "81a6b61901bee1a29a458133423377b95c724143784994f6a673931523acaa88"
+    },
+    {
       "path": "contracts/test/RedTeamB.t.sol",
-      "sha256": "7cee5325a23723092167aa8d1ba57e922af36410dd7f78d57d10ddaa26062fae"
+      "sha256": "a9115547ebb8a782340058596e015afcb2682a757b3d1994100b00d30036e7d2"
     },
     {
       "path": "contracts/test/RedTeamBFork.t.sol",
-      "sha256": "b576c7497cf054306c8598b6792f3943b6f78ab2a9e8d975e89a1fce1e7e9f6f"
+      "sha256": "6e29f53d64d982c1a274a546cd090be11af32900420411aca91676a01b4cf9dd"
     },
     {
       "path": "contracts/test/mocks/MockOracle.sol",
@@ -288,11 +304,11 @@
     },
     {
       "path": "contracts/test/testnet/OakTestFixtures.sol",
-      "sha256": "e89b002dbcee3ea5424d3e9c002ceee8920297a0655b5e6bbcc8e5a4f8c8ac26"
+      "sha256": "43dd36de9bd1f0524f5b07812743aa18564199034bdc1beef59ac6fd442c753d"
     },
     {
       "path": "contracts/test/vectors.json",
-      "sha256": "fb3f06cf9d59ad88d9fd8f827afaeedd08c916f6aa1b0e885cac42b6ed03689f"
+      "sha256": "746331aa249398e7616a7391fc8c133d6bcc6c87610f58e9f370e93f86e7f6f2"
     },
     {
       "path": "deploy.env.sample",
@@ -300,43 +316,43 @@
     },
     {
       "path": "docs/INVARIANTS.md",
-      "sha256": "6cb3f2e540cb6eb45b7bdad74fc2629cb8bfaf2adb9baba89079321d877372d9"
+      "sha256": "5d99467e7dac82dabaded08ba1784b2223642542fdd3b6f61873d81d704547ec"
     },
     {
       "path": "docs/README.md",
-      "sha256": "de031e56f89fc0724a2d3d91637c71552374829389be62e2f57092fb6b7ef7cd"
+      "sha256": "7fc4b57690ebde911edeba6d4a830009761d19ee9edd4377d0659769c2969ff6"
     },
     {
       "path": "docs/access-and-pricing.md",
-      "sha256": "40690648477e9cd233647bc89703ebf55dc6e15fdeda93377380fd5ac6f4c1a1"
+      "sha256": "bd9b4594fc07bd7ca445fc107f656d0bf23553ee227aee3776dc9e034791639e"
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "e801bb5d1b33e86d1675cc2316e673502a613685eaedddaa1bddebafc9a17af5"
+      "sha256": "f42001550710fdbda7024b451b13b6f2755d53db80fea6c3bb3459b978a82bf5"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "9b3613256c0a9746dffb2bef7da4a28c50894f01f036bba9e5bb670f53d02738"
+      "sha256": "a5cdc5727602833393fd376ec8cb30e580d04c0cf56395b79f3d687aec8264e2"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
-      "sha256": "dd791f4490d523db7dd2100cae6942008673fdb90bd5ab394615df10b0e51819"
+      "sha256": "3e72bc80e765a6321e0f97bed882e27953ebf189dc85a370f55e051ac936d928"
     },
     {
       "path": "docs/client-setup/codex.md",
-      "sha256": "420d2ed87ae99775cdd37882108c6317f1d9ee5df2087e23880332c496007ee7"
+      "sha256": "cfa2d280c7819837eb6c4365fa922220def123e107f3defae6e8e17e501320c4"
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "3c198aa5c5e4cb5feb90a2f8ae953169c4e0b754e24e02b682bcb4938303bfe2"
+      "sha256": "df9f8207988f616d0b752f345b3199f15543f010ed7fcd9fabdc10d6b4cb8216"
     },
     {
       "path": "docs/client-setup/gemini.md",
-      "sha256": "d0fc247e5367ac0590002b5225b41c3f538c7ec093a6357a3ff7476ef7d628ff"
+      "sha256": "7db0b829a1a7129a48b2d7aab014ee54eaafc4adae1686a9d68376f5abf4ca05"
     },
     {
       "path": "docs/client-setup/generic-mcp.md",
-      "sha256": "7df32500198b9dd1c18614c564510a268a65b22b1a6c7473b807381b41d12f1d"
+      "sha256": "894ac0455ecfea9b53b2c48c326aa8c033b0e2251e95b9a2edbf905914a19ceb"
     },
     {
       "path": "docs/contract-development.md",
@@ -344,7 +360,7 @@
     },
     {
       "path": "docs/headless-wallet.md",
-      "sha256": "fdfb26cd592d5307be87e70d2e5215468f113a268b0142478e489341da75af62"
+      "sha256": "e4c42aa254e7dae2ec0baf47e902547435223314b6ecefe4556648993ea06fcf"
     },
     {
       "path": "docs/mcp-tools-reference.md",
@@ -356,15 +372,15 @@
     },
     {
       "path": "docs/robinhood-chain-projects.md",
-      "sha256": "828a2bc6ee9b98531afc9dd4da3c7d1dace67007a95854cf357ea0e91e3f25b0"
+      "sha256": "0ffcc93273581d01afeabc6d8fe3129cbf1a5ac28a5ae80d162db2513cbaad21"
     },
     {
       "path": "docs/security.md",
-      "sha256": "377397fcbf794b451a87b5b535e6250359cd0fd5df545652379996792fb82782"
+      "sha256": "f260320fce43dcc831d0041df315ebc140ac661654b3ce4cdb369bd707fad1be"
     },
     {
       "path": "docs/what-is-oak.md",
-      "sha256": "4209ad399cbd6beab3884d9f7a96ff181fee7f7cc60c1b14edd474f99e5a4e04"
+      "sha256": "f986a5375fc5e738b67a485f3c714d521a017d8f1c1c6307e35b6e6539ec3515"
     },
     {
       "path": "examples/.gitignore",
@@ -424,7 +440,7 @@
     },
     {
       "path": "examples/README.md",
-      "sha256": "873ca6c854b3212d9e1c01a02e26d5bdbc29ff72e25096369e338aaaeb41c74a"
+      "sha256": "2a7e4d7c8fd9e54104a8932305bee22bcbab0f1e45bcf20d9e02622e33ac741e"
     },
     {
       "path": "examples/eval-design.md",
@@ -432,11 +448,11 @@
     },
     {
       "path": "examples/package-lock.json",
-      "sha256": "498d66fe27a1ce57d136e425cad1fafc726faa934479d42120669a0a169d4214"
+      "sha256": "c3c8873ea3e325da80df815d44b4fd1eb93c0af9f6940b1435a618b8a7f59549"
     },
     {
       "path": "examples/package.json",
-      "sha256": "ce7a2aa1a9d8587c8a631f754e56d57db124961edf8eb9d7452cbbc04d6ef3b6"
+      "sha256": "604f764248ff85dd6798e8392c89ab52bdf8238a77c7289871a6d4fb13bac80f"
     },
     {
       "path": "examples/shared/client.mjs",
@@ -457,6 +473,10 @@
     {
       "path": "examples/test/cli.test.mjs",
       "sha256": "2f142c12f13d64ee6988b52387d99881e66be8a19c5662d6bdadac0c1d521b83"
+    },
+    {
+      "path": "llms.txt",
+      "sha256": "8a5356daff5ebd6444802812511d915f6c85dc74ab39212932df2a806fc044f7"
     }
   ]
 }

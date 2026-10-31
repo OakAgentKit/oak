@@ -36,7 +36,7 @@ Restart Claude Desktop so it spawns `oak mcp` over `stdio`, then test a read and
 ## Safety & Custody Reminders
 
 - Never run `oak init` or `oak export` inside a chat prompt, and never paste a private key or 24-word recovery phrase into Claude Desktop.
-- While `oak mcp` is running, renewal can run within 3 days of expiry. In 0.1.1 (release candidate), new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting. Run `oak cancel` in your terminal to cancel immediately.
+- While `oak mcp` is running, renewal can run within 3 days of expiry. Since 0.1.1, new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting. Run `oak cancel` in your terminal to cancel immediately.
 
 The absolute Oak executable still uses Node from `PATH`. Set both Node and Oak paths explicitly when the GUI has a minimal path. Run `command -v node` and `command -v oak` in your own terminal and substitute their absolute paths below (including spaces if present):
 
@@ -48,8 +48,8 @@ Use the Node 22 binary from your version manager. Alternatively set the MCP proc
 
 ## Confirmation and current access
 
-Hosted actions are team-only until token and subscription launch. In **0.1.1 (release candidate)**,
+Hosted actions are team-only until token and subscription launch. Since **0.1.1**,
 action signing requires your client's MCP confirmation form by default. A missing
 form, decline or timeout stops signing. Verify form support in your installed client;
 a connection or tool list alone does not establish action support.
-Read [shared confirmation guidance](README.md#confirmation-support--011-release-candidate) before testing an action.
+Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.
