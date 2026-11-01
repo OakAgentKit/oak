@@ -15,9 +15,9 @@ test('balances and cross-project positions use only two read calls', async () =>
   } finally { await connection.close(); }
 });
 test('partial module failures remain visible, not zero balances', async () => {
-  const connection = await fixtureConnection({ overrides: { positions: () => [
+  const connection = await fixtureConnection({ overrides: { positions: () => ({ positions: [
     { module: 'morpho', id: 'error', chainId: 4663, assets: [], description: 'morpho: unavailable' },
-  ] } });
+  ] }) } });
   try { assert.deepEqual((await portfolio(connection.client)).warnings, ['morpho: unavailable']); }
   finally { await connection.close(); }
 });

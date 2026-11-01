@@ -31,7 +31,7 @@ export async function fixtureConnection({ overrides = {}, calls = [] } = {}) {
   const handlers = {
     find_token: args => ({ matches: [{ ...(args.query === 'USDG' ? usdg : weth), verified: true }], unverified: [], warnings: [] }),
     quote: args => quoteFixture(args), preview: args => ({ ...previewFixture, txs: args.txs }),
-    balances: () => balances, positions: () => positions, ...overrides,
+    balances: () => balances, positions: () => ({ positions }), ...overrides,
   };
   return connect({
     identity: { requireVerified: async () => disabled(), unlink: disabled, sessions: { headers: async () => ({}), clear() {} } },
