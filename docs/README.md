@@ -7,7 +7,7 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Connect your AI app](client-setup/README.md): install Oak, create the wallet automatically, and choose a client.
 - [Examples](../examples/README.md): three runnable examples with offline fixtures by default.
 - [25 configured projects](robinhood-chain-projects.md): capabilities grouped by use.
-- [Tool reference](mcp-tools-reference.md): names, inputs and network scope.
+- [Tool reference](mcp-tools-reference.md): names, inputs, network scope and which tools `tools/list` shows. Find any other tool with `find_tool` and run it with `run_tool`.
 
 ## Understand access and custody
 

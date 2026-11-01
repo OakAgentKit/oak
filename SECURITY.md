@@ -17,7 +17,8 @@ safe harbor in [docs/security.md](docs/security.md#1-reporting-a-vulnerability),
 
 | Version | Supported |
 | --- | --- |
-| 0.1.2 (latest) | Yes |
+| 0.1.9 (latest published) | Yes |
+| 0.1.2 | Yes |
 | Earlier versions | Fixes ship in the latest release; please upgrade |
 
 The [security policy](docs/security.md) also covers local custody, confirmation and transaction checks,

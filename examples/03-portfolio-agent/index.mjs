@@ -3,9 +3,10 @@ import { pathToFileURL } from 'node:url';
 import { formatAmount } from '@oakagentkit/core/amounts';
 import { openExample, readTool } from '../shared/client.mjs';
 export async function portfolio(client) {
-  const [balances, positions] = await Promise.all([
+  const [balances, positionStatus] = await Promise.all([
     readTool(client, 'balances'), readTool(client, 'positions'),
   ]);
+  const positions = positionStatus.positions;
   return {
     balances: balances.map(item => ({ ...item, humanAmount: formatAmount(item.amount, item.token.decimals) })),
     positions, warnings: positions.filter(item => item.id === 'error').map(item => item.description),
