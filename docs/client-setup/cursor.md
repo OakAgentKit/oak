@@ -19,7 +19,7 @@ Add Oak to your workspace `.cursor/mcp.json` (or global `~/.cursor/mcp.json`):
 
 ## 2. Reload MCP Servers and Verify
 
-Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (exposing 102 tools on mainnet `4663`, or 16 tools on testnet `46630`), and test in Cursor Agent mode:
+Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in version 0.1.9, listing 84 tools on mainnet `4663`, or 19 tools on testnet `46630`; the full catalogs have 659 and 39 tools via the finders), and test in Cursor Agent mode:
 
 1. **Read test:** *"Run `balances` and `positions` to inspect my Robinhood Chain portfolio."*
 2. **Action test:** *"Use `find_token` to verify TSLA, `quote` `10000000` USDG (`10 USDG`) to TSLA at `50` bps slippage, and show the `preview` before calling `swap`."*

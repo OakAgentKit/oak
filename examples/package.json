@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
-    "@oakagentkit/core": "0.1.2",
-    "@oakagentkit/addon": "0.1.2"
+    "@oakagentkit/core": "0.1.9",
+    "@oakagentkit/addon": "0.1.9"
   }
 }

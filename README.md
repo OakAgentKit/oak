@@ -26,10 +26,11 @@ Oak is independent and is not affiliated with Robinhood.
 </picture></a>
 </p>
 
-**Version 0.1.2:** 102 tools on mainnet, 16 on testnet. There is no send tool in this version.
-Longbow deposits, reads and withdrawals are available. Meridian buys are coming soon:
-Oak refuses them before anything is signed. Hosted actions open with the subscription contracts;
+**Version 0.1.9:** 659 tools on mainnet and 39 on testnet, with 84 and 19 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. npm installs 0.1.9.
+Longbow deposits, reads and withdrawals are available. Version 0.1.9 restores Meridian buys and corrects RFQ settlement handling. Hosted actions open with the subscription contracts;
 until their addresses are published in [contracts/deployments](contracts/deployments/README.md), they stay limited to the Oak team.
+Version 0.1.9 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
+tool with `find_tool` and `run_tool`. The [tool reference](docs/mcp-tools-reference.md) marks which tools are listed.
 
 ## 25 projects, one connection
 
@@ -52,6 +53,8 @@ The catalogue describes configured tools, not a guarantee that every project act
 available to every wallet or validated end to end.
 Merkl tools: Powered by Merkl, [https://app.merkl.xyz](https://app.merkl.xyz).
 HeyResearch tools retain their attribution and citations.
+
+[![OakAgentKit on HEY Research Lab](https://heyresearch.xyz/api/badge/oakagentkit)](https://heyresearch.xyz/project/oakagentkit?utm_source=badge&utm_medium=readme)
 
 ## Quick start for builders
 
@@ -128,8 +131,8 @@ Clients without MCP form elicitation cannot sign in default ask mode.
 
 **Limits:** A preview is an estimate, not a promise of execution or sellability.
 Transfer traces exclude gas; the confirmation shows gas separately. Checks do not
-prove Relay destination fills or Meridian relayer execution. Oak adds no daily
-spending caps or operator asset policy. Your computer, RPC and external projects
+prove Relay destination fills or Meridian relayer execution.
+In owner-selected auto mode, automatic approvals default to a 50 USD budget per local calendar day. Actions above the remaining budget, without a fresh USD value, or with unavailable usage records require human approval. Ask mode requires confirmation. This budget does not cap spending that a person explicitly approves. There is no operator asset allowlist. Your computer, RPC and external projects
 remain trust boundaries. There is no completed third-party audit.
 
 Keep keys out of agent chats and logs. Backups are optional: `oak backup` gives

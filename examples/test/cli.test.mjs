@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 for (const [directory, expected] of [
-  ['01-quickstart-mcp', /100 tools/],
+  ['01-quickstart-mcp', /(?:82|100) tools/],
   ['02-preview-sign-swap', /stopped\s*$/],
   ['03-portfolio-agent', /"humanAmount": "25"/],
 ]) {

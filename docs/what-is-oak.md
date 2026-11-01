@@ -12,8 +12,10 @@ The illustration represents those configured integrations, not every project on 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 102 tools with consistent inputs
+If you build agents, the same connection gives you 659 mainnet tools in version 0.1.9 with consistent inputs
 and one local wallet. You can build your own workflows or autonomous setups.
+Version 0.1.9 shows your agent a short list of everyday tools; it finds and runs
+any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
 for the [25 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,

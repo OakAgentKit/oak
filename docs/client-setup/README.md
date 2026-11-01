@@ -1,6 +1,6 @@
 # MCP client setup guides
 
-Oak Agent Kit (`@oakagentkit/addon`, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and **102 MCP tools** across **25 ecosystem projects** on **Robinhood Chain** (`4663`).
+Oak Agent Kit (`@oakagentkit/addon`, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 25 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
 
 ---
 
@@ -13,7 +13,11 @@ Requires **Node.js 22 LTS** (`>=22.12.0 <23`):
 ```bash
 npm install -g @oakagentkit/addon
 oak --version
+oak address
+oak status
 ```
+
+On first use Oak creates a local wallet. Check the address and network, `keyProtection`, and any file-storage warning before funding it. `oak status` also reports confirmation mode and the automatic approval budget. While the hosted service is in private test mode, `actionAccess:false` is expected for an unlisted wallet; token reads remain available. Never send keys or recovery words to the agent.
 
 ### 2. Connect the MCP; the Wallet Creates Itself
 
