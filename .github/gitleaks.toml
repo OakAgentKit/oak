@@ -7,6 +7,8 @@ id = "generic-api-key"
 description = "Reviewed public addresses, event hashes, receipt symbols and Solidity identifier; no credentials"
 regexTarget = "secret"
 regexes = [
+  # Public EVM addresses only; anchors keep API keys and 32-byte keys in scope.
+  '''^0x[0-9a-fA-F]{40}$''',
   '''^0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73$''',
   '''^0x0bd7d308f8e1639fab988df18a8011f41eacad73$''',
   '''^0x137731B8B2D7Cd24aB4A4A9061f2D7b4Fd1aBFEE$''',
