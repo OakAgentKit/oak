@@ -1,0 +1,16 @@
+{
+  "name": "oak-agent-kit",
+  "owner": {
+    "name": "Oak Agent Kit"
+  },
+  "metadata": {
+    "description": "Oak local MCP for Robinhood Chain."
+  },
+  "plugins": [
+    {
+      "name": "oak",
+      "source": "./plugins/oak",
+      "description": "Connect a local Oak wallet and tools for 25 Robinhood Chain projects."
+    }
+  ]
+}

@@ -3,6 +3,10 @@
   "mode": "launch",
   "files": [
     {
+      "path": ".claude-plugin/marketplace.json",
+      "sha256": "6d0056ed0d8856f1a0b41eb5df8b07f822844c472b0cb038fa5d2f1dc15a2442"
+    },
+    {
       "path": ".github/CI-NOTES.md",
       "sha256": "2e5e7a965bfb116773877c2d7ddc57cd9217f77db30606998880fe7ac8a34d37"
     },
@@ -76,7 +80,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "4b37686645201359b39620392a9478c8974cf6bad751ebbfd02565782bbf3e53"
+      "sha256": "b4c324a0f6a05392bc10eedbbdaf223eadcb30227b15a4197eb9dfbf95742f3a"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -92,11 +96,11 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "62573809410a15ee72097fcaff55252dcd837334c3621383471dd51624412366"
+      "sha256": "1ea372146fce78b79b0676e3998786f41c510e44bfcf88b4e1d71c0c31eb9ab7"
     },
     {
       "path": "README.md",
-      "sha256": "162976e9429de475051fa1966457eb64ebf55c5bc88619fa6cf89d11537b520a"
+      "sha256": "42f1144525ae4f23dd20a02df2ae48775d053a6f31c8d2fca1aebf1fc1f1060c"
     },
     {
       "path": "SECURITY.md",
@@ -336,11 +340,11 @@
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "d6d2c35bcd5d752fcc858a9ef6669d51673e39fabe567e79144708f8c34d8a0a"
+      "sha256": "023fd93b035abaf80cc66dff07dfbb346d6c79fb98d72cd1d55e4950f476c282"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "f953a35bb3fabd8a032a9a0d55f85dfe1740bb014defa655fb33fbab10be68da"
+      "sha256": "98d664de58e9ea144028fae304b019460d153829e2b54649aac9d7a07da77cc7"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
@@ -352,7 +356,7 @@
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "19c13242e5d7de10224624e4e231a7577c67114143c54dfb07d7d64fe9b3328f"
+      "sha256": "1ee76c77667b133abb9cb311b5a4120afe07f1641721769cbb579466a94f770d"
     },
     {
       "path": "docs/client-setup/gemini.md",
@@ -485,6 +489,22 @@
     {
       "path": "llms.txt",
       "sha256": "8a5356daff5ebd6444802812511d915f6c85dc74ab39212932df2a806fc044f7"
+    },
+    {
+      "path": "plugins/oak/.claude-plugin/plugin.json",
+      "sha256": "f95c832e4eedf010c37c7ec0c9bfca0e0192a51ddf3ce69d89fe129abb3e391c"
+    },
+    {
+      "path": "plugins/oak/.mcp.json",
+      "sha256": "95354c448604b8b952342c9ff8061cd35c9a3287d3d467e592708fb903a468bf"
+    },
+    {
+      "path": "plugins/oak/LICENSE",
+      "sha256": "68cd800a54ece78ba06c649fe093c22e1cbf65a4fb189e44faa285cbad934998"
+    },
+    {
+      "path": "plugins/oak/README.md",
+      "sha256": "50316a35c6353db80ea090654fa0074b1e2b95496aa513d7a6d7d5748c5916c5"
     }
   ]
 }

@@ -2,6 +2,25 @@
 
 Install Oak and connect the MCP below. The wallet creates itself on first use; your agent calls `account`, asks you to fund the returned address with ETH and USDG on the named network, then re-checks `balances`. See [shared setup](README.md#shared-prerequisites-do-this-once) for identity registration, subscription approval and optional backup guidance.
 
+## Plugin shortcut
+
+Requires Node.js 22 (`>=22.12.0 <23`) and npm on your PATH. These shortcuts run
+`npx -y @oakagentkit/addon@0.2.0 mcp`, so no global Oak install is needed.
+Review your app’s install confirmation, then start a fresh session. If you already
+configured Oak manually, use that connection or remove it before adding a second one.
+Installing connects tools; identity registration and paid subscriptions still need
+separate approval.
+
+In Claude Code, run these two commands:
+
+```text
+/plugin marketplace add OakAgentKit/oak
+/plugin install oak@oak-agent-kit
+```
+
+Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
+2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
+
 ## 1. Register the MCP Server
 
 Run the following command in your terminal:

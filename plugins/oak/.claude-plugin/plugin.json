@@ -1,0 +1,11 @@
+{
+  "name": "oak",
+  "version": "0.2.0",
+  "description": "Connect a local Oak wallet and tools for 25 Robinhood Chain projects. Requires Node.js 22.12+ within major 22.",
+  "author": {
+    "name": "Oak Agent Kit"
+  },
+  "homepage": "https://oakagentkit.org",
+  "repository": "https://github.com/OakAgentKit/oak",
+  "license": "MIT"
+}

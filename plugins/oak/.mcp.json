@@ -1,0 +1,10 @@
+{
+  "oak": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@oakagentkit/addon@0.2.0",
+      "mcp"
+    ]
+  }
+}

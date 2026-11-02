@@ -2,6 +2,17 @@
 
 Install Oak and connect the MCP below. The wallet creates itself on first use; your agent calls `account`, asks you to fund the returned address with ETH and USDG on the named network, then re-checks `balances`. See [shared setup](README.md#shared-prerequisites-do-this-once) for identity registration, subscription approval and optional backup guidance.
 
+## Quick connection
+
+Requires Node.js 22 (`>=22.12.0 <23`) and npm on your PATH. These shortcuts run
+`npx -y @oakagentkit/addon@0.2.0 mcp`, so no global Oak install is needed.
+Review your app’s install confirmation, then start a fresh session. If you already
+configured Oak manually, use that connection or remove it before adding a second one.
+Installing connects tools; identity registration and paid subscriptions still need
+separate approval.
+
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.0%2522%252C%2522mcp%2522%255D%257D)
+
 ## 1. Configure `.cursor/mcp.json`
 
 Add Oak to your workspace `.cursor/mcp.json` (or global `~/.cursor/mcp.json`):

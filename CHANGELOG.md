@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 — release candidate (unpublished)
+
+- Add the MCP Registry identity `io.github.OakAgentKit/oak` to the add-on manifest and prepare its registry descriptor.
+- Accept private keys without a `0x` prefix during owner-terminal recovery; explain how to recover an account from a 12-word phrase without echoing it.
+- Add the Claude Code plugin marketplace and editor install links. Install shortcuts remain pinned to published 0.2.0 until this candidate is published.
+- License the install plugin files and the `oak-recipe/v1` recipe format/schema under MIT. The add-on and core implementation license remains “Free to use, no copying.”
+- Support Node.js 22.12.0 or newer in the published package manifests. The 0.2.1 candidate passes isolated install, MCP startup and 3,809 add-on tests on Node 22.23.4, 24.22.2 and 25.9.0; workspace build tooling remains pinned to Node 22.
+
 ## 0.2.0 - 2026-11-02
 
 - Publish core and add-on 0.2.0 and the live mainnet token, oracle, burner and subscription deployment records with receipt hashes.
