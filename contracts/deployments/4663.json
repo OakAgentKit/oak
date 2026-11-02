@@ -1,11 +1,39 @@
 {
   "chainId": 4663,
-  "status": "token-live; subscription topology not deployed",
-  "notice": "Verify the launch transaction on chain 4663 before using these addresses. Only token and curve are asserted; no oracle, burner, subscription or fee utility deployment is asserted.",
+  "status": "0.2.0 live",
+  "recordedAt": "2026-11-02",
+  "notice": "Mainnet launch and deployment receipts recorded for 0.2.0. Verify chain, code and current state before use. The ETH/USDG pool predates this release; its reference transaction is not pool creation.",
+  "launchTransaction": "0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58",
+  "ponsUrl": "https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828",
   "contracts": {
     "oakToken": "0x6511c233790Ec10f7d673c64DC82C3F941D57828",
-    "ponsCurve": "0x47C76144294B009C12b8BC7C1D40CD8d65Dd486e"
+    "ponsCurve": "0x47C76144294B009C12b8BC7C1D40CD8d65Dd486e",
+    "oakOracle": "0x9d3Ae2a760B6266F8A92240a59e5006D1AADBD30",
+    "oakBurner": "0x0704AE41934EE9b71A85cBd308786CfE503108f4",
+    "oakSubscription": "0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8",
+    "ethUsdgPool": "0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca",
+    "oakTeamVesting": "0xbDB50e1aB95516D4f1CfCbB8eE704dc1e65f9b91"
   },
-  "ponsUrl": "https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828",
-  "launchTransaction": "0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58"
+  "deploymentTransactions": {
+    "oakOracle": "0x54ed60ff36f1b83e6f6a0f41e6dbd2e0915d79a0af4bc510cfb291918d9f31b1",
+    "oakBurner": "0xec83b462a4baffdb7c64940f9e2edaff3edaa9c5ab9493a4ecc020140e81da06",
+    "oakSubscription": "0xfc356ad47cdce9a9961d53f1d37a384c9553ab4fe60591d7e2d30df3f08a96d7",
+    "oakTeamVesting": "0x4efe37182a53179f21452960a438fe7fd59b4c6d05220efb50589be3fdbed1eb",
+    "launch": "0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58"
+  },
+  "ethUsdgPoolReferenceTransaction": "0x54ed60ff36f1b83e6f6a0f41e6dbd2e0915d79a0af4bc510cfb291918d9f31b1",
+  "vesting": {
+    "fundingTransaction": "0xf923681d37dc59c26214ba4f3552a25ff5f96088d73a52e03c5ed5d7e87ebf4a",
+    "token": "0x6511c233790Ec10f7d673c64DC82C3F941D57828",
+    "decimals": 18,
+    "fundedAmountBaseUnits": "29989491552825155605852396",
+    "fundedAmount": "29989491.552825155605852396",
+    "beneficiary": "0x84b1B9e5D1cAfD9543E684BB39E9cbD478189EE2",
+    "startTimestamp": 1801440000,
+    "start": "2027-02-01T00:00:00Z",
+    "durationSeconds": 31536000,
+    "cliffSeconds": 0,
+    "end": "2028-02-01T00:00:00Z",
+    "terms": "365 days linear from start, zero additional cliff. Anyone may release vested funds to the current beneficiary. Ownership is transferable; transfer does not accelerate vesting. No deployer withdrawal role."
+  }
 }

@@ -31,7 +31,7 @@ Launch Gemini and test:
 
 ## Confirmation and current access
 
-Hosted actions are team-only until token and subscription launch. Since **0.1.1**,
+Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode. Since **0.1.1**,
 action signing requires your client's MCP confirmation form by default. A missing
 form, decline or timeout stops signing. Verify form support in your installed client;
 a connection or tool list alone does not establish action support.

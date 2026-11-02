@@ -15,10 +15,10 @@ From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-node test-packed.mjs /path/to/oakagentkit-core-0.1.9.tgz /path/to/oakagentkit-addon-0.1.9.tgz
+node test-packed.mjs /path/to/oakagentkit-core-0.2.0.tgz /path/to/oakagentkit-addon-0.2.0.tgz
 ```
 
-These archives must be a matching reviewed release pair. The npm-ci path uses the exact versions in examples/package.json and package-lock.json; it does not test a newer locally packed candidate. Update and review both files when qualifying 0.1.9.
+These archives must be a matching reviewed release pair. The npm-ci path uses the exact versions in examples/package.json and package-lock.json; it does not test a newer locally packed candidate. Update and review both files when qualifying 0.2.0.
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
 `npm run preview`, or `npm run portfolio`. Each defaults to labelled fixture
@@ -66,13 +66,13 @@ RPC availability, execution, auth/keychain access, prices or external settlement
 A successful buy simulation does not establish sellability; simulation excludes
 gas. See [eval-design.md](eval-design.md) for failure controls.
 
-Oak keeps `tools/list` short. Version 0.1.9 lists 84 tools through the CLI and 82 through these read-only examples. Tools outside that list remain reachable: call `find_tool` with an exact name for its input schema, then `run_tool` with the name and arguments. Counts may change between versions; compare your installed catalog.
+Oak keeps `tools/list` short. Version 0.2.0 lists 84 tools through the CLI and 82 through these read-only examples. Tools outside that list remain reachable: call `find_tool` with an exact name for its input schema, then `run_tool` with the name and arguments. Counts may change between versions; compare your installed catalog.
 
 Version 0.1.2 historically listed 102 CLI tools and 100 through the read-only examples; testnet CLI discovery listed 16. These historical counts do not establish the newer testnet surface.
 
 ## Direct installation from npm
 
-The manifest and reviewed lockfile pin **0.1.9** and its
+The manifest targets **0.2.0**. Launch preparation must replace the lockfile’s `PENDING_LAUNCH_ARCHIVE` integrity markers with the final reviewed archives before registry installation. The generated candidate lockfile pins its
 resolved dependency graph:
 
 ```sh

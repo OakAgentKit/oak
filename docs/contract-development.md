@@ -49,6 +49,6 @@ Only the human operator selects a local keystore or hardware signer and repeats
 an approved command with `--broadcast`. Never put a private key or recovery words
 in `.env`, arguments, an agent prompt or logs.
 
-The [deployment JSON files](../contracts/deployments/README.md) are placeholders
-until an operator records verified receipts. Read [authority and custody](security.md)
+The [deployment JSON files](../contracts/deployments/README.md) record the live
+0.2.0 mainnet receipts and team vesting lock; testnet remains a placeholder. Read [authority and custody](security.md)
 before deployment, and preserve those disclosures when proposing changes.

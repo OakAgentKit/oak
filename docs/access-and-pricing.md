@@ -1,10 +1,10 @@
 # Access and pricing
 
-Hosted actions are limited to the Oak team until the token and subscription launch.
-Strangers can discover tools and call reads such as `find_token`; private-mode
-actions require a server-allowlisted wallet.
+Version **0.2.0 is live** in paid mode on mainnet (chain ID 4663).
+Anyone can discover tools and call reads such as `find_token`; actions require a verified
+ERC-8004 identity and an active subscription. Launch phase controls plan availability.
 Installing the published npm packages is free under their [own license](../LICENSE-PACKAGES.md).
-These are launch subscription terms, not a statement that subscriptions are open today.
+The [live deployment record](../contracts/deployments/README.md) lists the contracts and receipt hashes.
 
 ## Launch phases
 
@@ -45,6 +45,6 @@ a 50% live-pool guard; see the exact [checks and limits](security.md).
 - `oak cancel` ends access immediately and forfeits remaining paid days. Cancel before switching plans.
 - An authoritative grandfathered holder on a retired contract uses `oak renew` when due to migrate with carried paid time, its recorded post-burn count and zero burn.
 
-Contract deployments remain [launch placeholders](../contracts/deployments/README.md).
-Do not fund an address taken from a placeholder. Use the verified deployment for
+Mainnet contracts are [0.2.0 live](../contracts/deployments/README.md).
+Testnet remains a placeholder. Use the verified deployment for
 your selected network and inspect the payment preview and confirmation.

@@ -23,4 +23,5 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): released and pending versions.
 
-Packages are published; hosted actions are team-only until token and subscription launch.
+Core and add-on 0.2.0 are published; hosted actions require a verified ERC-8004 identity
+and an active subscription. See the [live deployments and team vesting lock](../contracts/deployments/README.md).

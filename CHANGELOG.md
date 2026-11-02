@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 - 2026-11-02
+
+- Publish core and add-on 0.2.0 and the live mainnet token, oracle, burner and subscription deployment records with receipt hashes.
+- Publish the funded OakTeamVesting lock, its source and tests: 365 days linear from 2027-02-01, beneficiary launch wallet, no additional cliff.
+
+- Include the identity and subscription lifecycle for paid actions, while keeping read tools available without a subscription. Hosted actions now use the verified launch deployment in paid mode; phase still controls available plans.
+- Pin the OAK token, oracle, burner, subscription and ETH/USDG pool per chain. Refuse missing pins or discovery/configuration disagreements before signing.
+- Verify short approval-census log pages against block receipts before recording coverage; pause actions when completeness cannot be established.
+- Budget aggregator swap gas for forwarded execution and replay the ordered bundle at the final limits before signing. Refuse bundles that cannot fit the local or affordable gas ceiling.
+
 ## 0.1.9
 
 - Flag token-level default approvals separately, so Oak does not mistake them for approvals you made or recommend revoking them.

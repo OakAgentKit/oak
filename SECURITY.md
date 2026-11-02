@@ -17,7 +17,8 @@ safe harbor in [docs/security.md](docs/security.md#1-reporting-a-vulnerability),
 
 | Version | Supported |
 | --- | --- |
-| 0.1.9 (latest published) | Yes |
+| 0.2.0 (staged candidate; publication pending) | Local checks only; launch acceptance pending |
+| 0.1.9 (latest published until 0.2.0 release) | Yes |
 | 0.1.2 | Yes |
 | Earlier versions | Fixes ship in the latest release; please upgrade |
 

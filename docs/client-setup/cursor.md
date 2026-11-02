@@ -19,7 +19,7 @@ Add Oak to your workspace `.cursor/mcp.json` (or global `~/.cursor/mcp.json`):
 
 ## 2. Reload MCP Servers and Verify
 
-Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in version 0.1.9, listing 84 tools on mainnet `4663`, or 19 tools on testnet `46630`; the full catalogs have 659 and 39 tools via the finders), and test in Cursor Agent mode:
+Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in version 0.2.0, listing 84 tools on mainnet `4663`, or 19 tools on testnet `46630`; the full catalogs have 659 and 39 tools via the finders), and test in Cursor Agent mode:
 
 1. **Read test:** *"Run `balances` and `positions` to inspect my Robinhood Chain portfolio."*
 2. **Action test:** *"Use `find_token` to verify TSLA, `quote` `10000000` USDG (`10 USDG`) to TSLA at `50` bps slippage, and show the `preview` before calling `swap`."*
@@ -31,7 +31,7 @@ Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in ver
 
 ## Confirmation and current access
 
-Hosted actions are team-only until token and subscription launch. Since **0.1.1**,
+Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode. Since **0.1.1**,
 action signing requires your client's MCP confirmation form by default. A missing
 form, decline or timeout stops signing. Verify form support in your installed client;
 a connection or tool list alone does not establish action support.

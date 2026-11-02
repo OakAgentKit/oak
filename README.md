@@ -1,7 +1,5 @@
 ![Oak Agent Kit cover: a felt oak tree with glowing roots and a hooded figure with a lantern, captioned "Your AI agent, on Robinhood Chain"](assets/oak-cover.webp)
 
-**$OAK on Robinhood Chain (4663):** `0x6511c233790Ec10f7d673c64DC82C3F941D57828` · [Pons](https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828) · [Token facts](https://oakagentkit.org/token.html). Hosted actions and paid access open with Oak 0.2.0; no date is promised and there is no public beta. Subscriptions, burns, oracle, burner and fee utility are not live.
-
 # Oak Agent Kit
 
 **One install connects your AI agent to 25 Robinhood Chain projects: swap, lend, borrow, use vaults, launch tokens and pull research.**
@@ -28,10 +26,10 @@ Oak is independent and is not affiliated with Robinhood.
 </picture></a>
 </p>
 
-**Version 0.1.9:** 659 tools on mainnet and 39 on testnet, with 84 and 19 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. npm installs 0.1.9.
-Longbow deposits, reads and withdrawals are available. Version 0.1.9 restores Meridian buys and corrects RFQ settlement handling. Hosted actions open with the subscription contracts;
-until their addresses are published in [contracts/deployments](contracts/deployments/README.md), they stay limited to the Oak team.
-Version 0.1.9 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
+**Version 0.2.0:** 659 tools on mainnet and 39 on testnet, with 84 and 19 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. Core and add-on **0.2.0 are published**. Mainnet contracts and the team vesting lock are recorded in [deployments](contracts/deployments/README.md).
+Longbow deposits, reads and withdrawals are available. Meridian buys and RFQ settlement handling carry forward from 0.1.9. Hosted actions run in paid mode with a verified ERC-8004 identity and an active subscription.
+Read `account` for the launch phase and available plans before subscribing.
+Version 0.2.0 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
 tool with `find_tool` and `run_tool`. The [tool reference](docs/mcp-tools-reference.md) marks which tools are listed.
 
 ## 25 projects, one connection
@@ -64,7 +62,7 @@ Requires **Node.js 22** (`>=22.12.0 <23`) and an MCP client.
 These are the same install and connect commands as the [client guides](docs/client-setup/README.md):
 
 ```sh
-npm install -g @oakagentkit/addon
+npm install -g @oakagentkit/addon@0.2.0
 oak --version
 ```
 
