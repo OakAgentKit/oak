@@ -8,7 +8,7 @@ Oak is independent and is not affiliated with Robinhood.
 
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
-[![Node.js 22](https://img.shields.io/badge/node-22-062F27)](#quick-start-for-builders)
+[![Node.js >=22.12.0](https://img.shields.io/badge/node-%3E%3D22.12.0-062F27)](#quick-start-for-builders)
 [![Chain 4663](https://img.shields.io/badge/Robinhood%20Chain-4663-062F27)](docs/robinhood-chain-projects.md)
 
 [What is Oak?](docs/what-is-oak.md) · [Connect your agent](docs/client-setup/README.md) · [All 25 projects](docs/robinhood-chain-projects.md) · [Tool reference](docs/mcp-tools-reference.md) · [Security](docs/security.md)
@@ -26,10 +26,10 @@ Oak is independent and is not affiliated with Robinhood.
 </picture></a>
 </p>
 
-**Version 0.2.0:** 659 tools on mainnet and 39 on testnet, with 84 and 19 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. Core and add-on **0.2.0 are published**. Mainnet contracts and the team vesting lock are recorded in [deployments](contracts/deployments/README.md).
+**Version 0.2.1:** 660 tools on mainnet and 40 on testnet, with 85 and 20 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. Core and add-on **0.2.1 are published**. Mainnet contracts and the team vesting lock are recorded in [deployments](contracts/deployments/README.md).
 Longbow deposits, reads and withdrawals are available. Meridian buys and RFQ settlement handling carry forward from 0.1.9. Hosted actions run in paid mode with a verified ERC-8004 identity and an active subscription.
 Read `account` for the launch phase and available plans before subscribing.
-Version 0.2.0 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
+Version 0.2.1 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
 tool with `find_tool` and `run_tool`. The [tool reference](docs/mcp-tools-reference.md) marks which tools are listed.
 
 ## 25 projects, one connection
@@ -58,8 +58,8 @@ HeyResearch tools retain their attribution and citations.
 
 ### Quick connections
 
-Requires Node.js 22 (`>=22.12.0 <23`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.2.0 mcp`, so no global Oak install is needed.
+Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
+`npx -y @oakagentkit/addon@0.2.1 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and paid subscriptions still need
@@ -75,17 +75,17 @@ In Claude Code, run these two commands:
 Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
 2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.0%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.1%2522%252C%2522mcp%2522%255D%257D)
 
 The manual global-install and per-client commands below remain available.
 
 ## Quick start for builders
 
-Requires **Node.js 22** (`>=22.12.0 <23`) and an MCP client.
+Requires **Node.js 22.12.0 or newer** (`>=22.12.0`) and an MCP client.
 These are the same install and connect commands as the [client guides](docs/client-setup/README.md):
 
 ```sh
-npm install -g @oakagentkit/addon@0.2.0
+npm install -g @oakagentkit/addon@0.2.1
 oak --version
 ```
 

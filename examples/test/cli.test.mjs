@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 for (const [directory, expected] of [
-  ['01-quickstart-mcp', /(?:82|100) tools/],
+  ['01-quickstart-mcp', null],
   ['02-preview-sign-swap', /stopped\s*$/],
   ['03-portfolio-agent', /"humanAmount": "25"/],
 ]) {
@@ -15,6 +15,15 @@ for (const [directory, expected] of [
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Fixture mode/);
-    assert.match(result.stdout, expected);
+    if (expected) assert.match(result.stdout, expected);
+    else {
+      const output = /^(\d+) tools \(names and JSON input schemas\):\n([\s\S]+)$/m.exec(result.stdout);
+      assert.ok(output, 'quickstart prints the tool count and JSON schemas');
+      const tools = JSON.parse(output[2]);
+      assert.equal(Number(output[1]), tools.length);
+      for (const name of ['balances', 'find_tool', 'oak_receipts']) {
+        assert.equal(tools.find(tool => tool.name === name)?.inputSchema.type, 'object', name);
+      }
+    }
   });
 }

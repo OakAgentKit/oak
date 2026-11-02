@@ -12,9 +12,9 @@ The illustration represents those configured integrations, not every project on 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 659 mainnet tools in version 0.2.0 with consistent inputs
+If you build agents, the same connection gives you 660 mainnet tools in version 0.2.1 with consistent inputs
 and one local wallet. You can build your own workflows or autonomous setups.
-Version 0.2.0 shows your agent a short list of everyday tools; it finds and runs
+Version 0.2.1 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
@@ -26,13 +26,14 @@ research, names and agent identities. Pons token launches are one example.
 1. **Install and connect.** Use [the guide for your AI app](client-setup/README.md).
    Oak creates a wallet on your computer automatically. You do not need a wallet creation command.
 2. **Ask for a read.** Try: “Show my public wallet address, network, balances and positions.”
-   Reads do not require a subscription or public agent identity once hosted access opens.
+   Reads do not require a subscription or public agent identity in normal service mode.
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
-   At launch, send a little ETH for network fees and USDG for a subscription only when you want paid actions.
+   Send a little ETH for network fees and USDG for a subscription only when you want paid actions.
 
-**Today:** the npm packages are published, but hosted actions are limited to the Oak team
-until the token and subscription launch. You can install, connect, see your local
-wallet address and run fixture examples; hosted calls may report unavailable access.
+**Today:** Oak 0.2.1 is published and mainnet paid access is live on the 0.2.0 deployment.
+$OAK has graduated on Pons. Reads need neither identity nor subscription; actions need a
+verified ERC-8004 identity and an active subscription. Call `account` for the current
+phase, available plans and price; both plans wait during warmup. See [access and pricing](access-and-pricing.md).
 
 ## Before your agent acts
 

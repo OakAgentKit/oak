@@ -1,6 +1,6 @@
 # Security, Custody, and Authority
 
-**Release scope:** Human confirmation and local transaction guards below apply from **0.1.1**; the current published release is **0.2.0**. See the [live deployment record](../contracts/deployments/README.md). Version 0.1.0 does not include them. Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode.
+**Release scope:** Human confirmation and local transaction guards below apply from **0.1.1**; the current published release is **0.2.1**. See the [live deployment record](../contracts/deployments/README.md). Version 0.1.0 does not include them. Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode.
 
 The treasury and contract admin is the single-owner wallet `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`. One owner key can spend treasury funds, redirect future subscription payments, replace the price signer, and retire subscriptions. There is no second-signature requirement. Key compromise exposes these powers; key loss can make treasury funds and administration inaccessible. It cannot spend user wallet balances. Safe support is an optional deployment profile, not the launch setup.
 

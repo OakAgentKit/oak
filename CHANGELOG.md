@@ -1,12 +1,19 @@
 # Changelog
 
-## 0.2.1 — release candidate (unpublished)
+## 0.2.1 — 2026-11-02 (published)
 
-- Add the MCP Registry identity `io.github.OakAgentKit/oak` to the add-on manifest and prepare its registry descriptor.
-- Accept private keys without a `0x` prefix during owner-terminal recovery; explain how to recover an account from a 12-word phrase without echoing it.
-- Add the Claude Code plugin marketplace and editor install links. Install shortcuts remain pinned to published 0.2.0 until this candidate is published.
-- License the install plugin files and the `oak-recipe/v1` recipe format/schema under MIT. The add-on and core implementation license remains “Free to use, no copying.”
-- Support Node.js 22.12.0 or newer in the published package manifests. The 0.2.1 candidate passes isolated install, MCP startup and 3,809 add-on tests on Node 22.23.4, 24.22.2 and 25.9.0; workspace build tooling remains pinned to Node 22.
+- [Changed] Published core and add-on 0.2.1; registry bytes verified at 15:56Z against frozen archives (SHA-256 core `b920b73f…`, add-on `9b2166da…`). No contract redeployment.
+- [Added] Catalog totals: 660 mainnet / 40 testnet callable tools, 85 / 20 listed tools, and 10 local lifecycle tools; read-only examples list 83.
+
+- [Changed] Accept private keys without a `0x` prefix when the owner restores a wallet in their own terminal; explain 12-word recovery without echoing recovery words.
+- [Changed] Let prepared actions reach confirmation after slow access checks. Rebuild expired actions before simulation and approval while keeping the 12-second preview reuse limit.
+- [Changed] Start approval discovery from the recorded creation point for a new Oak wallet, and retry interrupted discovery automatically.
+- [Changed] Resolve official stock tickers to the issuer's listed token across quotes, prices and Priors stock tools. Refuse look-alike tickers; during a stock-list outage, keep unrelated address-based quotes available and pause stock identities that cannot be checked.
+- [Changed] Keep a local approval receipt log for transaction, typed-data and gateway decisions. Add the read-only `oak_receipts` tool and `oak receipts` list, verify and JSON/CSV export commands.
+- [Changed] Put the exact decision first in confirmation forms, with amounts, recipients, minimum received and bounded permissions where available; label official stock tokens clearly.
+- [Changed] Add the MCP Registry identity `io.github.OakAgentKit/oak`, its registry descriptor, the Claude Code plugin marketplace and editor install links. Install shortcuts pin the verified published 0.2.1 archives; the official MCP Registry listing is pending.
+- [Changed] License the plugin files and recipe format/schema under MIT; the core and add-on implementation license remains “Free to use, no copying.”
+- [Changed] Allow Node.js 22.12.0 or newer in the published package manifests; contributor and release builds remain on Node 22. Installation, MCP startup and the add-on suite pass on Node 22.23.4, 24.22.2 and 25.9.0; workspace builds remain on Node 22.
 
 ## 0.2.0 - 2026-11-02
 

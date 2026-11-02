@@ -9,9 +9,12 @@ test('real packaged add-on connects over MCP and exposes Pons creator schemas', 
   try {
     const tools = await listTools(connection.client);
     const hasFinder = tools.some(tool => tool.name === 'find_tool');
-    assert.equal(tools.length, hasFinder ? 82 : 100);
+    const expected = await connection.bridge.listTools();
+    assert.equal(tools.length, expected.length);
+    assert.deepEqual(tools.map(tool => tool.name), expected.map(tool => tool.name));
+    assert.equal(new Set(tools.map(tool => tool.name)).size, tools.length);
     for (const name of ['balances', 'positions', 'quote', ...(hasFinder ? ['find_tool', 'run_tool'] : ['preview']), 'oak_setup',
-      'pons_launch_options', 'pons_transfer_creator_fee_recipient', 'pons_set_buyback']) {
+      'oak_receipts', 'pons_launch_options', 'pons_transfer_creator_fee_recipient', 'pons_set_buyback']) {
       let schema = tools.find(tool => tool.name === name)?.inputSchema;
       if (!schema) {
         const result = await connection.client.callTool({ name: 'find_tool', arguments: { query: name } });

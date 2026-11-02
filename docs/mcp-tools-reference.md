@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon`, available at launch) exposes **659 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **9 local lifecycle tools**, and **639 ecosystem tools** across **25 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.2.1, published on npm) exposes **660 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **10 local lifecycle tools**, and **639 ecosystem tools** across **25 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **84** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 659 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
+`tools/list` stays short. It shows the **85** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 660 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 active tools**: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 9 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances` and `oak_approval_census_status`). Swap routes and the other 24 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 active tools**, **20** listed in `tools/list`: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 10 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status` and `oak_receipts`). Swap routes and the other 24 ecosystem modules are mainnet-only.
 
 ---
 
@@ -13,7 +13,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 - **Decimal base-unit strings:** Every token amount in tool inputs and outputs is a decimal base-unit string (for example, `"9000000"` for `9 USDG` with 6 decimals; `"1000000000000000000"` for `1 ETH` or `1 OAK` with 18 decimals). Never pass floating-point numbers.
 - **Token metadata:** Tool outputs identify the EIP-55 checksummed token `address` (`0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee` for native ETH), `symbol`, `decimals`, and `chainId` (`4663` or `46630`).
 - **Reads vs. actions:** Read tools work without an ERC-8004 identity and even when a subscription is lapsed. Action tools require both a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) and an active subscription on the wallet's authoritative lineage contract. One narrow exception: a fresh wallet may run `relay_bridge_in` to itself for ETH or USDG on Robinhood Chain (no swap) before it has either, so funds on another chain can reach it; that bridge still previews, passes the local guard and asks for confirmation. `find_tool` reports each tool as read or action by this same rule.
-- **Private hosted access:** Installing or listing tools does not grant action access. A stranger can call read tools such as `find_token`; an unallowlisted private-mode action returns "Not submitted. This wallet is not on the server private test allow-list. Ask the operator to configure private test access or use the normal paid setup." Public paid actions wait for token/subscription launch.
+- **Private hosted access:** Installing or listing tools does not grant action access. A stranger can call read tools such as `find_token`; an unallowlisted private-mode action returns "Not submitted. This wallet is not on the server private test allow-list. Ask the operator to configure private test access or use the normal paid setup." Mainnet paid access is live; it requires a verified ERC-8004 identity and an active subscription. Call `account` for phase, available plans and price.
 - **Hosted preview vs. local simulations:** Transaction builders run a hosted `preview` (`eth_simulateV1` with `traceTransfers: true`). The bridge may reuse an identical same-block hosted preview for up to 12 seconds, but this does not remove the sender's local ordered simulation, exact-transaction simulation, or fresh post-confirmation simulation. Transfer changes are estimates, exclude gas, and cannot prove inclusion, sellability, or external settlement.
 - **Finite approvals:** Swaps approve the quoted input and holder sign-up approves the quoted burn. Bounded-price flows may approve a finite capped maximum and request cleanup afterward. Unlimited grants are refused, but Oak makes no unconditional promise that every successful flow leaves zero residual allowance.
 - **Typed data and gasless paths:** Identity link/unlink challenges and Meridian RFQ continuations sign EIP-712 typed data rather than an EVM transaction, so they do not claim a transaction preview or gas estimate. Ask mode binds confirmation to the typed-data hash when a prompt is required; owner-selected auto mode skips prompts while retaining applicable checks. Reads and session/request authentication signatures do not prompt.
@@ -45,7 +45,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 
 ---
 
-## Local Lifecycle Tools (9)
+## Local Lifecycle Tools (10)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -56,8 +56,9 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 | `send` | yes | Send ETH or a pinned token (USDG, WETH, USDe, OAK) from the local wallet to an address. A human confirms the exact token, amount and recipient before signing. |
 | `oak_confirmation` | yes | Read the decoded terms and unsigned hashes of pending human confirmations in this local process. Cannot approve or sign. No identity or subscription needed. |
 | `oak_cleanup_allowances` | yes | Separate wallet allowance cleanup: preview and confirm each recorded leftover approval revoke. Costs network fees. Never bundled into an unrelated action. No identity or subscription needed. |
-| `oak_allowances` | yes | Read current ERC-20 and Permit2 allowances from the local wallet to known Oak spenders at one block. Optional tokens array; defaults include pinned tokens and Beefy wants/shares. Reports nonzero grants and unavailable reads. No identity, subscription, signing or cleanup. |
+| `oak_allowances` | yes | Read current ERC-20 and Permit2 allowances from the local wallet to known Oak spenders at one block. Optional tokens array; defaults include pinned tokens and Beefy wants/shares. Flags token-level default Permit2 approvals separately from wallet permissions; defaults are not wallet-made grants and should not be advised for revocation. Unavailable reads remain unknown. No identity, subscription, signing or cleanup. |
 | `oak_approval_census_status` | yes | Read local approval-history catch-up progress and estimated time. Uniswap and reads remain available during catch-up. |
+| `oak_receipts` | yes | List or export local approval receipts as JSON or CSV, or verify their hash chain against a saved head. No upload, signing, identity or subscription required. |
 
 ---
 
@@ -243,7 +244,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 | `orbio_buy_held_credit` | via `run_tool` | Prepare buying held Orbio credit with USDG, bounded by a minimum credit out and a fill limit. |
 | `orbio_activate_credit` | via `run_tool` | Prepare activating held Orbio credit for yourself or a named beneficiary. |
 | `orbio_transfer_credit` | via `run_tool` | Prepare transferring held Orbio credit to another address. |
-| `orbio_credit_status` | yes | Read wallet CREDIT and activated account balance; the local add-on authenticates with a human-approved credential signature. |
+| `orbio_credit_status` | yes | Read wallet CREDIT and activation receipts without a signature. Activated account balance stays unverified until you authenticate with orbio_account; status reuses an existing local credential. |
 | `orbio_tx_status` | via `run_tool` | Read the status of an Orbio-related transaction on Robinhood Chain or Ethereum. |
 | `orbio_catalog` | via `run_tool` | Browse the Orbio catalog of models, tools or infrastructure with optional search and output-modality filters. |
 | `orbio_staking_status` | via `run_tool` | Read your ORBIO staking balance, pending rewards and staking parameters. |
@@ -317,7 +318,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 | `relay_bridge_out` | yes | Bridge ETH or ERC-20 out; checks return RPC/tracing on server and add-on (OAK_RPC_URL_<chainId>). Default slippage 500 bps; review the minimum. |
 | `relay_status` | yes | Read a known Relay requestId status without an API key; requestId is required. Optional destination receipt checks need its chain RPC. |
 | `relay_bridge_in` | yes | Prepare an inbound Relay bridge route to Robinhood Chain. A fresh wallet may bridge ETH or USDG to itself before it has an identity or subscription; every other shape needs both. |
-| `relay_quote` | via `run_tool` | Read a Relay estimate; requires operator-configured Relay authentication because quote/v2 requires authentication since October 2, 2026. Nothing is signed. |
+| `relay_quote` | via `run_tool` | Read a Relay estimate; requires operator-configured Relay API credentials because quote/v2 requires authentication since October 2, 2026. Nothing is signed. |
 | `relay_chains` | via `run_tool` | Read Relay chains and supported currency metadata without an API key. |
 | `relay_chain_health` | via `run_tool` | Read Relay chain service health; chainId is required. |
 | `relay_token_details` | via `run_tool` | Read Relay token metadata and market analytics. |
@@ -330,10 +331,10 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **39 acti
 | `relay_currency_classifications` | via `run_tool` | Read Relay major and stable token fee categories. |
 | `relay_liquidity` | via `run_tool` | Read indicative Relay solver liquidity by chain. |
 | `relay_swap_sources` | via `run_tool` | List Relay swap venues available for routing filters. |
-| `relay_requests` | via `run_tool` | Page this wallet’s Relay request history, including pending and child requests; needs operator-configured Relay authentication. |
+| `relay_requests` | via `run_tool` | Page this wallet’s Relay request history, including pending and child requests; needs operator-configured Relay API credentials. |
 | `relay_app_fee_balance` | via `run_tool` | Read this wallet’s off-chain Relay app fee credits. |
 | `relay_app_fee_claims` | via `run_tool` | Page this wallet’s previous Relay fee claims. |
-| `relay_balance_events` | via `run_tool` | Page this wallet’s Relay fee and sponsorship balance events; needs operator-configured Relay authentication. |
+| `relay_balance_events` | via `run_tool` | Page this wallet’s Relay fee and sponsorship balance events; needs operator-configured Relay API credentials. |
 | `relay_deposit_address` | via `run_tool` | Monitor a Relay deposit address and its deposits, sweeps, fills and refunds. |
 | `relay_recovery_balances` | via `run_tool` | Read this wallet’s credited Relay recovery balances; this does not attest deposits. |
 | `relay_withdrawal_status` | via `run_tool` | Read a Relay programmatic withdrawal job status; verify its chain receipt separately. |
