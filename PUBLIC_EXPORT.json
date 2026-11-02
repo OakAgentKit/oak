@@ -1,6 +1,6 @@
 {
   "schema": "oak-public-export/v1",
-  "mode": "prelaunch",
+  "mode": "launch",
   "files": [
     {
       "path": ".github/CI-NOTES.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": ".github/dependabot.yml",
-      "sha256": "a700fe91b3fce94270b3e6b918f6378edca7a9606c38f00aa89133f01a2d23ce"
+      "sha256": "3608e70616626990982cd3ad00deb3277e36583cbe6ed7538f0df8a19d101be9"
     },
     {
       "path": ".github/gitleaks.toml",
@@ -72,7 +72,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "4f51ab56ffe58ebfe0c33f4f91a492722eae0e4a498a159c59345d499e1fa9bf"
+      "sha256": "188745bfe058b1173dbee910b92139b0c64660b0f179b6b918349f458fca48d8"
     },
     {
       "path": "CHANGELOG.md",
@@ -96,7 +96,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "652451802949456590e295b779dc4397796d8b6911dfa906ee39d1bb16f5da44"
+      "sha256": "704150b24a75ee1875ae61d7faf1971db0079ae8b63e64cd4aec822354df7de5"
     },
     {
       "path": "SECURITY.md",
@@ -164,7 +164,7 @@
     },
     {
       "path": "contracts/deployments/4663.json",
-      "sha256": "a3cbeafb4a035cec3bb0a7a7dc41eb3d98e1885c8fb22555d9f9e6d2678ebfd7"
+      "sha256": "834286a3cc41382639edd39ee69d69167f5f8106ef6076f3c245dc7ffc0bf1fa"
     },
     {
       "path": "contracts/deployments/46630.json",
@@ -172,7 +172,7 @@
     },
     {
       "path": "contracts/deployments/README.md",
-      "sha256": "e2a7cc0450ae67f000eebceb9ebd3ccbb53bdcfd2f31d2dfc0a934ab35854a3c"
+      "sha256": "9ce56a293f1dc6f68e8227f7207e218e32cd5208918bb3596833e272cf0bfa7f"
     },
     {
       "path": "contracts/foundry.toml",
@@ -476,7 +476,7 @@
     },
     {
       "path": "llms.txt",
-      "sha256": "8a5356daff5ebd6444802812511d915f6c85dc74ab39212932df2a806fc044f7"
+      "sha256": "ddf39d7470f12780b1bc280b1d9050290d179244ea480b388b6ed8fab7256adb"
     }
   ]
 }

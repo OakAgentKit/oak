@@ -1,5 +1,7 @@
 # Oak for AI agents
 
+**$OAK on Robinhood Chain (4663):** `0x6511c233790Ec10f7d673c64DC82C3F941D57828` · [Pons](https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828) · [Token facts](https://oakagentkit.org/token.html). Hosted actions and paid access open with Oak 0.2.0; no date is promised and there is no public beta. Subscriptions, burns, oracle, burner and fee utility are not live.
+
 This file is the entry point for AI agents using Oak or working in this repository.
 It points to the documents that hold each rule; those documents are authoritative.
 

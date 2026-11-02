@@ -1,6 +1,11 @@
 {
   "chainId": 4663,
-  "status": "published at launch",
-  "notice": "Placeholder only. Verified Oak deployment addresses will be published at launch. Do not use as deployment configuration.",
-  "contracts": {}
+  "status": "token-live; subscription topology not deployed",
+  "notice": "Verify the launch transaction on chain 4663 before using these addresses. Only token and curve are asserted; no oracle, burner, subscription or fee utility deployment is asserted.",
+  "contracts": {
+    "oakToken": "0x6511c233790Ec10f7d673c64DC82C3F941D57828",
+    "ponsCurve": "0x47C76144294B009C12b8BC7C1D40CD8d65Dd486e"
+  },
+  "ponsUrl": "https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828",
+  "launchTransaction": "0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58"
 }

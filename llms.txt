@@ -1,5 +1,7 @@
 # Oak Agent Kit
 
+**$OAK on Robinhood Chain (4663):** `0x6511c233790Ec10f7d673c64DC82C3F941D57828` · [Pons](https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828) · [Token facts](https://oakagentkit.org/token.html). Hosted actions and paid access open with Oak 0.2.0; no date is promised and there is no public beta. Subscriptions, burns, oracle, burner and fee utility are not live.
+
 > Oak is one MCP install that connects an AI agent to 25 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally. Oak is independent and is not affiliated with Robinhood.
 
 Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.

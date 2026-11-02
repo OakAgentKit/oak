@@ -1,5 +1,7 @@
 ![Oak Agent Kit cover: a felt oak tree with glowing roots and a hooded figure with a lantern, captioned "Your AI agent, on Robinhood Chain"](assets/oak-cover.webp)
 
+**$OAK on Robinhood Chain (4663):** `0x6511c233790Ec10f7d673c64DC82C3F941D57828` · [Pons](https://ponsfamily.com/launchpad/0x6511c233790ec10f7d673c64dc82c3f941d57828) · [Token facts](https://oakagentkit.org/token.html). Hosted actions and paid access open with Oak 0.2.0; no date is promised and there is no public beta. Subscriptions, burns, oracle, burner and fee utility are not live.
+
 # Oak Agent Kit
 
 **One install connects your AI agent to 25 Robinhood Chain projects: swap, lend, borrow, use vaults, launch tokens and pull research.**
