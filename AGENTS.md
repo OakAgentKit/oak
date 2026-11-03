@@ -7,7 +7,7 @@ It points to the documents that hold each rule; those documents are authoritativ
 
 - **Setup:** follow [Connect your agent](docs/client-setup/README.md). Its copy-paste setup prompt is the expected first run.
 - **Tools and conventions:** [MCP tools reference](docs/mcp-tools-reference.md) lists every tool and the shared conventions, such as decimal base-unit amount strings and chain IDs.
-- **Projects:** [Robinhood Chain projects](docs/robinhood-chain-projects.md) describes what each of the 25 integrations can do.
+- **Projects:** [Robinhood Chain projects](docs/robinhood-chain-projects.md) describes what each of the 26 integrations, including Agent Wormhole phase A (signed token metadata snapshots and offline text scans; neither proves safety or sellability) can do.
 - **Custody and confirmation:** [Security, custody and authority](docs/security.md) is the custody rulebook. Never ask for keys or recovery words, never read wallet or key files, and never run `oak init`, `oak export` or `oak config set confirm auto` on the owner's behalf.
 - **Access:** [Access and pricing](docs/access-and-pricing.md) explains plans; get the owner's approval before identity registration or a subscription payment.
 

@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-**One install connects your AI agent to 25 Robinhood Chain projects: swap, lend, borrow, use vaults, launch tokens and pull research.**
+**One install connects your AI agent to 26 Robinhood Chain projects: swap, lend, borrow, use vaults, launch tokens and pull research.**
 Your keys stay on your machine. By default, Oak shows every transaction in plain words and waits for your approval before it signs.
 Oak is independent and is not affiliated with Robinhood.
 
@@ -11,7 +11,7 @@ Oak is independent and is not affiliated with Robinhood.
 [![Node.js >=22.12.0](https://img.shields.io/badge/node-%3E%3D22.12.0-062F27)](#quick-start-for-builders)
 [![Chain 4663](https://img.shields.io/badge/Robinhood%20Chain-4663-062F27)](docs/robinhood-chain-projects.md)
 
-[What is Oak?](docs/what-is-oak.md) · [Connect your agent](docs/client-setup/README.md) · [All 25 projects](docs/robinhood-chain-projects.md) · [Tool reference](docs/mcp-tools-reference.md) · [Security](docs/security.md)
+[What is Oak?](docs/what-is-oak.md) · [Connect your agent](docs/client-setup/README.md) · [All 26 projects](docs/robinhood-chain-projects.md) · [Tool reference](docs/mcp-tools-reference.md) · [Security](docs/security.md)
 
 ## How it works
 
@@ -22,17 +22,17 @@ Oak is independent and is not affiliated with Robinhood.
 <p>
 <a href="assets/arch-light.svg"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/arch-dark.svg">
-  <img src="assets/arch-light.svg" width="1200" alt="Your agent connects through Oak to 25 configured projects. Transaction previews estimate transfers; ask mode prompts before local signing, while owner-configured auto mode skips the prompt but retains checks. The hosted service supplies stateful quotes, prices and unsigned routing.">
+  <img src="assets/arch-light.svg" width="1200" alt="Your agent connects through Oak to 26 configured projects. Transaction previews estimate transfers; ask mode prompts before local signing, while owner-configured auto mode skips the prompt but retains checks. The hosted service supplies stateful quotes, prices and unsigned routing.">
 </picture></a>
 </p>
 
-**Version 0.2.1:** 660 tools on mainnet and 40 on testnet, with 85 and 20 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. Core and add-on **0.2.1 are published**. Mainnet contracts and the team vesting lock are recorded in [deployments](contracts/deployments/README.md).
+**Version 0.2.2 (published 2026-11-03):** 675 tools on mainnet and 41 on testnet, with 90 and 21 respectively in `tools/list`. Other tools are reachable through `find_tool` and `run_tool`. Core and add-on **0.2.2 are published on npm**. Mainnet contracts and the team vesting lock are recorded in [deployments](contracts/deployments/README.md).
 Longbow deposits, reads and withdrawals are available. Meridian buys and RFQ settlement handling carry forward from 0.1.9. Hosted actions run in paid mode with a verified ERC-8004 identity and an active subscription.
 Read `account` for the launch phase and available plans before subscribing.
-Version 0.2.1 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
+Version 0.2.2 keeps `tools/list` short: it shows the everyday tools, and an agent finds and runs any other
 tool with `find_tool` and `run_tool`. The [tool reference](docs/mcp-tools-reference.md) marks which tools are listed.
 
-## 25 projects, one connection
+## 26 projects, one connection
 
 | Category | Projects on Robinhood Chain mainnet |
 | --- | --- |
@@ -40,7 +40,7 @@ tool with `find_tool` and `run_tool`. The [tool reference](docs/mcp-tools-refere
 | Vaults & Rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl |
 | Borrow & Lend | Morpho Blue, Priors |
 | Move Money | Relay |
-| Markets & Data | Meridian, Lighter, HeyResearch |
+| Markets & Data | Meridian, Lighter, HeyResearch, Wormhole (Agent Wormhole phase A) |
 | Identity & Tools | ERC-8004, hood.ag, HoodLock, Orbio (AI compute credits) |
 
 - Read balances and positions across projects, look up tokens, and request project research.
@@ -52,14 +52,14 @@ Actions depend on project availability and permissions, identity, and subscripti
 The catalogue describes configured tools, not a guarantee that every project action is
 available to every wallet or validated end to end.
 Merkl tools: Powered by Merkl, [https://app.merkl.xyz](https://app.merkl.xyz).
-HeyResearch tools retain their attribution and citations.
+HeyResearch tools retain their attribution and citations. Agent Wormhole phase A verifies signed token metadata snapshots on chain 4663 and scans supplied text locally without uploading it; neither read proves safety or sellability.
 
 [![OakAgentKit on HEY Research Lab](https://heyresearch.xyz/api/badge/oakagentkit)](https://heyresearch.xyz/project/oakagentkit?utm_source=badge&utm_medium=readme)
 
 ### Quick connections
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.2.1 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.2.2 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and paid subscriptions still need
@@ -75,7 +75,7 @@ In Claude Code, run these two commands:
 Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
 2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.1%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMiIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.2%2522%252C%2522mcp%2522%255D%257D)
 
 The manual global-install and per-client commands below remain available.
 
@@ -85,7 +85,7 @@ Requires **Node.js 22.12.0 or newer** (`>=22.12.0`) and an MCP client.
 These are the same install and connect commands as the [client guides](docs/client-setup/README.md):
 
 ```sh
-npm install -g @oakagentkit/addon@0.2.1
+npm install -g @oakagentkit/addon@0.2.2
 oak --version
 ```
 

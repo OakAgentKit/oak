@@ -1,8 +1,8 @@
 # Oak for Claude Code
 
-Connect a local Oak MCP server with tools for 25 projects on Robinhood Chain.
+Connect a local Oak MCP server with tools for 26 projects on Robinhood Chain.
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. The plugin runs
-`npx -y @oakagentkit/addon@0.2.1 mcp`; a global Oak install is optional.
+`npx -y @oakagentkit/addon@0.2.2 mcp`; a global Oak install is optional.
 
 In Claude Code:
 

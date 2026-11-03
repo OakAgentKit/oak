@@ -10,7 +10,7 @@
     {
       "name": "oak",
       "source": "./plugins/oak",
-      "description": "Connect a local Oak wallet and tools for 25 Robinhood Chain projects."
+      "description": "Connect a local Oak wallet and tools for 26 Robinhood Chain projects."
     }
   ]
 }

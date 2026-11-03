@@ -18,6 +18,7 @@ jobs:
         with:
           lycheeVersion: v0.20.1
           # npm package pages block CI clients with 403; keep other npmjs pages checked.
-          args: --no-progress --max-retries 2 --timeout 20 --exclude '^https?://(www\.)?(x|twitter)\.com([/?#]|$)' --exclude '^https?://(www\.)?npmjs\.com/package/(@[^/?#]+/)?[^@/?#][^/?#]*/?([?#].*)?$' README.md 'docs/**/*.md'
+          # VS Code MCP install redirects to the vscode: handler by design.
+          args: --no-progress --max-retries 2 --timeout 20 --exclude '^https?://(www\.)?(x|twitter)\.com([/?#]|$)' --exclude '^https?://(www\.)?npmjs\.com/package/(@[^/?#]+/)?[^@/?#][^/?#]*/?([?#].*)?$' --exclude '^https://vscode\.dev/redirect\?url=vscode%3Amcp%2Finstall%3F' README.md 'docs/**/*.md'
           fail: true
           token: ''

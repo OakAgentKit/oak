@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.2 — 2026-11-03 (published)
+
+- [Changed] Published core and add-on 0.2.2; registry bytes match the frozen archives (SHA-256 core `57ae466c…`, add-on `b730a839…`). No contract redeployment. Install shortcuts, plugin pins and editor links pin 0.2.2.
+- [Added] Catalog totals: 675 mainnet / 41 testnet callable tools, 90 / 21 listed tools, 11 local lifecycle tools and 26 projects.
+
+- [Added] Agent Wormhole phase A: check a signed token metadata snapshot on Robinhood Chain, or scan untrusted text locally without uploading it. Missing or stale evidence stays unknown; neither read certifies a token or proves text safe.
+- [Added] Hookr limit-order creation, cancellation, fills and bounty claims, with order, pool, quote and relay-receipt reads and trader-signed swap relaying.
+- [Changed] HEY Research Lab context appears when you ask for it. Automatic checks are off by default; owners can opt in with `OAK_HEY_AUTO_CONTEXT`. Previously requested context can be shown again with its check time.
+- [Added] Token facts, builder feed, follow list and position context reads from HEY Research Lab, only when you ask. Follow lists stay on your computer; selected position context is joined locally without sending wallet addresses or amounts to HEY Research Lab.
+- [Added] Two proof-of-ship reads through `heyresearch_read`: `getProofOfShipShips` for dated ship receipts and `getProofOfShipTie` for the project's reported token association. Builder activity is not an endorsement, audit, rating or trading signal.
+
+- [Fixed] Buy tokens whose only route is a verified pinned pool or Pons pool after the approval-history check, including native ETH inputs and outputs.
+- [Fixed] Accept valid request proofs under small client/server clock differences while retaining single-use proofs and expiry limits.
+- [Fixed] Reuse an existing exact Permit2 approval; replace surplus approvals with the exact input amount and preserve local swap input caps.
+- [Fixed] List HEY Research Lab token facts, feed, follow and position context on the everyday tool menu alongside the access-code tool.
+- [Fixed] Label indexed feed figures as addresses, and leave unread figures marked as not read.
+- [Fixed] Preserve HEY Research Lab's exact status label and help text; agents must repeat the returned status line word for word.
+
 ## 0.2.1 — 2026-11-02 (published)
 
 - [Changed] Published core and add-on 0.2.1; registry bytes verified at 15:56Z against frozen archives (SHA-256 core `b920b73f…`, add-on `9b2166da…`). No contract redeployment.

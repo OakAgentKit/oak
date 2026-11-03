@@ -6,7 +6,8 @@ solc_version = "0.8.26"
 evm_version = "cancun"
 optimizer = true
 optimizer_runs = 200
-bytecode_hash = "none"
+# Match deployed IPFS metadata; byte-exact evidence: ops/publish/blockscout-verify-2026-11-02/README.md.
+bytecode_hash = "ipfs"
 fs_permissions = [{ access = "read", path = "test" }]
 
 [profile.default.fuzz]

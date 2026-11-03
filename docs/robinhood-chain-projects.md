@@ -1,10 +1,10 @@
-# Robinhood Chain Ecosystem Projects (25 Configured Modules)
+# Robinhood Chain Ecosystem Projects (26 Configured Modules)
 
-Oak Agent Kit (`@oakagentkit/addon`, published on npm) provides normalized MCP modules for **25 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
+Oak Agent Kit (`@oakagentkit/addon`, published on npm) provides normalized MCP modules for **26 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
 
-Instead of configuring 25 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, holder sign-up approves its quoted burn, and bounded-price flows may approve a finite cap followed by cleanup. Since **0.1.1**, local transaction checks and human confirmation precede signing by default. Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode. Projects keep their own protocol fees; Oak charges **0%** on your trades and no per-call fees.
+Instead of configuring 26 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, holder sign-up approves its quoted burn, and bounded-price flows may approve a finite cap followed by cleanup. Since **0.1.1**, local transaction checks and human confirmation precede signing by default. Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode. Projects keep their own protocol fees; Oak charges **0%** on your trades and no per-call fees.
 
-> **Network scope:** All 25 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the 9 basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
+> **Network scope:** All 26 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the 9 basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
 
 > **Tool list:** The Tools column names every tool each project registers. The [tool reference](mcp-tools-reference.md) gives each tool's one-line description and marks which ones `tools/list` shows. An agent finds any tool that is not listed with `find_tool` and runs it with `run_tool`.
 
@@ -60,13 +60,14 @@ All six vault modules integrate into the one-call `positions` tool so an agent c
 
 ---
 
-## 5. Markets and Data (3 Projects)
+## 5. Markets and Data (4 Projects)
 
 | Project | Tools | Capabilities & Protocol Notes |
 | :--- | :--- | :--- |
 | **Meridian** | `meridian_browse`, `meridian_positions`, `meridian_settle`, `meridian_redeem`, `meridian_buy`, `meridian_sell` | Robinhood Chain Predict search, paginated position reads, settlement/redemption, and secondary RFQ sales using USDe collateral. `meridian_buy` is paused. Position-token bridging, Arbitrum trading and perps are unsupported. The local bridge handles multi-turn EIP-712 RFQ continuations automatically (never pass `continuation` or `signature` manually). |
 | **Lighter** | `lighter_funding` | Read-only normalized perpetual funding rates. |
 | **HeyResearch** | `heyresearch_research_project`, `heyresearch_chain_activity`, `heyresearch_read`, `heyresearch_bulk`, `heyresearch_validate_receipt` | Read-only project research and chain activity queries preserving HeyResearch attribution, citations, and status wording. `heyresearch_read` runs any of HeyResearch's public operations by name, `heyresearch_bulk` uses the operator's key, and `heyresearch_validate_receipt` sends a research receipt for stateless validation. |
+| **Agent Wormhole** | `wormhole_token_check`, `wormhole_scan_text` | Phase A. `wormhole_token_check` reads and verifies a free signed token metadata snapshot on chain 4663; missing, stale or invalid evidence gives no current verdict, and it is not a contract audit. `wormhole_scan_text` scans untrusted text offline on this computer for instruction shapes and never uploads it; allow is not proof of safety and abstain means unknown. |
 
 ---
 

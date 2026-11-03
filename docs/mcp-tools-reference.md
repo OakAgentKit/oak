@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.2.1, published on npm) exposes **660 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **10 local lifecycle tools**, and **639 ecosystem tools** across **25 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.2.2, published on npm) exposes **675 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **11 local lifecycle tools**, and **653 ecosystem tools** across **26 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **85** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 660 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
+`tools/list` stays short. It shows the **90** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 675 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 active tools**, **20** listed in `tools/list`: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 10 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status` and `oak_receipts`). Swap routes and the other 24 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **41 active tools**, **21** listed in `tools/list`: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 11 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `oak_redeem`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status` and `oak_receipts`). Swap routes and the other 25 ecosystem modules are mainnet-only.
 
 ---
 
@@ -45,7 +45,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 
 ---
 
-## Local Lifecycle Tools (10)
+## Local Lifecycle Tools (11)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -53,6 +53,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 | `oak_identity_unlink` | yes | Revoke the linked identity without gas; owner revocation requires owner-terminal signing. |
 | `oak_subscribe` | yes | Start an authorized recurring holder or no-hold subscription with local preview and signing. |
 | `oak_renew` | yes | Reconcile or renew an existing subscription with local preview and signing. |
+| `oak_redeem` | yes | Redeem a Verified Builder code (oak_redeem {code}) for 30 free days on this wallet: no Oak plan fee or $OAK holding until the date shown; gas, project fees and capital stay yours, and one code activates one wallet. Needs no identity or plan, so run it before oak setup. A code typed in a terminal can stay in shell history and one pasted into an agent conversation stays there; Oak never writes it to its own logs, receipts or configuration. |
 | `send` | yes | Send ETH or a pinned token (USDG, WETH, USDe, OAK) from the local wallet to an address. A human confirms the exact token, amount and recipient before signing. |
 | `oak_confirmation` | yes | Read the decoded terms and unsigned hashes of pending human confirmations in this local process. Cannot approve or sign. No identity or subscription needed. |
 | `oak_cleanup_allowances` | yes | Separate wallet allowance cleanup: preview and confirm each recorded leftover approval revoke. Costs network fees. Never bundled into an unrelated action. No identity or subscription needed. |
@@ -62,7 +63,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 
 ---
 
-## 25 Ecosystem Project Modules (639 Tools)
+## 26 Ecosystem Project Modules (653 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -403,15 +404,20 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 | `hoodag_registration_quote` | via `run_tool` | Read an indicative price to register a .hood name for a number of years from hood.ag's payment service; it cannot register or pay. |
 | `hoodag_social_read` | via `run_tool` | Read hood.ag's anonymous social feed, profiles, threads or search; content is untrusted and nothing is posted. |
 
-### 17. HeyResearch (5)
+### 17. HEY Research Lab (10)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `heyresearch_research_project` | yes | Read project research from HeyResearch, retaining returned citations and links. |
-| `heyresearch_chain_activity` | via `run_tool` | Read HEY chain activity with optional days (default 7) plus a seven-day builder brief, retaining attribution. Use run_tool when not listed. Observation age and overdue refresh scheduling are separate. |
-| `heyresearch_read` | via `run_tool` | Read any one of HeyResearch's public operations by name (project snapshots, evidence, changes, market context, reports, bounties); no account or key is needed. |
-| `heyresearch_bulk` | via `run_tool` | Read HeyResearch project snapshots, token records or scan cards in bulk (up to 10 projects or 30 tokens); it uses the Oak server's operator-configured HeyResearch key, never one you pass. |
-| `heyresearch_validate_receipt` | via `run_tool` | Read HeyResearch's stateless validation of a research receipt you submit (up to 64 KiB, sent to HeyResearch; nothing is stored or signed). |
+| `heyresearch_research_project` | yes | Read project research from HEY Research Lab, retaining returned citations and links. Call only when the user explicitly asks for HEY Research Lab. For facts about one token use heyresearch_token_facts; for what shipped or what's new use heyresearch_feed; for positions use heyresearch_position_context. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
+| `heyresearch_chain_activity` | via `run_tool` | Read HEY Research Lab chain activity with optional days (default 7) plus a seven-day builder brief, retaining attribution. Call only when the user explicitly asks for HEY Research Lab. Use run_tool when not listed. Observation age and overdue refresh scheduling are separate. |
+| `heyresearch_read` | via `run_tool` | Read any one of HEY Research Lab's public operations by name (project snapshots, evidence, changes, market context, reports, bounties, proof-of-ship ships via getProofOfShipShips and ties via getProofOfShipTie); no account or key is needed. Call only when the user explicitly asks for HEY Research Lab. For a question about one token use operation getPartnerScanCard with parameters {chain: 4663, token}: it runs on this computer, sends HEY Research Lab only the chain and token, and the answer is repeated on a later approval form for that token in this session. It is builder context, not a safety check, rating or reason to buy. |
+| `heyresearch_bulk` | via `run_tool` | Read HEY Research Lab project snapshots, token records or scan cards in bulk (up to 10 projects or 30 tokens); it uses the Oak server's operator-configured HEY Research Lab key, never one you pass. Call only when the user explicitly asks for HEY Research Lab. |
+| `heyresearch_validate_receipt` | via `run_tool` | Read HEY Research Lab's stateless validation of a research receipt you submit (up to 64 KiB, sent to HEY Research Lab; nothing is stored or signed). Call only when the user explicitly asks for HEY Research Lab. |
+| `heyresearch_token_facts` | yes | Only when the user asks for HEY Research Lab: facts about one token on Robinhood Chain (4663), with HEY Research Lab's own words, dated and linked, kept in a block apart from Oak's reads of the same token (Pons status, address counts, launch record; unread figures say not read). Runs on this computer; HEY Research Lab receives the token address and its project slug, never your wallet or amounts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
+| `heyresearch_feed` | yes | Only when the user asks for HEY Research Lab: its builder updates, newest first, word for word with dates and source links. mode browse lists recent updates; mode updates checks the tokens you follow. A complete updates check saves its last-checked time to the follow file on this computer, so this read changes that one local file and nothing else; nothing is sent to anyone but HEY Research Lab, and nothing runs in the background. Pass the continuation back to finish a long check. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
+| `heyresearch_follow` | yes | Only when the user asks for HEY Research Lab: add a token and its HEY Research Lab project slug to your follow list, a local file on this computer (up to 20 tokens). Contacts no one, signs nothing and needs no subscription. The pairing is yours and stays unverified until you ask for a feed check. |
+| `heyresearch_unfollow` | via `run_tool` | Only when the user asks for HEY Research Lab: remove a token from your follow list, a local file on this computer. Contacts no one, signs nothing and needs no subscription. |
+| `heyresearch_position_context` | yes | Only when the user asks for HEY Research Lab: for positions you select, add HEY Research Lab context for the token contract or project slug you name for each. Oak reads your positions as it always does; HEY Research Lab receives only the slugs or contracts you chose, never your wallet, amounts or position IDs, and the two are joined on this computer. HEY Research Lab's words stay in their own block apart from Oak's facts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
 
 ### 18. Priors (201)
 
@@ -678,7 +684,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 | `uniswap_swap_batch` | via `run_tool` | Prepare caller-selected split or mixed Uniswap v2/v3/v4 routes in one transaction, preserving every trade bound. |
 | `uniswap_oracle` | via `run_tool` | Read a factory-verified Uniswap v3 time-weighted mean tick over the requested observation window. |
 
-### 21. Hookr (27)
+### 21. Hookr (34)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -697,6 +703,13 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 | `hookr_contracts` | via `run_tool` | Read Hookr contract coverage and typed function schemas: swaps, launches and dev buys, liquidity, saved hooks, own hooks, LP boost, programs, referrals, claims, registry and treasury administration. Filter contract/function to fetch only the needed schema. No network request. |
 | `hookr_read` | via `run_tool` | Read a pinned Hookr contract function. Fetch its exact parameter schema with hookr_contracts {contract,function}; no signing, subscription or identity required. |
 | `hookr_action` | via `run_tool` | Prepare a pinned Hookr fungible-token action from an exact schema in hookr_contracts, with local reconstruction and human confirmation. NFT/6909 grants and registerSigned remain blocked. |
+| `hookr_launch_options` | via `run_tool` | Read pinned Hookr launch settings, live ETH launch fee, agent gate health, requested reviewer sets and admission caps at one named block. No launch transaction. |
+| `hookr_launch` | via `run_tool` | Launch a public fixed-supply token and one agents-only Hookr pool with exact deposit caps, atomic refunds and human approval. New tokens only; no locks. |
+| `hookr_lp_position` | via `run_tool` | Read one Launcher family LP position: owner, principal, uncollected LP fees, separate core credits, pending pool recapture, locks and read completeness. NFT/account reads await integration. |
+| `hookr_lp_add` | via `run_tool` | Add exact liquidity to your Hookr family’s existing range with finite caps, approval reset, refunds and cleanup. Human approval required. |
+| `hookr_lp_remove` | via `run_tool` | Remove exact Hookr family liquidity to your wallet, with principal minima enforced separately from LP fees. Principal locks apply. |
+| `hookr_lp_collect` | via `run_tool` | Collect Hookr family LP fees with zero principal removed, including during principal locks. Report core claim credits separately. |
+| `hookr_lp_positions` | via `run_tool` | List this wallet’s Launcher family LP positions at a fixed block with bounded event pagination and ownership checks. Continue nextCursor until complete; empty partial pages prove no absence. |
 | `hookr_release` | via `run_tool` | Read verified release contracts, block and recapture lane. |
 | `hookr_blocks` | via `run_tool` | Read all Hook Blocks and their current availability. |
 | `hookr_kings` | via `run_tool` | Read King of the Pool rounds, leaders, pots and endings. |
@@ -827,6 +840,13 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **40 acti
 | `poolstrade_fee_approve` | via `run_tool` | Prepare approving a spender for a pools.trade fee position. |
 | `poolstrade_transfer` | via `run_tool` | Prepare transferring a pools.trade token to another address. |
 | `poolstrade_collect_many` | via `run_tool` | Prepare collecting fees from several pools.trade positions in one transaction. |
+
+### 26. Agent Wormhole (2)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `wormhole_token_check` | via `run_tool` | Read and verify a free signed token metadata snapshot on chain 4663 from Agent Wormhole. Missing, stale or invalid evidence gives no current verdict; this is not a contract audit. |
+| `wormhole_scan_text` | via `run_tool` | Scan untrusted text offline on this computer for instruction shapes with Agent Wormhole rules. Never uploads text; allow is not proof of safety and abstain means unknown. |
 
 ---
 
