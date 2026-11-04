@@ -2,9 +2,9 @@
 
 > Oak is one MCP install that connects an AI agent to 26 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally. Oak is independent and is not affiliated with Robinhood.
 
-Version 0.2.2 is published. Agent Wormhole phase A checks signed token metadata snapshots on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
+Version 0.2.3 is published. Agent Wormhole phase A checks signed token metadata snapshots on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
 
-Install with `npm install -g @oakagentkit/addon@0.2.2` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
+Install with `npm install -g @oakagentkit/addon@0.2.3` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
 
 ## Docs
 

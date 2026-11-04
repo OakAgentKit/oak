@@ -12,9 +12,9 @@ The illustration represents those configured integrations, not every project on 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 675 mainnet tools in version 0.2.2 with consistent inputs
+If you build agents, the same connection gives you 675 mainnet tools in version 0.2.3 with consistent inputs
 and one local wallet. You can build your own workflows or autonomous setups.
-Version 0.2.2 shows your agent a short list of everyday tools; it finds and runs
+Version 0.2.3 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
@@ -30,7 +30,7 @@ research, names and agent identities. Pons token launches are one example.
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
    Send a little ETH for network fees and USDG for a subscription only when you want paid actions.
 
-**Today:** Oak 0.2.2 is published and mainnet paid access is live on the 0.2.0 deployment.
+**Today:** Oak 0.2.3 is published and mainnet paid access is live on the 0.2.0 deployment.
 $OAK has graduated on Pons. Reads need neither identity nor subscription; actions need a
 verified ERC-8004 identity and an active subscription. Call `account` for the current
 phase, available plans and price; both plans wait during warmup. See [access and pricing](access-and-pricing.md).

@@ -1,6 +1,6 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.2.2, published on npm) exposes **675 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **11 local lifecycle tools**, and **653 ecosystem tools** across **26 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.2.3, published on npm) exposes **675 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **11 local lifecycle tools**, and **653 ecosystem tools** across **26 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
 `tools/list` stays short. It shows the **90** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 675 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
 

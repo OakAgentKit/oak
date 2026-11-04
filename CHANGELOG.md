@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3 — 2026-11-03 (published)
+
+- [Fixed] Merkl finder reads handle current opportunity and campaign responses and show hints for the matching type and destination.
+- [Changed] Uniswap v4 liquidity adds keep up to 0.5% headroom within your caps. Unused ETH is refunded in the same transaction.
+- [Fixed] Position adds no longer stop when only in-limit amounts or the new position's ID change before sending. The confirmed transaction bytes, recipients and approval limits stay bound.
+- [Fixed] New wallets no longer see “Invalid, expired or replayed Oak request” because the identity check advanced the server clock during authentication.
+- [Changed] A clearer message explains when a linked agent was replaced or unlinked and how to link it again.
+
 ## 0.2.2 — 2026-11-03 (published)
 
 - [Changed] Published core and add-on 0.2.2; registry bytes match the frozen archives (SHA-256 core `57ae466c…`, add-on `b730a839…`). No contract redeployment. Install shortcuts, plugin pins and editor links pin 0.2.2.
