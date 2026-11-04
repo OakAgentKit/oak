@@ -9,16 +9,16 @@ Three small Node.js 22 examples using only exported npm package APIs:
 ## Install and test packed packages
 
 Prerequisites: Node.js **22.12+ / 22.x**, npm, and the two release `.tgz` files.
-The core and add-on packages are published on npm. You can also use
+The core and add-on 0.2.4 packages are prepared, with publication pending. Use
 matching release archives for checks; no private repository source is needed.
 From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-node test-packed.mjs /path/to/oakagentkit-core-0.2.0.tgz /path/to/oakagentkit-addon-0.2.0.tgz
+node test-packed.mjs /path/to/oakagentkit-core-0.2.4.tgz /path/to/oakagentkit-addon-0.2.4.tgz
 ```
 
-These archives must be a matching reviewed release pair. The npm-ci path uses the exact versions in examples/package.json and package-lock.json; it does not test a newer locally packed candidate. Update and review both files when qualifying 0.2.0.
+These archives must be a matching reviewed release pair. The npm-ci path uses the exact versions in examples/package.json and package-lock.json; it does not test a newer locally packed candidate. Update and review both files when qualifying 0.2.4.
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
 `npm run preview`, or `npm run portfolio`. Each defaults to labelled fixture
@@ -53,7 +53,7 @@ identities, renew subscriptions, sign transactions, or send them, even after
 confirmation. No identity or active subscription is needed for the read tools.
 
 The examples are mainnet-only (`4663`); testnet has no swap routes or portfolio
-coverage across the 25 modules. Results depend on configured project readers;
+coverage across the 28 modules. Results depend on configured project readers;
 module error rows are surfaced, not reported as empty successful portfolios.
 
 ## Verification boundary
@@ -66,14 +66,14 @@ RPC availability, execution, auth/keychain access, prices or external settlement
 A successful buy simulation does not establish sellability; simulation excludes
 gas. See [eval-design.md](eval-design.md) for failure controls.
 
-Oak keeps `tools/list` short. Version 0.2.0 lists 84 tools through the CLI and 82 through these read-only examples. Tools outside that list remain reachable: call `find_tool` with an exact name for its input schema, then `run_tool` with the name and arguments. Counts may change between versions; compare your installed catalog.
+Oak keeps `tools/list` short. The prepared 0.2.4 registration lists 97 tools through the CLI; these read-only examples omit setup flows. Tools outside that list remain reachable: call `find_tool` with an exact name for its input schema, then `run_tool` with the name and arguments. Counts may change between versions; compare your installed catalog.
 
 Version 0.1.2 historically listed 102 CLI tools and 100 through the read-only examples; testnet CLI discovery listed 16. These historical counts do not establish the newer testnet surface.
 
 ## Direct installation from npm
 
-The manifest targets **0.2.0**. Launch preparation must replace the lockfile’s `PENDING_LAUNCH_ARCHIVE` integrity markers with the final reviewed archives before registry installation. The generated candidate lockfile pins its
-resolved dependency graph:
+The manifest and lockfile target **0.2.4**. The two Oak package integrity fields are omitted while publication is pending; the third-party dependency graph retains its checksums.
+TODO(U-INT): have release packaging add the final reviewed core and add-on integrity values before registry installation. After that update, run:
 
 ```sh
 npm ci --ignore-scripts --no-audit --no-fund
@@ -84,4 +84,4 @@ To verify matching local release archives, use
 `test-packed.mjs` instead.
 These examples deliberately disable signing; their review prompt is not the
 wallet's MCP confirmation form. Hosted read calls such as `find_token` are available to strangers; private-mode
-actions require server allowlisting. Public paid access waits for launch.
+actions require server allowlisting. Hosted actions require a verified ERC-8004 identity and an active subscription.

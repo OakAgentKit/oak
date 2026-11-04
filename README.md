@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-Oak connects your AI agent to **26 projects on Robinhood Chain** through one
+Oak connects your AI agent to **28 projects on Robinhood Chain** through one
 local MCP server. Your agent can check balances, compare swap routes, manage
 vault and lending positions, bridge assets, and use project tools from the same
 connection. MCP is the standard that lets an AI app call external tools.
@@ -15,7 +15,7 @@ Oak is independent and is not affiliated with Robinhood.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Current release: 0.2.3**, published on npm for both `@oakagentkit/core` and
+**Prepared release: 0.2.4**, with publication pending for both `@oakagentkit/core` and
 `@oakagentkit/addon`. See the [changelog](CHANGELOG.md) for the fixes in this release.
 Mainnet paid access uses the existing [0.2.0 deployment](contracts/deployments/README.md).
 
@@ -29,12 +29,12 @@ You need Node.js **22.12.0 or newer**, npm and an MCP client.
 Run these commands in your terminal:
 
 ```sh
-npm i -g @oakagentkit/addon
+npm i -g @oakagentkit/addon@0.2.4
 oak --version
 ```
 
-The current version is 0.2.3. To install that exact release, use
-`npm i -g @oakagentkit/addon@0.2.3`.
+The prepared version is 0.2.4. Publication is pending;
+wait for the release before running the pinned install command.
 
 ## Connect your agent
 
@@ -58,7 +58,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.2.3 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.2.4 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -87,9 +87,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.3%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.4%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.2.3 package through `npx`.
+These shortcuts run the pinned 0.2.4 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -115,13 +115,17 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 | --- | --- |
 | Swap, trade, launch tokens and manage liquidity | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4) |
 | Use vaults and claim rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl |
-| Supply collateral, lend, borrow and repay | Morpho Blue, Priors |
+| Supply collateral, lend, borrow and repay | Morpho Blue, Priors, LayerBank |
+| Buy, sell and redeem principal tokens | Pendle |
 | Bridge assets | Relay |
 | Use prediction markets, funding data and research | Meridian, Lighter, HeyResearch, Wormhole (Agent Wormhole phase A) |
 | Manage identity, names, locks and AI credits | ERC-8004, hood.ag, HoodLock, Orbio |
 
-The catalog has **675 mainnet tools** and **41 testnet tools**. Your agent sees
-90 everyday tools on mainnet, or 21 on testnet, in `tools/list`. It can find and
+`earn_options` compares LayerBank and Pendle through a read-only helper.
+It is excluded from the project count.
+
+The catalog has **684 mainnet tools** and **42 testnet tools**. Your agent sees
+97 everyday tools on mainnet, or 22 on testnet, in `tools/list`. It can find and
 run the rest through `find_tool` and `run_tool`.
 The [tool reference](docs/mcp-tools-reference.md) lists every tool and its inputs.
 The [project guide](docs/robinhood-chain-projects.md) explains each integration.
@@ -179,9 +183,7 @@ project; subscriptions go to the burner and treasury.
 
 Before signing, Oak checks routes, recipients, approval spenders and simulated
 wallet outflows. It refuses unlimited and incremental approvals, unsupported
-permits and blanket operator approvals. Uniswap v4 position adds may use up to
-0.5% headroom within the caps you approved, and unused ETH is refunded in the
-same transaction. A finite capped approval can leave an allowance that needs
+permits and blanket operator approvals. Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks; unused ETH is refunded in the same transaction. A finite capped approval can leave an allowance that needs
 cleanup; Oak makes no unconditional zero-residual-allowance promise.
 
 Human confirmation is on by default. Declining, timing out or having no supported
@@ -207,7 +209,7 @@ Never give an agent keys or recovery words. Never let an agent run `oak init` or
 `oak export`; those commands belong in your own terminal. Backups are optional:
 `oak backup` gives guidance. Oak cannot recover a lost key. Oak shows a region
 notice by default; the operator and user are responsible for local compliance.
-Oak never promises returns. [Security and custody](docs/security.md)
+[Security and custody](docs/security.md)
 
 ## Source and links
 

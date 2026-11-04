@@ -1,9 +1,44 @@
 # Changelog
 
+## 0.2.4 — prepared, unpublished
+
+- [Added] LayerBank on Robinhood Chain: `layerbank_list`, `layerbank_deposit`, `layerbank_withdraw` lend and withdraw USDG at the pinned pool with an exact approval; a withdrawal larger than the pool's cash on hand is refused and the smaller amount is offered only if you agree.
+- [Added] Pendle on Robinhood Chain: `pendle_list`, `pendle_buy`, `pendle_sell`, `pendle_redeem` for fixed-term PT on USDG and stock-token markets; Oak decodes Pendle's calldata, checks it against the chain and refuses anything it cannot match, and ended terms are cashed out from a locally built call.
+- [Added] Read-only `earn_options` compares LayerBank and Pendle side by side with live rates, the way out, one risk line and one cost line each, and says plainly when an amount is too small after costs.
+- [Changed] Confirmation screens, receipts and ended-term notices for LayerBank and Pendle, including the cash-out screen that names the stock token for ended stock-token terms.
+- [Added] The positions read reports staked ORBIO, claimable CREDIT and owned agent-vault stakes.
+- [Changed] LayerBank fee estimates use gas measured on mainnet receipts, and the list and card share one wording for each risk line.
+- [Changed] Merkl pool opportunities carry the liquidity-position warning, and discovery hints appear only for registered destinations.
+- [Fixed] A direct-owner link proof older than 30 seconds is refused when it is consumed. This bounds late relinking; it does not detect an NFT transfer inside the 30 seconds.
+- [Changed] Builder status text reads "Builder status by HEY Research Lab" and "Not on HEY Research Lab yet"; the privacy page says token scans run from your computer and only `getPartnerScanCard` is direct, and lists the Merkl bonus read and Pendle market list and quotes.
+- [Changed] Uniswap v4 add and increase screens disclose leftover allowances and how to clean them up.
+- [Added] Proof section on the token page, checked by a read-only script against the chain and npm.
+- [Added] A farming playbook for USDG. Ask your agent to use Oak's farming skills: it reads lending and vault options in order, then the Merkl bonus rewards on them. Everything in it is a read until you choose, and rates, caps and bonuses are read again each time you ask.
+- [Added] `oak_playbook`, a local read-only tool that gives you an Oak playbook by name, for clients that cannot read MCP resources. With no name it lists the playbooks; a long playbook comes in pages with a `nextOffset`. Startup step 8 now names it.
+- [Added] Positions cover more holdings: Pons buyer holdings, Priors savings, stock collateral, backing stake and PRIORS, NetNet bond notes, Longbow NFT loans you borrowed against, and pinned Beefy vault positions that stay listed when Beefy's service is down.
+- [Changed] In `positions`, `incomplete` now means a holdings read failed (an error, a timeout or a partial scan). Programs with no holdings reader are listed apart as `notIndexed`, each with its reason.
+- [Added] Catalog totals from registration: 684 mainnet / 42 testnet callable tools, 97 / 22 listed tools and 28 projects. Tool references regenerated from the integrated source.
+- [Fixed] Pons buys reuse an existing exact Permit2 approval and replace a different allowance with the exact input amount.
+- [Fixed] `pons_profile` listed other wallets' launches; it now lists only the launches that wallet created. `pons_analytics` buyback holdings no longer show empty rows, and `pons_browse` describes its limit for each mode.
+- [Fixed] `clanker_browse` no longer fails on the last page of a deployer or search query, and a malformed cursor is refused. Token symbols and text from KyberSwap, HoodLock, Hookr, Merkl and Clanker are quoted as untrusted text and capped in Oak's own sentences.
+- [Fixed] Longbow NFT offers read again, and Longbow analytics offer only the views Longbow supports. Beefy concentrated-liquidity routes are hidden when their live check fails, the Beefy vault total is labelled `vaultTotalWant`, and share-token symbols are read from the chain.
+- [Fixed] `relay_bridge_out` checks its arguments before it probes the RPC that bridging out needs. `pendle_list` shows no rate lines for ended terms, and a Pendle request that Oak's rate budget refuses is reported as busy instead of starting a chain scan. `earn_options` no longer calls an amount you do not hold "your USDG".
+- [Fixed] `find_tool` sends everyday asks such as "how much do I own" and "buy ETH" to the right tool. Not-found results are reported as not found rather than "try again", missing Priors and ERC-8004 IDs say they do not exist, and Lighter funding rates no longer show float noise.
+- [Fixed] HEY Research Lab cooldowns are honoured: Oak no longer retries a request the service asked it to wait on.
+- [Changed] The trust, security and token pages and the threat model now say exactly when a burn cancels the 90-day sweep timer: when it spends at least 1% of the armed balance (rounded up) or the most one burn call may take, whichever is smaller. The privacy page lists the Orbio, HoodLock commerce, Meridian perps, Longbow, Pons and Beefy hosts and the local files Oak keeps, and the threat model gives the 300-second signing deadline, the file-key fallback and the 2,048-character text cap.
+- [Changed] Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks; unused ETH is refunded in the same transaction.
+- [Changed] Prepared install pins for 0.2.4, updated project lists and removed the connector count from the boundary diagrams.
+- [Changed] `uniswap_list_positions` reads and names the wallet you pass, not only your own. It says when a wallet holds more than 64 Uniswap v3 positions and that the list is incomplete, and `tokenIds` limits the read to the positions you choose. A one-token `uniswap_pools` search now works on the public RPC.
+- [Fixed] In `positions`, a Uniswap v3 portfolio over 64 positions shows as incomplete, never as complete. A position read that runs past its time limit is cancelled; the Pendle read stops at once.
+- [Fixed] Meridian refuses a malformed page cursor before it sends a request.
+- [Added] A quote on the pinned Uniswap route shows price impact against reference prices and warns above 2%; the trade is not blocked, and the quote says when no fresh reference price was available. Quote amounts with leading zeros are read correctly.
+- [Changed] Clearer messages: input errors say what to send (base-unit amounts, whole-number agent IDs), basis points are explained (100 = 1%), identity and access messages name `oak_setup`, `account`, `oak_subscribe` and `oak_renew`, funding errors show readable amounts beside base units, allowance cleanup says so when nothing ran, and the Orbio credential prompt names what it authorizes.
+- [Security] `merkl_claim` claims only for your own wallet, and a Relay deposit must name your wallet as the depositor. Invisible characters in confirmation fields are shown escaped. In auto mode, a deposit that would go over the daily cap asks you before its approval is sent, not after.
+
 ## 0.2.3 — 2026-11-03 (published)
 
 - [Fixed] Merkl finder reads handle current opportunity and campaign responses and show hints for the matching type and destination.
-- [Changed] Uniswap v4 liquidity adds keep up to 0.5% headroom within your caps. Unused ETH is refunded in the same transaction.
+- [Changed] Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks; unused ETH is refunded in the same transaction.
 - [Fixed] Position adds no longer stop when only in-limit amounts or the new position's ID change before sending. The confirmed transaction bytes, recipients and approval limits stay bound.
 - [Fixed] New wallets no longer see “Invalid, expired or replayed Oak request” because the identity check advanced the server clock during authentication.
 - [Changed] A clearer message explains when a linked agent was replaced or unlinked and how to link it again.

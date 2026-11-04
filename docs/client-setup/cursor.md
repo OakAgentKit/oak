@@ -5,13 +5,13 @@ Install Oak and connect the MCP below. The wallet creates itself on first use; y
 ## Quick connection
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.2.3 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.2.4 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and paid subscriptions still need
 separate approval.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuMyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.3%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.4%2522%252C%2522mcp%2522%255D%257D)
 
 ## 1. Configure `.cursor/mcp.json`
 
@@ -30,7 +30,7 @@ Add Oak to your workspace `.cursor/mcp.json` (or global `~/.cursor/mcp.json`):
 
 ## 2. Reload MCP Servers and Verify
 
-Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in version 0.2.3, listing 90 tools on mainnet `4663`, or 21 tools on testnet `46630`; the full catalogs have 675 and 41 tools via the finders), and test in Cursor Agent mode:
+Open **Cursor Settings → MCP**, confirm `oak` shows as green/connected (in version 0.2.4, listing 97 tools on mainnet `4663`, or 22 tools on testnet `46630`; the full catalogs have 684 and 42 tools via the finders), and test in Cursor Agent mode:
 
 1. **Read test:** *"Run `balances` and `positions` to inspect my Robinhood Chain portfolio."*
 2. **Action test:** *"Use `find_token` to verify TSLA, `quote` `10000000` USDG (`10 USDG`) to TSLA at `50` bps slippage, and show the `preview` before calling `swap`."*
