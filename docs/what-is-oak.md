@@ -1,10 +1,10 @@
 # What is Oak?
 
-Oak gives your AI agent one connection to explore and use 29 configured projects on Robinhood Chain.
+Oak gives your AI agent one connection to explore and use 31 configured projects on Robinhood Chain.
 You can ask it to check balances, look up project information or prepare an action,
 without connecting each project separately.
 
-![An illustration of Oak connecting its 29 configured Robinhood Chain project integrations](../assets/oak-world.webp)
+![An illustration of Oak connecting its 31 configured Robinhood Chain project integrations](../assets/oak-world.webp)
 
 The illustration represents those configured integrations, not every project on the chain.
 
@@ -12,13 +12,13 @@ The illustration represents those configured integrations, not every project on 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 687 mainnet tools in version 0.2.5 with consistent inputs
+If you build agents, the same connection gives you 700 mainnet tools in version 0.2.6 with consistent inputs
 and one local wallet. You can build your own workflows or autonomous setups.
-Version 0.2.5 shows your agent a short list of everyday tools; it finds and runs
+Version 0.2.6 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
-for the [29 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
+for the [31 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
 research, names and agent identities. Pons token launches are one example.
 
 ## Your first five minutes
@@ -30,7 +30,7 @@ research, names and agent identities. Pons token launches are one example.
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
    Send a little ETH for network fees and USDG for a subscription only when you want paid actions.
 
-**Release status:** Oak 0.2.5 is prepared; publication is pending. Mainnet paid access uses the 0.2.0 deployment.
+**Release status:** Oak 0.2.6 is prepared; publication is pending. Mainnet paid access uses the 0.2.0 deployment.
 $OAK has graduated on Pons. Reads need neither identity nor subscription; actions need a
 verified ERC-8004 identity and an active subscription. Call `account` for the current
 phase, available plans and price; both plans wait during warmup. See [access and pricing](access-and-pricing.md).

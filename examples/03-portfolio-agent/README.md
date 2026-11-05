@@ -7,7 +7,8 @@ integer arithmetic. Positions retain their project/module and any error rows.
 Prerequisites: Node 22 and the [packed-package installation](../README.md).
 Fixtures need no wallet, RPC or funds. Optional live reads require a local
 mainnet wallet and published service URL; no ERC-8004 identity/subscription is
-required. Mainnet's configured readers cover the 29 ecosystem modules.
+required. Mainnet has 31 configured ecosystem modules.
+Hosted `positions` cannot read Gloam notes because Gloam has no positions reader; use local `gloam_status` for those notes.
 
 From the installed examples directory:
 

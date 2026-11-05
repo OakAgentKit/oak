@@ -1,6 +1,6 @@
 # Threat model
 
-Oak's security documentation covers the shared custody and authority model. The sections below add the LayerBank, Pendle and Borro boundaries and limits.
+Oak's security documentation covers the shared custody and authority model. The sections below add the LayerBank, Pendle, Borro and Chop boundaries and limits.
 Use these sections when describing the impact of a report:
 
 - **Custody:** [Where your key lives](docs/security.md#2-where-your-key-lives-local-self-custody): the wallet is created and used on the user's machine; the hosted service never receives it.
@@ -13,13 +13,13 @@ Report a vulnerability privately as described in [SECURITY.md](SECURITY.md).
 
 ## Ecosystem assets and trust boundaries
 
-Oak connects to **29 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
+Oak connects to **31 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
 
 | Asset | What is at stake |
 | --- | --- |
-| LayerBank USDG deposits (`lRobUSDG`), Pendle principal tokens (PT), ended-term payouts and Borro lending vault shares | Unauthorized signing, bad trade parameters, thin liquidity, third-party contract bugs or changes can cause loss or prevent an exit. |
+| LayerBank USDG deposits (`lRobUSDG`), Pendle principal tokens (PT), ended-term payouts, Borro lending vault shares and Chop wrapped log / farm positions | Unauthorized signing, bad trade parameters, thin liquidity, third-party contract bugs or changes can cause loss or prevent an exit. |
 
-LayerBank deposits and withdrawals call the pinned pool. Pendle trades call the pinned router. Borro deposits and withdrawals call the single Morpho Vault V2 contract verified on chain for that request (`0x0FBad98595b0186dA120E41f77C102beb49f803c` factory membership), with exact asset approvals to that single vault and never to `BorroBuilders` or an external router. Borro is an independent project; Oak did not build it and is not affiliated with it. Oak pins addresses and function selectors, rather than contract code. Pendle's hosted API (`api-v2.pendle.finance`) supplies untrusted market lists and trade calldata and sees the requesting wallet address and trade amounts. Borro's web pages (`borro.markets/markets.json` and `contracts.json`) are optional, untrusted HTTP inputs queried by the Oak server for candidate discovery and labelled display rates; they are never used to construct calldata and are disabled during the add-on's offline local-guard rebuild. For an ended Pendle term, Oak builds the cash-out call locally from chain reads; an optional quote request to Pendle includes the wallet address and PT amount, lasts at most 1.5 seconds and can add a notice without changing the transaction. `earn_options` signs nothing. None of these three modules is registered on testnet.
+LayerBank deposits and withdrawals call the pinned pool. Pendle trades call the pinned router. Borro deposits and withdrawals call the single Morpho Vault V2 contract verified on chain for that request (`0x0FBad98595b0186dA120E41f77C102beb49f803c` factory membership), with exact asset approvals to that single vault and never to `BorroBuilders` or an external router. Borro is an official Oak partner. Borro's own team runs its product and contracts; Oak didn't build them and doesn't run them. Chop log discovery, wraps, unwraps, 50/50 LP farming, unfarming and CHOP reward harvesting call the verified Chop log contract or pinned Chop contracts on chain 4663, with exact token approvals and a 1,000,000 gas floor on `chop_harvest`. Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Oak pins addresses and function selectors, rather than contract code. Pendle's hosted API (`api-v2.pendle.finance`) supplies untrusted market lists and trade calldata and sees the requesting wallet address and trade amounts. Borro's web pages (`borro.markets/markets.json` and `contracts.json`) are optional, untrusted HTTP inputs queried by the Oak server for candidate discovery and labelled display rates; they are never used to construct calldata and are disabled during the add-on's offline local-guard rebuild. For an ended Pendle term, Oak builds the cash-out call locally from chain reads; an optional quote request to Pendle includes the wallet address and PT amount, lasts at most 1.5 seconds and can add a notice without changing the transaction. `earn_options` signs nothing. None of these four modules is registered on testnet.
 
 ## Threat H: Untrusted Pendle calls and limited LayerBank cash
 
@@ -45,3 +45,22 @@ LayerBank deposits and withdrawals call the pinned pool. Pendle trades call the 
 ## Before a deposit or term
 
 Read the confirmation screen's end date, early-exit line, risk line and cash-on-hand line. Choose an amount that allows for a partial withdrawal or a sale at the current market price. Expect the stock token itself when withdrawing from a stock-token vault or cashing out an ended stock-token term.
+
+
+### Threat K: Gloam notes, proofs and relay
+
+Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+
+- The encrypted local note store and receive key are spend authority. Theft can expose funds; losing both the store and backups loses them. New change and sweep notes require new backups. Never paste notes, bearer packages or backups into an agent. Claim accepts sealed tickets to the receive tag and sweeps ready payments immediately; the payer can take a payment back before it is claimed.
+- Only shield deposits sign wallet transactions. Exact USDG approval and `shieldBound` target the pinned pool through Oak's preview, local guard, human confirmation and sender. Pay, claim and whole-note cash-out are proof-authorized relay submissions, with human confirmation bound to the payload hash. Auto mode cannot approve them. Cash-out is only to this wallet and publicly reveals its receipt amount.
+- The session-free Oak forward sees the IP and public proof; a cash-out also names the wallet. Deposit attribution carries a public shield hash linkable to the wallet. Oak logs none of those fields; memory rate limits do not prevent all key-quota abuse. The unauthenticated forward can consume Oak's service-key allowance. Relay availability and future billing remain third-party/operator risks.
+- Public relay fallback occurs only on unreachable/5xx errors, reports that Gloam saw the computer's IP and loses attribution; a 4xx never falls back. Private actions never self-broadcast. Circuit downloads expose the computer's IP to Gloam; SHA-256 pin checks refuse altered files.
+- Gloam is in Mainnet Beta. A single EOA owner can lower deposit limits or fees immediately; raising the fee (up to 1%) or limits requires a three-day public wait. USDG's issuer can freeze the vault's tokens. Contract or circuit faults can lose money; no claim extends an outside contract review to the circuits, relay or SDK.
+- The fresh SDK has no established provenance. The optional `@oakagentkit/gloam` package has its own dependency and license supply chain; its absence or API mismatch refuses with an install command. Oak does not import its SDK at startup. Notes and proving stay local; the hosted module refuses all Gloam tools and `positions` cannot inspect private notes.
+
+
+### Threat J: Chop contracts and exit limits
+
+Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+
+Chop's upgrade key can replace log, staking and rewards implementations without a timelock. Oak rechecks the registry, proxy runtimes and beacon anchors for every action; implementation drift refuses wraps and farms, while verified exits carry a changed-code warning. The underlying unwrap has no on-chain minimum, so a fresh locally read floor and human confirmation cannot guarantee the eventual payout. A reward payout failure may be caught by Chop while the transaction succeeds; Oak checks received CHOP separately and applies a 1,000,000 gas floor. Wrapping or farming OAK reduces the wallet's OAK balance and can pause holder access. Logs are permissionless: registry verification is not a safety verdict. Oak refuses the dormant colliding OAK token. No contract audit claim is made.
