@@ -5,7 +5,7 @@ Install Oak and connect the MCP below. The wallet creates itself on first use; y
 ## Plugin shortcut
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.2.5 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.2.6 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and paid subscriptions still need

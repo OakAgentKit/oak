@@ -1,8 +1,18 @@
 # Changelog
 
-## 0.2.5 — prepared, unpublished
+## 0.2.6 — prepared, unpublished
 
-- [Added] Borro on Robinhood Chain (`borro_list`, `borro_deposit`, `borro_withdraw`): lend and withdraw USDG and official stock tokens across Borro's Morpho Vault V2 contracts, verified on chain per request against the factory, Borro's 2-of-3 group wallet and Oak's asset list, with `positions` coverage and plain risk, fee and cash-on-hand lines. Borro is an independent project; Oak did not build it and is not affiliated with it.
+- [Added] Gloam private USDG payments (`gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`) and the opt-in `@oakagentkit/gloam@0.2.6` engine. Notes, receive keys and proving stay on the user's computer; shield uses exact approvals and local signing, pay/claim/cash-out use proof authorization through the relay. Claim is free; all actions require a human even in auto mode. Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Added] Chop on Robinhood Chain (`chop_logs`, `chop_position`, `chop_quote_unwrap`, `chop_wrap`, `chop_unwrap`, `chop_farm`, `chop_unfarm`, `chop_harvest`): verified log discovery against the Chop factory, position and lock reads, unwrap quotes, wrapping, unwrapping, two-sided 50/50 LP farming, unfarming and `CHOP` reward harvesting with `positions` coverage, exact approvals, locally re-read confirmation floors and a 1,000,000 gas floor on `chop_harvest`. Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Added] Catalog totals from registration: 700 mainnet / 42 testnet callable tools, 105 / 22 listed tools and 31 projects. Tool references regenerated from the integrated source.
+- [Changed] Agent Wormhole adds request-time token verdicts on swap and launch paths (fail-open on network errors, hard-refusal on high-confidence block verdicts with local snapshot provenance checks), offline third-party text scanning on untrusted descriptions, and an off-by-default x402 USDG micropayment scaffold. Agent Wormhole is an official Oak partner. Agent Wormhole's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Fixed] Borro live-test fixes: align `borro_list`, `borro_deposit` and `borro_withdraw` with the live Morpho Vault V2 surface, add stock-token vault labels and locally verified share/asset floors, and tighten withdrawal cash-on-hand checks.
+- [Changed] Official Oak partner disclosures across product surfaces, playbooks, documentation and website pages for Borro, Chop, Gloam, Agent Wormhole and HEY Research Lab.
+- [Changed] Prepared install pins for 0.2.6 and updated project and tool counts across documentation, site and examples.
+
+## 0.2.5 — 2026-11-05 (published)
+
+- [Added] Borro on Robinhood Chain (`borro_list`, `borro_deposit`, `borro_withdraw`): lend and withdraw USDG and official stock tokens across Borro's Morpho Vault V2 contracts, verified on chain per request against the factory, Borro's 2-of-3 group wallet and Oak's asset list, with `positions` coverage and plain risk, fee and cash-on-hand lines. Borro is an official Oak partner. Borro's own team runs its product and contracts; Oak didn't build them and doesn't run them.
 - [Added] Catalog totals from registration: 687 mainnet / 42 testnet callable tools, 99 / 22 listed tools and 29 projects. Tool references regenerated from the integrated source.
 - [Security] `relay_bridge_in` recomputes Relay's v1 full-order hash locally and binds the origin input, destination chain and token, wallet recipient, minimum output floor, empty output calls, wallet refund terms and deadlines to the local request before any approval and on every rebuild.
 - [Fixed] Successful action messages offer `oak_cleanup_allowances` only when that action itself left an unspent approval record behind, instead of repeating stale advice from older journal entries.

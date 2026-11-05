@@ -1,17 +1,17 @@
 # Oak Agent Kit
 
-> Oak is one MCP install that connects an AI agent to 29 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally. Oak is independent and is not affiliated with Robinhood.
+> Oak is independent and is not affiliated with Robinhood. Oak is one MCP install that connects an AI agent to 31 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally.
 
-Version 0.2.5 is prepared; publication is pending. Agent Wormhole phase A checks signed token metadata snapshots on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
+Version 0.2.6 is prepared; publication is pending. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
 
-Install with `npm install -g @oakagentkit/addon@0.2.5` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
+Install with `npm install -g @oakagentkit/addon@0.2.6` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
 
 ## Docs
 
 - [What is Oak](https://github.com/OakAgentKit/oak/blob/main/docs/what-is-oak.md): plain-English introduction
 - [Connect your agent](https://github.com/OakAgentKit/oak/blob/main/docs/client-setup/README.md): install, wallet, funding and the copy-paste setup prompt
 - [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions
-- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 29 configured projects and their tools
+- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 31 configured projects and their tools
 - [Access and pricing](https://github.com/OakAgentKit/oak/blob/main/docs/access-and-pricing.md): plans, renewal and cancellation
 - [Security, custody and authority](https://github.com/OakAgentKit/oak/blob/main/docs/security.md): local custody, confirmation, key authority and vulnerability reporting
 - [Headless wallet](https://github.com/OakAgentKit/oak/blob/main/docs/headless-wallet.md): unattended operation chosen by the owner
@@ -26,3 +26,5 @@ Install with `npm install -g @oakagentkit/addon@0.2.5` (Node.js 22), then connec
 
 - [Examples](https://github.com/OakAgentKit/oak/blob/main/examples/README.md): runnable Node.js MCP examples
 - [Changelog](https://github.com/OakAgentKit/oak/blob/main/CHANGELOG.md)
+
+- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.2.6 -p @oakagentkit/gloam@0.2.6 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
