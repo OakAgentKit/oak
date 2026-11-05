@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.2.4, published on npm) exposes **684 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **12 local lifecycle tools**, and **661 ecosystem tools** across **28 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.2.5, published on npm) exposes **687 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **2 finder tools**, **12 local lifecycle tools**, and **664 ecosystem tools** across **29 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **97** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 684 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
+`tools/list` stays short. It shows the **99** tools marked *yes* below (each program's everyday tools, the local lifecycle tools, `find_tool` and `run_tool`) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 687 by what you want to do, and `run_tool` calls one with its arguments through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 active tools**, **22** listed in `tools/list`: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 12 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `oak_redeem`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts` and `oak_playbook`). Swap routes and the other 27 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 active tools**, **22** listed in `tools/list`: the 9 basic tools, `find_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 12 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `oak_redeem`, `send`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts` and `oak_playbook`). Swap routes and the other 28 ecosystem modules are mainnet-only.
 
 ---
 
@@ -64,7 +64,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 
 ---
 
-## 28 Ecosystem Project Modules (661 Tools)
+## 29 Ecosystem Project Modules (664 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -125,7 +125,15 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `layerbank_deposit` | yes | Prepare lending a USDG base-unit amount on LayerBank. Rates are read live and can change; show the returned risk and cost lines before asking. |
 | `layerbank_withdraw` | yes | Prepare taking USDG out of LayerBank, limited by cash on hand. Use a base-unit amount or max; show the returned receipt and network cost. |
 
-### 6. Pendle (4)
+### 6. Borro (3)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `borro_list` | via `run_tool` | Read Borro lending vaults for USDG and stock tokens, each checked on chain at call time. Rates are read live from Borro's page and labelled as such. Borro is an independent project. Show the returned risk lines as written. |
+| `borro_deposit` | yes | Prepare lending a base-unit amount into a Borro vault, named by asset symbol or vault address. Borro is an independent project; show the returned risk and cost lines and the share minimum before asking. |
+| `borro_withdraw` | yes | Prepare taking an asset out of a Borro vault, limited by cash on hand. Use a base-unit amount or max; if less is ready, offer the smaller amount and wait for the person. |
+
+### 7. Pendle (4)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -140,7 +148,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | :--- | :--- | :--- |
 | `earn_options` | yes | Read live LayerBank and Pendle options for make my money earn something. Read the returned card, risks, costs and maturity notices as written; let the user pick. |
 
-### 7. NetNet (26)
+### 8. NetNet (26)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -171,7 +179,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `netnet_force_exit` | via `run_tool` | Prepare a penalized NetNet Credit deallocation and cash exit with preview limits. |
 | `netnet_in_kind_exit` | via `run_tool` | Prepare a bounded NetNet Credit in-kind exit into idle USDG and supported Morpho Blue supply positions, with exact share approval. |
 
-### 8. Longbow (28)
+### 9. Longbow (28)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -204,7 +212,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `longbow_force_exit` | via `run_tool` | Prepare a penalized Longbow V2 deallocation and cash exit with preview limits. |
 | `longbow_in_kind_exit` | via `run_tool` | Prepare a bounded Longbow V2 in-kind exit into idle assets and supported Morpho Blue supply positions, with exact share approval. |
 
-### 9. Grove (8)
+### 10. Grove (8)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -217,7 +225,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `grove_deposit` | yes | Prepare a deposit into a supported Grove vault. |
 | `grove_withdraw` | yes | Prepare withdrawal from a supported Grove vault. |
 
-### 10. Beefy (16)
+### 11. Beefy (16)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -238,7 +246,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `beefy_vault_admin` | via `run_tool` | Read who owns, manages and can operate a Beefy vault and its strategy. |
 | `beefy_vault_manage` | via `run_tool` | Prepare a role-gated Beefy vault action such as earn, strategy proposal or upgrade, token rescue or ownership change. |
 
-### 11. Pons (18)
+### 12. Pons (18)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -261,7 +269,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `pons_trades` | via `run_tool` | Read a Pons launch's curve buys and sells from its on-chain events in a bounded block window; graduated-pool swaps are not listed. |
 | `pons_profile` | via `run_tool` | Read a wallet's Pons profile text (untrusted) and the launches it created. |
 
-### 12. Orbio (23)
+### 13. Orbio (23)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -289,7 +297,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `orbio_infra_call` | via `run_tool` | Run an Orbio infra call locally; requires an activated account, even for reads. Changes need an idempotency key, cost ceiling and human confirmation. |
 | `orbio_swap_quote` | via `run_tool` | Read an Orbio swap quote for ORBIO, ETH or USDG locally; it only quotes, and nothing is built or signed beyond the wallet-key message. |
 
-### 13. HoodLock (24)
+### 14. HoodLock (24)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -318,7 +326,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `hoodlock_feature_claim` | via `run_tool` | Reconcile an already-paid HoodLock featured listing without paying again; human confirmation required. |
 | `hoodlock_referral_register` | via `run_tool` | Register a HoodLock referral code through a local wallet message and ephemeral session; human confirmation required. |
 
-### 14. Merkl (13)
+### 15. Merkl (13)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -336,7 +344,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `merkl_dispute` | via `run_tool` | Prepare disputing the Merkl Distributor's current tree with an exact collateral approval; the collateral stays locked and is forfeited if the dispute is rejected. |
 | `merkl_distributor_admin` | via `run_tool` | Prepare a Merkl Distributor governor, guardian or updater operation, such as updating or revoking the tree, trusting an operator or recovering tokens to a named recipient; it affects all claimants. |
 
-### 15. Relay (25)
+### 16. Relay (25)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -366,13 +374,13 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `relay_vault_status` | via `run_tool` | Read legacy Relay vault shares and exit liquidity; needs OAK_RPC_URL_1 or OAK_RPC_URL_42161 for that chain. New deposits are unsupported. |
 | `relay_vault_withdraw` | via `run_tool` | Preview a legacy Relay vault exit to this wallet on Ethereum or Arbitrum, in WETH or native ETH. |
 
-### 16. Lighter (1)
+### 17. Lighter (1)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
 | `lighter_funding` | yes | Read Lighter funding data without submitting trades. |
 
-### 17. ERC-8004 (19)
+### 18. ERC-8004 (19)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -396,7 +404,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `erc8004_validation` | via `run_tool` | Read ERC-8004 validation requests and responses by request hash, agent or validator. |
 | `erc8004_verify_domain` | via `run_tool` | Read whether an agent's registered endpoint domain publishes a matching agent-registration file. |
 
-### 18. hood.ag (27)
+### 19. hood.ag (27)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -428,7 +436,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `hoodag_registration_quote` | via `run_tool` | Read an indicative price to register a .hood name for a number of years from hood.ag's payment service; it cannot register or pay. |
 | `hoodag_social_read` | via `run_tool` | Read hood.ag's anonymous social feed, profiles, threads or search; content is untrusted and nothing is posted. |
 
-### 19. HEY Research Lab (10)
+### 20. HEY Research Lab (10)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -443,7 +451,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `heyresearch_unfollow` | via `run_tool` | Only when the user asks for HEY Research Lab: remove a token from your follow list, a local file on this computer. Contacts no one, signs nothing and needs no subscription. |
 | `heyresearch_position_context` | yes | Only when the user asks for HEY Research Lab: for positions you select, add HEY Research Lab context for the token contract or project slug you name for each. Oak reads your positions as it always does; HEY Research Lab receives only the slugs or contracts you chose, never your wallet, amounts or position IDs, and the two are joined on this computer. HEY Research Lab's words stay in their own block apart from Oak's facts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
 
-### 20. Priors (201)
+### 21. Priors (201)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -649,7 +657,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `priors_x_link` | via `run_tool` | Prepare linking an agent to an X post URL as public ERC-8004 metadata. |
 | `priors_capabilities` | via `run_tool` | Read which Priors tools are reads, local actions or owner-signed, and which Priors features Oak does not route. |
 
-### 21. Morpho Blue (18)
+### 22. Morpho Blue (18)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -672,7 +680,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `morpho_midnight_manage` | via `run_tool` | Prepare role-checked Midnight configuration, fees, delegation or irreversible offer-group cancellation. |
 | `morpho_bundle` | via `run_tool` | Prepare atomic Blue supply, withdrawal, collateral borrowing, repayment or same-token migration with bounded public allocation fees. |
 
-### 22. Uniswap Liquidity (31)
+### 23. Uniswap Liquidity (31)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -708,7 +716,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `uniswap_swap_batch` | via `run_tool` | Prepare caller-selected split or mixed Uniswap v2/v3/v4 routes in one transaction, preserving every trade bound. |
 | `uniswap_oracle` | via `run_tool` | Read a factory-verified Uniswap v3 time-weighted mean tick over the requested observation window. |
 
-### 23. Hookr (34)
+### 24. Hookr (34)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -747,11 +755,11 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `hookr_addon_read` | via `run_tool` | Read factory-verified current Hookr revenue time shares, day wrappers or compounders: locks, day income, unwrap baskets, bands and side assets. Open factories via hookr_action. |
 | `hookr_addon_action` | via `run_tool` | Prepare a factory-verified current Hookr compounder action with exact funding and human confirmation. Time-share and day-wrapper actions await ERC-6909 trace and journal support. |
 
-### 24. Meridian (18)
+### 25. Meridian (18)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `meridian_browse` | yes | Search and page through Meridian Predict markets or look up an open condition. Prices 0 and 1 may indicate a resolved or inactive market; check resolution, status and liquidity before treating them as tradable prices. |
+| `meridian_browse` | yes | Search and page through Meridian Predict markets or look up an open condition. Prices 0 and 1 may indicate a resolved or inactive market; check resolution, status and liquidity before treating them as tradable prices. To buy a position, find meridian_buy with find_tool and call it with run_tool. |
 | `meridian_positions` | yes | Read Meridian prediction positions page by page. |
 | `meridian_settle` | via `run_tool` | Prepare settlement of eligible Meridian positions. |
 | `meridian_redeem` | yes | Prepare redemption of resolved Meridian positions. |
@@ -765,12 +773,12 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `meridian_perps_signer` | via `run_tool` | Blocked: Meridian perps signatures remain disabled by the signing contract pending expiry policy and a registered local submission path. Never supply a signature manually. |
 | `meridian_perps_referral` | via `run_tool` | Blocked: Meridian perps signatures remain disabled by the signing contract pending expiry policy and a registered local submission path. Never supply a signature manually. |
 | `meridian_perps_batch` | via `run_tool` | Blocked: Meridian perps signatures remain disabled by the signing contract pending expiry policy and a registered local submission path. Never supply a signature manually. |
-| `meridian_perps_deposit` | via `run_tool` | Preview an exact ERC-20 approval and exchange deposit. First deposit registers the subaccount. Wait for sequencer processing before trading. |
+| `meridian_perps_deposit` | via `run_tool` | Preview an exact ERC-20 approval and exchange deposit. First deposit registers the subaccount. Oak cannot place Meridian perps orders or initiate withdrawals; use Meridian's supported interface for those. Oak can only finalize a withdrawal that was already initiated there. |
 | `meridian_perps_finalize` | via `run_tool` | Preview same-chain withdrawal finalization for this owner after on-chain initiation. API acceptance alone does not permit finalization. |
 | `meridian_perps_stream` | via `run_tool` | Read a bounded sample of an official perps WebSocket stream, then close. Empty timed-out samples do not prove no activity. L2Book starts with up to 100 levels per side, followed by deltas. |
 | `meridian_predict_read` | via `run_tool` | Omit operation to discover variable schemas locally. Run fixed official Predict app reads: competitions/rules/standings, historical predictions/trades, categories/tags/questions/odds, collateral transfers and account statistics. Follow pageInfo cursors and preserve filters. Indexed data can lag the chain. |
 
-### 25. TickerSpring (50)
+### 26. TickerSpring (50)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -825,7 +833,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `tickerspring_claim` | yes | Prepare TickerSpring order proceeds/token claim. |
 | `tickerspring_orders` | via `run_tool` | Read TickerSpring wallet orders. |
 
-### 26. Clanker (17)
+### 27. Clanker (17)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -847,7 +855,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `clanker_store_fees` | via `run_tool` | Prepare depositing fee tokens into the Clanker fee locker for a named fee owner, with an exact approval; authorized depositors only. |
 | `clanker_claim_for` | via `run_tool` | Prepare paying out a named fee owner's collected Clanker fees; anyone may call it and the payout always goes to that fee owner. |
 
-### 27. pools.trade (13)
+### 28. pools.trade (13)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -865,7 +873,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **42 acti
 | `poolstrade_transfer` | via `run_tool` | Prepare transferring a pools.trade token to another address. |
 | `poolstrade_collect_many` | via `run_tool` | Prepare collecting fees from several pools.trade positions in one transaction. |
 
-### 28. Agent Wormhole (2)
+### 29. Agent Wormhole (2)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
