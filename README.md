@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-Oak connects your AI agent to **28 projects on Robinhood Chain** through one
+Oak connects your AI agent to **29 projects on Robinhood Chain** through one
 local MCP server. Your agent can check balances, compare swap routes, manage
 vault and lending positions, bridge assets, and use project tools from the same
 connection. MCP is the standard that lets an AI app call external tools.
@@ -15,7 +15,7 @@ Oak is independent and is not affiliated with Robinhood.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Prepared release: 0.2.4**, with publication pending for both `@oakagentkit/core` and
+**Prepared release: 0.2.5**, with publication pending for both `@oakagentkit/core` and
 `@oakagentkit/addon`. See the [changelog](CHANGELOG.md) for the fixes in this release.
 Mainnet paid access uses the existing [0.2.0 deployment](contracts/deployments/README.md).
 
@@ -29,11 +29,11 @@ You need Node.js **22.12.0 or newer**, npm and an MCP client.
 Run these commands in your terminal:
 
 ```sh
-npm i -g @oakagentkit/addon@0.2.4
+npm i -g @oakagentkit/addon@0.2.5
 oak --version
 ```
 
-The prepared version is 0.2.4. Publication is pending;
+The prepared version is 0.2.5. Publication is pending;
 wait for the release before running the pinned install command.
 
 ## Connect your agent
@@ -58,7 +58,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.2.4 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.2.5 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -87,9 +87,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.4%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuNSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.5%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.2.4 package through `npx`.
+These shortcuts run the pinned 0.2.5 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -115,7 +115,7 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 | --- | --- |
 | Swap, trade, launch tokens and manage liquidity | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4) |
 | Use vaults and claim rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl |
-| Supply collateral, lend, borrow and repay | Morpho Blue, Priors, LayerBank |
+| Supply collateral, lend, borrow and repay | Morpho Blue, Priors, LayerBank, Borro |
 | Buy, sell and redeem principal tokens | Pendle |
 | Bridge assets | Relay |
 | Use prediction markets, funding data and research | Meridian, Lighter, HeyResearch, Wormhole (Agent Wormhole phase A) |
@@ -124,8 +124,8 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 `earn_options` compares LayerBank and Pendle through a read-only helper.
 It is excluded from the project count.
 
-The catalog has **684 mainnet tools** and **42 testnet tools**. Your agent sees
-97 everyday tools on mainnet, or 22 on testnet, in `tools/list`. It can find and
+The catalog has **687 mainnet tools** and **42 testnet tools**. Your agent sees
+99 everyday tools on mainnet, or 22 on testnet, in `tools/list`. It can find and
 run the rest through `find_tool` and `run_tool`.
 The [tool reference](docs/mcp-tools-reference.md) lists every tool and its inputs.
 The [project guide](docs/robinhood-chain-projects.md) explains each integration.

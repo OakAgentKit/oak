@@ -3,7 +3,7 @@
     "command": "npx",
     "args": [
       "-y",
-      "@oakagentkit/addon@0.2.4",
+      "@oakagentkit/addon@0.2.5",
       "mcp"
     ]
   }

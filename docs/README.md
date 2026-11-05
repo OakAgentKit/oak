@@ -6,7 +6,7 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 
 - [Connect your AI app](client-setup/README.md): install Oak, create the wallet automatically, and choose a client.
 - [Examples](../examples/README.md): three runnable examples with offline fixtures by default.
-- [28 configured projects](robinhood-chain-projects.md): capabilities grouped by use.
+- [29 configured projects](robinhood-chain-projects.md): capabilities grouped by use.
 - [Tool reference](mcp-tools-reference.md): names, inputs, network scope and which tools `tools/list` shows. Find any other tool with `find_tool` and run it with `run_tool`.
 
 ## Understand access and custody
@@ -23,5 +23,5 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): released and pending versions.
 
-Core and add-on 0.2.4 are prepared; publication is pending; hosted actions require a verified ERC-8004 identity
+Core and add-on 0.2.5 are prepared; publication is pending; hosted actions require a verified ERC-8004 identity
 and an active subscription. See the [live deployments and team vesting lock](../contracts/deployments/README.md).

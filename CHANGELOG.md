@@ -1,6 +1,22 @@
 # Changelog
 
-## 0.2.4 — prepared, unpublished
+## 0.2.5 — prepared, unpublished
+
+- [Added] Borro on Robinhood Chain (`borro_list`, `borro_deposit`, `borro_withdraw`): lend and withdraw USDG and official stock tokens across Borro's Morpho Vault V2 contracts, verified on chain per request against the factory, Borro's 2-of-3 group wallet and Oak's asset list, with `positions` coverage and plain risk, fee and cash-on-hand lines. Borro is an independent project; Oak did not build it and is not affiliated with it.
+- [Added] Catalog totals from registration: 687 mainnet / 42 testnet callable tools, 99 / 22 listed tools and 29 projects. Tool references regenerated from the integrated source.
+- [Security] `relay_bridge_in` recomputes Relay's v1 full-order hash locally and binds the origin input, destination chain and token, wallet recipient, minimum output floor, empty output calls, wallet refund terms and deadlines to the local request before any approval and on every rebuild.
+- [Fixed] Successful action messages offer `oak_cleanup_allowances` only when that action itself left an unspent approval record behind, instead of repeating stale advice from older journal entries.
+- [Fixed] `pendle_buy` and `pendle_sell` preserve upstream HTTP status codes and timeout classifications from Pendle's convert endpoint, and `pendle_sell` confirmation screens derive the PT input amount, receiver and token from the unsigned transaction and chain reads rather than hosted summary text.
+- [Changed] `meridian_perps_deposit` discovery, preview and confirmation screens state that Oak cannot place perps orders or initiate perps withdrawals and point to Meridian's supported interface to manage or withdraw deposited margin; `meridian_browse` points to `meridian_buy` via `find_tool` and `run_tool`.
+- [Changed] Confirmation screens label the unsigned signing hash as a technical audit reference, decline and timeout messages instruct the agent not to retry the same action and to ask the person what to change, and unlimited-approval and Permit2-expiry refusals add plain-language explanations.
+- [Fixed] Re-pinned the upgraded Beefy concentrated-liquidity strategy on Robinhood Chain so the guarded Beefy CLM deposit and withdrawal checks match the live contract.
+- [Changed] `uniswap_list_positions` pages Uniswap v3 holdings past 64 positions using a block-pinned `cursor` (`v3:<wallet>:<block>:<nextIndex>`), while `positions` stays bounded to the first page.
+- [Fixed] `pons_holdings` forwards the portfolio reader's timeout options through the Pons positions wrapper, and HoodLock non-string amount refusals share the standard base-unit example message.
+- [Added] `oak config check-rpc` checks whether your configured `OAK_RPC_URL` supports `debug_traceCall` with `callTracer` and `prestateTracer` for KyberSwap and Velora swaps without needing a wallet or printing your RPC URL.
+- [Fixed] Release packaging normalizes file modes across builds and cache reuse and checks archive reproducibility across build layers.
+- [Changed] Prepared install pins for 0.2.5 and updated project and tool counts across documentation and examples.
+
+## 0.2.4 — 2026-11-04 (published)
 
 - [Added] LayerBank on Robinhood Chain: `layerbank_list`, `layerbank_deposit`, `layerbank_withdraw` lend and withdraw USDG at the pinned pool with an exact approval; a withdrawal larger than the pool's cash on hand is refused and the smaller amount is offered only if you agree.
 - [Added] Pendle on Robinhood Chain: `pendle_list`, `pendle_buy`, `pendle_sell`, `pendle_redeem` for fixed-term PT on USDG and stock-token markets; Oak decodes Pendle's calldata, checks it against the chain and refuses anything it cannot match, and ended terms are cashed out from a locally built call.

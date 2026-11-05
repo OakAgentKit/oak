@@ -11,7 +11,7 @@ the license shipped with your installed package is authoritative.
 - **Legacy differential test only:** `contracts/test/OakTickMathDifferential.t.sol` contains a GPL-2.0-or-later Uniswap v3 reference oracle; it is test-only and is never deployed.
 - **Install plugin files and the `oak-recipe/v1` recipe format/schema:** MIT. The plugin includes its own MIT LICENSE; the recipe schema carries its MIT license note.
 - **Core and add-on npm packages:** “Oak — Free to use, no copying.”
-- **Agent Wormhole text scanner included in 0.2.4:** Apache-2.0, with its license and upstream attribution included in the compiled packages; see [Agent Wormhole](https://github.com/runningoffcode/agent-wormhole). Oak's package terms do not replace that license.
+- **Agent Wormhole text scanner included in 0.2.5:** Apache-2.0, with its license and upstream attribution included in the compiled packages; see [Agent Wormhole](https://github.com/runningoffcode/agent-wormhole). Oak's package terms do not replace that license.
 - **Hosted Oak service:** private and proprietary; subscription terms are separate.
 
 No recipe package ships in this repository. Your own examples and data-only
