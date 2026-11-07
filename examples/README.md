@@ -3,22 +3,24 @@
 Three small Node.js 22 examples using only exported npm package APIs:
 
 - [01-quickstart-mcp](01-quickstart-mcp/): connect an MCP client to the add-on and list names and schemas.
-- [02-preview-sign-swap](02-preview-sign-swap/): quote, build unsigned calldata, simulate, and pause for review.
+- [02-preview-sign-swap](02-preview-sign-swap/): prepare a swap, read the plain summary, answer yes or no, then execute the exact action ID after yes.
 - [03-portfolio-agent](03-portfolio-agent/): read balances and positions across projects.
 
 ## Install and test packed packages
 
 Prerequisites: Node.js **22.12+ / 22.x**, npm, and the two release `.tgz` files.
-The core and add-on 0.2.6 packages are prepared, with publication pending. Use
+The examples target core and add-on **0.3.0**. Use
 matching release archives for checks; no private repository source is needed.
 From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-node test-packed.mjs /path/to/oakagentkit-core-0.2.6.tgz /path/to/oakagentkit-addon-0.2.6.tgz
+npm run test:packed -- /path/to/oakagentkit-core-0.3.0.tgz /path/to/oakagentkit-addon-0.3.0.tgz
 ```
 
-These archives must be a matching reviewed release pair. The npm-ci path uses the exact versions in examples/package.json and package-lock.json; it does not test a newer locally packed candidate. Update and review both files when qualifying 0.2.6.
+These archives must be a matching reviewed release pair. The packed test installs
+the archives explicitly with `--package-lock=false`; it does not rely on the
+checked-in lockfile or workspace links. This is the supported 0.3.0 check here.
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
 `npm run preview`, or `npm run portfolio`. Each defaults to labelled fixture
@@ -43,37 +45,59 @@ these scripts do not automatically read `.env` files. Export the variables in
 your terminal. The service receives your wallet address and read arguments.
 
 The shared client connects the MCP SDK to the exported `createBridge` through
-`InMemoryTransport`. It deliberately supplies a disabled sender and renewal
-callback, and loads no recipes. It does **not** launch the normal `oak mcp`
-CLI, whose startup/hourly subscription renewal can send payments (and requires
-human confirmation for new signatures in default ask mode). Live reads
-load the local signer solely for Oak session/request authentication messages;
+`InMemoryTransport`. By default it supplies a disabled sender and loads no recipes.
+Live reads load the local signer solely for Oak session/request authentication messages;
 transaction and typed-data signing are disabled. These examples do not register
-identities, renew subscriptions, sign transactions, or send them, even after
-confirmation. No identity or active subscription is needed for the read tools.
+identities, sign transactions, or send them, even after yes. The swap's offline
+fixture injects a mock sender to demonstrate prepare and execute calls without
+signing or broadcasting. Optional live mode supports reads; the disabled live
+sender refuses swap preparation. No identity is needed for the read tools.
 
 The examples are mainnet-only (`4663`); testnet has no swap routes or portfolio
-coverage across the 31 modules. Results depend on configured project readers;
-module error rows are surfaced, not reported as empty successful portfolios.
+coverage across projects. Results depend on configured project readers;
+module error rows and incomplete or unindexed coverage remain visible.
+
+## Approval flow in 0.3.0
+
+1. Call `oak_prepare {name: "swap", arguments: {quoteId}}` (or the listed `swap`
+   action tool). This builds and simulates without signing.
+2. Show the returned plain summary: what the action does, what leaves the wallet,
+   what comes back or minimum received, fees, token approval and warnings. Show
+   the exact `actionId` and UTC expiry too, then ask the person for yes or no.
+3. After the person's yes, call `oak_execute {actionId}` once with that exact ID.
+   No, unclear answers, EOF and noninteractive runs stop before execute.
+
+The swap example checks expiry again after the answer. Expired actions or failed
+execution need a fresh prepare step and another yes; nothing retries silently.
+In production Oak re-simulates, checks unchanged terms, local signing guards and
+the optional daily spending limit before signing. The fixture models the call
+boundary and gives back `not_submitted`; it does not implement those sender checks.
+The directory name and `npm run preview` command remain for existing links.
 
 ## Verification boundary
 
 Tests use the real packed add-on bridge, real MCP client/transport, and real
 core quote/calldata/amount helpers. The HTTP service responses and session
-headers are fixtures. They prove client wiring, expected finite approvals, confirmation
-ordering, action rejection, and partial-error handling. They do not prove live
+headers and sender are fixtures. Paid diagnostics are off and token-snapshot
+transport is stubbed. Signing and broadcast traps fail if invoked. Tests prove
+client wiring, exact finite approvals, summary/yes/execute ordering, action
+rejection and partial-error handling. They do not prove live
 RPC availability, execution, auth/keychain access, prices or external settlement.
 A successful buy simulation does not establish sellability; simulation excludes
 gas. See [eval-design.md](eval-design.md) for failure controls.
 
-Oak keeps `tools/list` short. The prepared 0.2.6 registration lists 105 tools through the CLI; these read-only examples omit setup flows. Tools outside that list remain reachable: call `find_tool` with an exact name for its input schema, then `run_tool` with the name and arguments. Counts may change between versions; compare your installed catalog.
+Oak keeps `tools/list` short. These examples omit setup flows. Tools outside that
+list remain reachable: call `find_tool` with an exact name for its input schema,
+then `run_read_tool` for reads or `run_tool` for actions. Actions still prepare
+first and require the person's yes before `oak_execute`. Compare your installed catalog.
 
 Version 0.1.2 historically listed 102 CLI tools and 100 through the read-only examples; testnet CLI discovery listed 16. These historical counts do not establish the newer testnet surface.
 
 ## Direct installation from npm
 
-The manifest and lockfile target **0.2.6**. The two Oak package integrity fields are omitted while publication is pending; the third-party dependency graph retains its checksums.
-TODO(U-INT): have release packaging add the final reviewed core and add-on integrity values before registry installation. After that update, run:
+The manifest targets **0.3.0**, but the checked-in lockfile still targets **0.2.7**.
+Release packaging must update and review that lockfile and the final Oak package
+integrity values before using `npm ci` for 0.3.0. After that update, run:
 
 ```sh
 npm ci --ignore-scripts --no-audit --no-fund
@@ -82,6 +106,7 @@ npm test
 
 To verify matching local release archives, use
 `test-packed.mjs` instead.
-These examples deliberately disable signing; their review prompt is not the
-wallet's MCP confirmation form. Hosted read calls such as `find_token` are available to strangers; private-mode
-actions require server allowlisting. Hosted actions require a verified ERC-8004 identity and an active subscription.
+These examples deliberately disable signing; the fixture's yes exercises only a
+mock execution request. Hosted read calls such as `find_token` are available
+without an identity. Oak is free to use; hosted actions require a verified
+ERC-8004 identity (except the free `gloam_claim` action).

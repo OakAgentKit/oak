@@ -1,50 +1,37 @@
 # Access and pricing
 
-Version **0.2.0 is live** in paid mode on mainnet (chain ID 4663).
-Anyone can discover tools and call reads such as `find_token`; actions require a verified
-ERC-8004 identity and an active subscription. Launch phase controls plan availability.
+Oak is **free to use** on Robinhood Chain mainnet (chain ID `4663`).
+Anyone can discover tools and call reads such as `find_token` without an identity.
+Hosted actions require a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`), except the free `gloam_claim` action.
 Installing the published npm packages is free under their [own license](../LICENSE-PACKAGES.md).
 The [live deployment record](../contracts/deployments/README.md) lists the contracts and receipt hashes.
 
-## Launch phases
+## Identity and chat confirmation
 
-- **Curve:** only no-hold opens, at 12.333333 USDG per 30 days; holder stays closed.
-- **Warmup:** after Pons graduation, both plans wait for 30 minutes of pool history.
-- **Ready:** holder opens; no-hold follows the current entry-price calculation at each renewal.
+- **Read tools:** `find_token`, `balances`, `price`, `quote`, `preview`, `history`, `positions`, `account`, and module reads work without an ERC-8004 identity.
+- **ERC-8004 identity setup (`oak setup` / `oak_setup`):** Public identity registration (`oak setup register`) mints an ERC-8004 NFT on chain, publishes the profile plus the mandatory `oak.registrar = oak` marker, and costs ETH network fees. Linking an existing identity (`oak setup link <agentId>`) is gasless; an external owner signs the link challenge in their own terminal. Unlinking (`oak identity unlink`) is also gasless.
+- **Yes-or-no confirmation in chat:** Every action runs in two steps. First, the agent calls a listed common action tool (`swap`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`) or `oak_prepare` with `{"name": "<tool>", "arguments": {...}}`, which builds and simulates the transaction via `eth_simulateV1` without signing, giving a six-part summary (what leaves the wallet, what comes back, the destination contract, the exact approval, the estimated network fee, and the USD value) plus a single-use `actionId` and UTC expiry. The agent shows that summary in chat and asks for a yes or no. When you say yes, the agent calls `oak_execute` with `{"actionId": "<the exact actionId>"}`, which re-simulates immediately before signing, checks that terms have not worsened and checks your optional daily spending limit in USD, and signs locally.
+- **Optional daily spending limit in USD (`oak_spending_limit`):** On first run, the agent asks once in chat whether you want a daily spending limit in USD. Skipping leaves no limit. You can set, change, or clear the daily spending limit anytime in chat via `oak_spending_limit`.
 
-Read `account` for phase and indicative price. Read tools require neither identity
-nor subscription in normal service mode. Actions require both a verified ERC-8004
-identity and an active subscription. Public identity registration needs authorization,
-publishes the profile and costs ETH gas. Linking an existing identity is gasless;
-an external owner signs the link in their own terminal.
+## How Oak earns income
 
-## Plans
+Oak earns a 0.25% fee on swaps and bridges, plus partner referral fees.
 
-**Holder: 9 USDG per 30 days.** Joining requires holding the quoted entry count `N`
-of OAK. The sign-up transaction burns `ceil(N * 5 / 100)` and records the remainder
-as `signupOakCount`. Hold 20,000 OAK: 1,000 burns and 19,000 is tracked.
-Keep at least the tracked amount for action access. Renewals need no price note
-and burn nothing. Holding OAK buys access and nothing else.
+- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on KyberSwap swaps, Velora swaps, and Relay bridges and swaps.
+- **hood.ag referrals:** 5% referral fee on `.hood` name registrations and 4% on marketplace resales, with matching buyer discounts (zero on treasury self-referral).
+- **Borro Bookrunners referral share:** 10% of the Borro vault interest fee on tagged deposits — 100% of that share to Oak for the first 12 months, then 50%, paid monthly in USDG. Deposits route via `BorroBuilders` (`0x082Ae609bdC7ccEec0C58B2361a21c49dc2aE291`) with referral code `oak` and on-chain `minShares` protection, or fall back to a direct vault deposit when `BorroBuilders` is unavailable.
 
-**No-hold: 9 USDG plus one sixth of the entry price per 30 days.** At the $20 entry
-floor this is 12.333333 USDG. After warmup it is repriced at each renewal.
-The entry price uses total supply times OAK USD price, treating USDG as $1:
-under $100k gives $20; $100k–$500k gives $20→$75; $500k–$1M gives $75→$100;
-$1M–$10M gives $100→$300; above $10M gives $300. These are subscription
-calculation bands, not forecasts. The service issues a 30-minute OAK price note
-with a 5-minute life. Contracts check it against on-chain ETH/USDG pricing and
-a 50% live-pool guard; see the exact [checks and limits](security.md).
+ETH network fees and project fees are separate.
 
-## Payments, renewal and cancellation
+## `$OAK` buybacks and burns
 
-- Each payment splits in the same transaction: 25% to `OakBurner`, 75% to the single-owner treasury.
-- Prepayment is capped at 90 days ahead. Oak adds no per-call or trade fee; ETH gas and project fees are separate.
-- `oak mcp` checks on startup and hourly; a plan with 3 days or less remaining can renew using local USDG and ETH.
-- Since **0.1.1**, new renewal signatures require human confirmation by default. Unattended renewal requires the owner's explicit auto setting.
-- `oak renew` reconciles pending payments and renews when due. Missing funds or an unresolved journal pause actions.
-- `oak cancel` ends access immediately and forfeits remaining paid days. Cancel before switching plans.
-- An authoritative grandfathered holder on a retired contract uses `oak renew` when due to migrate with carried paid time, its recorded post-burn count and zero burn.
+25% of Oak's income buys back and burns $OAK.
+Holding $OAK has no access perks. Oak uses 25% of its income to buy back and burn $OAK.
 
-Mainnet contracts are [0.2.0 live](../contracts/deployments/README.md).
-Testnet remains a placeholder. Use the verified deployment for
-your selected network and inspect the payment preview and confirmation.
+1. At least once a month, the operator converts 25% of that period's swap, bridge, and partner referral fee income to USDG.
+2. The operator transfers that USDG to `OakBurner` (`0x660b86c5a3f9E1278cB5F01763fd0a630221C18B`) on Robinhood Chain first.
+3. The operator wallet fetches a caller-bound `for: "burner"` price note from the hosted service (`OakOracle` verifies that `note.wallet == msg.sender`, that the note is within 300 seconds, and that the signed `$OAK`-per-ETH rate is within the 50% oracle guard band, while `OakBurner` enforces its tighter 10% live-spot check and output floor).
+4. The operator calls `buyAndBurn(usdgIn, note, sig)` on `OakBurner` in chunks of at most `oracle.liquidityUsdgE6() / 200` (`0.5%` of live pool USDG liquidity per call), swapping USDG -> WETH -> `$OAK` and sending the bought `$OAK` to `0x000000000000000000000000000000000000dEaD`.
+5. Public burn announcements state `"we burned"` and link the on-chain `OakBurner` transactions.
+
+See [security](security.md) for the exact on-chain oracle and burner checks. Legacy v1 and v2 billing contracts (`0xF1C5d40997e1151B125a41e822C4278b153c4610` and `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remain deployed on Robinhood Chain and are unused.

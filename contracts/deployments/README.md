@@ -1,6 +1,7 @@
 # Deployments
 
-**0.2.0 live** on Robinhood Chain mainnet (chain ID **4663**), recorded 2026-11-02.
+**Historical 0.2.0 launch receipts** on Robinhood Chain mainnet (chain ID **4663**), recorded 2026-11-02.
+These receipts do not describe every later contract replacement. See [current security and authority](../../docs/security.md).
 The [mainnet deployment record](4663.json) contains addresses and transaction hashes.
 The [testnet record](46630.json) remains a placeholder; it is not mainnet configuration.
 Verify chain ID, contract code and current state before use.
@@ -34,11 +35,13 @@ transfer ownership without accelerating the schedule. The deployer has no separa
 withdrawal or emergency-sweep role. Tokens added later follow the original schedule.
 See the [vesting tests](../test/OakTeamVesting.t.sol) and [custody disclosures](../../docs/security.md).
 
-## Paid access
+## Current access
 
-The published core and add-on packages are **0.2.0**. Hosted actions use paid mode:
-verified ERC-8004 identity and an active subscription are required; reads stay available.
-Launch phase still controls plan availability; read `account` before subscribing.
-Payments split 25% to the burner and 75% to the single-owner treasury.
+The published core and add-on packages are **0.3.0**. Oak is free to use.
+Reads need no identity; actions require a verified ERC-8004 identity, except the
+free `gloam_claim` action. Every action requires a yes in chat before signing.
+Legacy billing contracts remain deployed and are unused.
+Oak charges a 0.25% fee on swaps and bridges, plus partner referral fees.
+25% of Oak's income buys back and burns `$OAK`; holding `$OAK` has no access perks.
 The treasury/admin is `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`.
 There is no second-signature requirement. See [access and pricing](../../docs/access-and-pricing.md).

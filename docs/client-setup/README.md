@@ -1,6 +1,6 @@
 # MCP client setup guides
 
-Oak Agent Kit (`@oakagentkit/addon`, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 31 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
+Oak Agent Kit (`@oakagentkit/addon` 0.3.0, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 34 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
 
 ---
 
@@ -17,11 +17,11 @@ oak address
 oak status
 ```
 
-On first use Oak creates a local wallet. Check the address and network, `keyProtection`, and any file-storage warning before funding it. `oak status` also reports confirmation mode and the automatic approval budget. While the hosted service is in private test mode, `actionAccess:false` is expected for an unlisted wallet; token reads remain available. Never send keys or recovery words to the agent.
+On first use Oak creates a local wallet. Check the address and network, `keyProtection`, and any file-storage warning before funding it. `oak status` also reports your identity status and optional daily spending limit. While the hosted service is in private test mode, `actionAccess:false` is expected for an unlisted wallet; token reads remain available. Never send keys or recovery words to the agent.
 
 ### 2. Connect the MCP; the Wallet Creates Itself
 
-Oak creates a wallet automatically when `oak mcp`, `oak address`, or another wallet command first runs. There are no recovery-word challenges or passphrase prompts. The agent calls `account`, relays the public address and selected network, asks you to fund it with a little ETH for gas and USDG, then calls `balances` again after you fund it.
+Oak creates a wallet automatically when `oak mcp`, `oak address`, or another wallet command first runs. There are no recovery-word challenges or passphrase prompts. On first run, the agent calls `account`, relays the public address and selected network, asks once whether you want a daily spending limit in USD (skipped means no limit), asks you to fund the wallet with a little ETH for gas, and calls `balances` again after you fund it.
 
 The private key stays local in `~/.oak/wallet.enc` (AES-256-GCM, `0600`, inside `~/.oak` at `0700`). A random encryption key is stored in macOS Keychain, Linux persistent Secret Service, or Windows Credential Manager when available. Otherwise Oak saves a random file key in the same owner-only directory (`wallet-key-<id>`, `0600`). This fallback relies on your OS account and filesystem permissions: someone who can read both files can unlock the wallet. No passphrase is requested. Keep only the funds your agent needs.
 
@@ -31,26 +31,26 @@ Backups are optional. When you hold more than pocket change, run `oak export` **
 
 ### 3. Fund and Approve Setup
 
-After funding, ask the agent to register a public ERC-8004 identity with `oak_setup {"mode":"register"}`. Oak supplies a default registration-v1 profile; you can provide your own `profile`. Registration costs ETH and publishes the profile. It does not require a subscription. Linking an existing ID uses `oak_setup {"mode":"link","agentId":"<id>"}`; if this wallet owns it, signing is automatic. An external NFT owner must sign in their own terminal because the agent does not control that owner's wallet.
+After funding, ask the agent to register a public ERC-8004 identity with `oak_setup {"mode":"register"}`. Oak supplies a default registration-v1 profile; you can provide your own `profile`. Registration costs ETH and publishes the profile. Linking an existing ID uses `oak_setup {"mode":"link","agentId":"<id>"}`; if this wallet owns it, signing is automatic. An external NFT owner must sign in their own terminal because the agent does not control that owner's wallet.
 
-The agent reads `account` for phase and price, explains the recurring payment, and gets your plan approval before calling `oak_subscribe {"plan":"nohold"}` (or `holder`). Launch curve: no-hold only, 12.333333 USDG per 30 days. Warmup: both plans wait for 30 minutes of history. Ready: both plans follow the quoted terms; holder requires OAK and a one-time sign-up burn. `oak_renew {}` reconciles or renews. All transactions retain previews and local signing. Merely funding a wallet does not authorize a paid subscription.
+Oak is free to use. All transactions retain previews, local checks, and yes-or-no confirmation in chat (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after you say yes). You can set or change an optional daily spending limit in USD anytime in chat (`oak_spending_limit`).
 
-The remaining user steps are funding, authorizing public registration and the recurring plan, and signing for an external identity owner when applicable. These steps move funds, publish data, or require an independently controlled wallet. Read tools remain available without identity or subscription.
+The remaining user steps are funding ETH for network fees, saying yes in chat to public identity registration or transactions, and signing for an external identity owner when applicable. Read tools remain available without an identity.
 
 ### 4. Service Defaults
 
-Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak subscription, token, oracle and pool addresses when a subscription operation needs them; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. Transaction signing requires `eth_simulateV1` with complete per-call logs and `traceTransfers`; the default public RPC supplies that evidence. `debug_traceCall`/`callTracer` is optional extra coverage: when supported Oak validates nested delegate targets, while an explicit unsupported-method response selects simulation-only mode and leaves that documented residual risk. A keyed RPC is therefore an optional reliability and extra-coverage override, not a prerequisite for the default simulation-only path. Malformed responses, transport errors, or loss of a tracer previously shown available fail closed.
+Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak token, oracle, burner, and pool addresses; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. Transaction signing requires `eth_simulateV1` with complete per-call logs and `traceTransfers`; the default public RPC supplies that evidence. `debug_traceCall`/`callTracer` is optional extra coverage: when supported Oak validates nested delegate targets, while an explicit unsupported-method response selects simulation-only mode and leaves that documented residual risk. A keyed RPC is therefore an optional reliability and extra-coverage override, not a prerequisite for the default simulation-only path. Malformed responses, transport errors, or loss of a tracer previously shown available fail closed.
 
-Mainnet paid access is live on the 0.2.0 deployment; the Oak 0.2.6 install pins are prepared, with publication pending.
-$OAK has graduated on Pons. Reads need neither identity nor subscription; actions require
-a verified ERC-8004 identity and an active subscription. Call `account` for phase,
-available plans and price; both plans wait during warmup. See [access and pricing](../access-and-pricing.md).
+Oak is free to use on mainnet; version 0.3.0 is available on npm.
+$OAK has graduated on Pons. Reads need no identity; actions require
+a verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
+wallet address, network, and ERC-8004 identity status. See [access and pricing](../access-and-pricing.md).
 Testnet still requires explicitly matching service, RPC and deployment settings.
 The commands below are advanced operator overrides, not the normal first-run path.
 
 ### Copy-paste Setup Prompt
 
-> Set up Oak for this AI agent. Install @oakagentkit/addon (Node.js 22.12.0 or newer) and connect the local MCP command `oak mcp`. Call account, tell me the public wallet address and network, and ask me to send a little ETH for gas and USDG. Re-check balances after I fund it. Do not run oak init or oak export, read wallet/key files, or ask for keys or recovery words. Explain identity registration and subscription costs, then get my approval before registering and subscribing. Tell me optional backup guidance with oak backup.
+> Set up Oak for this AI agent. Install @oakagentkit/addon (Node.js 22.12.0 or newer) and connect the local MCP command `oak mcp`. Call account, tell me the public wallet address and network, ask once whether I want a daily spending limit in USD (`oak_spending_limit`), and ask me to send a little ETH for gas. Re-check balances after I fund it. Do not run oak init or oak export, read wallet/key files, or ask for keys or recovery words. Explain identity registration and its ETH gas cost, then get my yes in chat before registering. Tell me optional backup guidance with oak backup.
 
 ---
 
@@ -73,7 +73,6 @@ On startup and once every hour, `oak mcp`:
 
 1. Reconciles any pending local transaction journal entry (`~/.oak/<address>.pending.json`).
 2. Verifies your ERC-8004 identity status (if the NFT is transferred or burned, or you run `oak identity unlink`, action tools pause and local `identity` is cleared while reads stay open; during a temporary RPC or service outage, local `identity` is preserved while reads stay open).
-3. Attempts renewal when `<= 3 days` remain before `paidUntil`, using local wallet signing and available USDG. In default ask mode, new payment signatures require human confirmation; unattended renewal requires the owner's explicit auto setting. `oak cancel` ends access immediately and forfeits paid days.
 
 Run `oak init --recover` in your own terminal to restore an exported private key or a legacy 24-word backup on a new computer. To replace an existing wallet, use `oak init --recover --replace`; Oak preserves an encrypted backup and asks you to confirm the recovered address. Never enter recovery words in an agent chat, arguments, environment variables or MCP tools.
 
@@ -83,29 +82,20 @@ Mainnet uses `https://api.oakagentkit.org` by default. Override it with `oak con
 
 ## Confirmation support
 
-Use a client that supports **MCP form elicitation** — the protocol's confirmation form.
-Ask mode is the default. Decline, timeout or a missing form stops action signing;
-reads and session authentication do not prompt. Check support in your installed
-client version rather than assuming every host below can confirm actions.
-The generic `oak call` CLI has no MCP confirmation form and cannot sign in ask mode.
-
-The owner may select `oak config set confirm auto` in their own terminal for
-unattended operation, and restore prompts with `oak config set confirm ask`.
-Only selecting auto requires a TTY; no MCP tool exposes this setting. Never ask an
-agent to allocate a PTY to change it. Auto retains local transaction checks.
-Do not enable it merely to make a connection test pass. See [security](../security.md).
-
-Verify your installed version with `oak --version`; 0.1.0 does not include the
-confirmation or hardened local checks described here, which arrived in 0.1.1.
+Every action uses two-step chat confirmation (`oak_prepare` or a listed common action tool, followed by `oak_execute` with `actionId`).
+First, the agent calls a listed common action tool (`swap`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`) or `oak_prepare` with `{"name": "<tool>", "arguments": {...}}`, which builds and simulates the transaction without signing and gives a six-part summary (what leaves the wallet, what comes back, the destination contract, the exact approval, the estimated network fee, and the USD value) plus a single-use `actionId` and UTC expiry.
+The agent shows that summary in chat and asks for a yes or no.
+When you say yes, the agent calls `oak_execute` with `{"actionId": "<the exact actionId>"}`, which re-simulates immediately before signing, checks that terms have not worsened and checks your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
+Reads and session authentication do not prompt. See [security](../security.md).
 
 ## Quick connections
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.2.6 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.3.0 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
-Installing connects tools; identity registration and paid subscriptions still need
-separate approval.
+Installing connects tools; identity registration and transactions still need
+your yes in chat.
 
 In Claude Code, run these two commands:
 
@@ -117,13 +107,13 @@ In Claude Code, run these two commands:
 Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
 2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjIuNiIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.2.6%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuMCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.0%2522%252C%2522mcp%2522%255D%257D)
 
 
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.2.6 -p @oakagentkit/gloam@0.2.6 oak mcp
+npx -y -p @oakagentkit/addon@0.3.0 -p @oakagentkit/gloam@0.3.0 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

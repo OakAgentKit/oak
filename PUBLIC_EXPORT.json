@@ -4,11 +4,11 @@
   "files": [
     {
       "path": ".claude-plugin/marketplace.json",
-      "sha256": "63aba40a83c4652fdfe916808232ffc4d479da6da12152e77cd8880bbe632c04"
+      "sha256": "2de6cd518cc0ec60a7653acd1df01bd5494513bbfc2b0a718fe259af7ebaef9a"
     },
     {
       "path": ".github/CI-NOTES.md",
-      "sha256": "2e5e7a965bfb116773877c2d7ddc57cd9217f77db30606998880fe7ac8a34d37"
+      "sha256": "dc0a5e58ac3c28d4b2ef3da3913c43d8655306aec47c10054abd7a02b0242696"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/bug_report.md",
@@ -76,11 +76,11 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "c58371a7a9c2751be10885fdf36d8d0ae0c4c3f8c584ed5157791be03cfb3971"
+      "sha256": "4ff7194d22922c903ec00572b79dbf03704aa685c4dbab3de17c7d1601581e88"
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "ca6f244ab96f6e09add7bd0d38e738daa5aeba174509fc7771933958e53d4b26"
+      "sha256": "fab9b0b4df4a8b469cc50c90d19178e577d2f6167202fb1f6259bfe79e2701dc"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -88,7 +88,7 @@
     },
     {
       "path": "CONTRIBUTING.md",
-      "sha256": "6ed46d5befea07ea3bfc8e3892c8e0c0e9d2ea24e9753381e9d2331430ad6e9a"
+      "sha256": "99a2ead1c985caa3649505e5ada44d7e94135dc68352414a59a9be11b2b9a3f1"
     },
     {
       "path": "LICENSE",
@@ -96,19 +96,19 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "51cb1aa9ddeeec90b061c1b2b02cd4217464d85a3c3c56aa8805e0179f432af7"
+      "sha256": "000ab1cce457567852dbbe8ad28ac12186d4156d7771411049938c07fc4653bf"
     },
     {
       "path": "README.md",
-      "sha256": "55705c0599fc99dba2c17a9ffa614fe4f814925cadd20e29ea61e0d84d357fe6"
+      "sha256": "842c3034a62a71d776cfbb6c6ba95a551db87f8a6a56e0a35b58f68018acccce"
     },
     {
       "path": "SECURITY.md",
-      "sha256": "e84c0943210077d2ed7d957a623fde7990a87f38137a10cc015bf049b30f4907"
+      "sha256": "04aa1f80f63e1befbae668633a4d7e131d8303bacfdff77f0dfcf1dd11c88b8a"
     },
     {
       "path": "THREAT_MODEL.md",
-      "sha256": "3ce6bcf38bd11079bb7437f7b7143093616aeefae17fc8a793a6aade96fb7671"
+      "sha256": "34e3ecbcbb21ae084104374618d5dc5cb7bd9eb9ac1ba80142b9bb84b9e915ee"
     },
     {
       "path": "assets/arch-dark.svg",
@@ -176,7 +176,7 @@
     },
     {
       "path": "contracts/deployments/README.md",
-      "sha256": "560f4401f6f40c7b13264b76259cbfa998492434d43a3a400c517a6deb941bf4"
+      "sha256": "ea4011d2fdd236ff554b45afe0bcf96a55e182437113622131b60250028443f7"
     },
     {
       "path": "contracts/foundry.toml",
@@ -328,55 +328,55 @@
     },
     {
       "path": "docs/INVARIANTS.md",
-      "sha256": "5d99467e7dac82dabaded08ba1784b2223642542fdd3b6f61873d81d704547ec"
+      "sha256": "5a1fd7f1fb7393822a615405d77b045ccbcd4abb5963ffbd28ce8b8aadefe31b"
     },
     {
       "path": "docs/README.md",
-      "sha256": "9219b12bc60aa865ee50372f02005e0ba7e032c17130c5137fc1e5ba9d762de3"
+      "sha256": "40f77f8fd26e909ec81b8d362f3a99c456e491f30f226d8a3e40bb144373dda0"
     },
     {
       "path": "docs/access-and-pricing.md",
-      "sha256": "795a4953cdb0fd731cc62bd5b0e45df500475d76a5b025a763b4b6aefd41e997"
+      "sha256": "4e2981fc2c64a466b6c277d97dbf00a3e6f914754d5f24fcd43d9413c3958f37"
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "4c2d27b52d41380bcf6eb02494188e98cc53c5a4971c04cd671c9f9a514f57ec"
+      "sha256": "94c29b9e753ce394f034642eb7a82828730e538df18beb9602578e7f4a9e10c5"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "d1a953dd464fd3d5c9d088108b2119a036468c1a4087f6472757717af4547966"
+      "sha256": "9beaf12da1ca5db39fd59faee1ef011ed8fc91fe90724d9aec723760bd87c1b1"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
-      "sha256": "bae3aec76a647c83d06260c3e15c19d12bb5dcf30b017465e939ee188f0b76c3"
+      "sha256": "b51c3c3d4e2248867e06577e230b316c79f4db4152643d610f1e935878b46190"
     },
     {
       "path": "docs/client-setup/codex.md",
-      "sha256": "d6d471e2bfe9c90a74e7d592ec2a76b8ddae173875cd0c9da677dc285f18534e"
+      "sha256": "a7adbe06a26af5f48023627a5fb027a95447ff7181da7df7b0972e9ba35c6ac9"
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "69e2e483db18f68cae0f6d27ce8b95482f6e9076f83881f0f99b1369b51246bf"
+      "sha256": "8f8e502395d130c6376191cbf77da5c0ca3cbfc945eb8bfb520dee7a372201ec"
     },
     {
       "path": "docs/client-setup/gemini.md",
-      "sha256": "4b6134880ede520d231a41d952f859288af55b54b5ae50f043c477dcf5f8fb90"
+      "sha256": "b145e515ae6a71b30b05b9745dce45a7d80383e06147d43f24f671b902994784"
     },
     {
       "path": "docs/client-setup/generic-mcp.md",
-      "sha256": "0a5ef946974c605d5f5d38e32aee43a62142fcc76f525753f75ea960e1d59d9f"
+      "sha256": "9a3fb3abc31ee0ccc367e7c8912c9550d9b2c91c2ac681a7171249a557f10f76"
     },
     {
       "path": "docs/contract-development.md",
-      "sha256": "8d43c700b42660bab2ac0cba521f63431d4e104a456241d757b07e63b5f5c6fb"
+      "sha256": "f3090055c1e2be71b31c4dd4d92c06d73081a8357532558aba02958450ee351a"
     },
     {
       "path": "docs/headless-wallet.md",
-      "sha256": "e4c42aa254e7dae2ec0baf47e902547435223314b6ecefe4556648993ea06fcf"
+      "sha256": "6de898e1cb412617cfd07c2e8f60f37e07b5fc697ef39090c52195751d015dba"
     },
     {
       "path": "docs/mcp-tools-reference.md",
-      "sha256": "dd5916cd683e9c5426aa4fc630dc0ca9fc4c19bdc1c5a0c912aff26430f21279"
+      "sha256": "9d143f815c0cb8160eb4c2c8c7325ba713413f86d3799feb97ff606a552ca9b6"
     },
     {
       "path": "docs/reviews.md",
@@ -384,15 +384,15 @@
     },
     {
       "path": "docs/robinhood-chain-projects.md",
-      "sha256": "5df67e0e08aac26f4369a4c446c2f4c2ca46d296f3fa90168aae34dade87b66e"
+      "sha256": "87bea569948ccc92cd1d883a46180a6e904254b8004b6839d5451d4de61cfa9d"
     },
     {
       "path": "docs/security.md",
-      "sha256": "84c821500d85f2930bd4b3f331cb11b944ac0979b54cbf99524c1268fb9cda7d"
+      "sha256": "46d8f129583fbb7a526a5195420146c0662be6517b5cbc3ebbb6ffe9ca7ff28a"
     },
     {
       "path": "docs/what-is-oak.md",
-      "sha256": "cff6c56e7207b6a177be418c54e2642af2150c2ce03645febe51ea486c77b2d3"
+      "sha256": "0a2cd1f3fddea0c7d131526d732a180bf6104e3cea723bf545c02eb519743658"
     },
     {
       "path": "examples/.gitignore",
@@ -420,15 +420,15 @@
     },
     {
       "path": "examples/02-preview-sign-swap/README.md",
-      "sha256": "70ac176ccc5593a987b8b8345298d617adb9e518312f1515f82d5335e1570358"
+      "sha256": "312b59a76f17d641611b66e2f9b6b88c48b92ecbbede09974c7478fbe9807c51"
     },
     {
       "path": "examples/02-preview-sign-swap/example.test.mjs",
-      "sha256": "3d482dcffc563bfc24df93d2e3ab85a8c59b0154e12adfb90f7a80037f8ee70f"
+      "sha256": "c8c2a74173ee8887bfff6d3f14db4ce6de16d94526fe75049d7be840eed24682"
     },
     {
       "path": "examples/02-preview-sign-swap/index.mjs",
-      "sha256": "484bdb15caebc1de9212c520999ed492c71f94c71f96d8b510bbd2532b29a113"
+      "sha256": "e77359e9dad1c1b20c3224850dff6614f4e99bd0b32f61dbce57a49a89fd4717"
     },
     {
       "path": "examples/03-portfolio-agent/.env.example",
@@ -436,15 +436,15 @@
     },
     {
       "path": "examples/03-portfolio-agent/README.md",
-      "sha256": "438bd27aebd594dc1c70367b165dfcc8c5521c83b714be5e4290d6dd7f421dd3"
+      "sha256": "f4cf222e0cb0f7e19a6638e8f3a1879f9a53c8d5c49c64a58b67b6ccfd846980"
     },
     {
       "path": "examples/03-portfolio-agent/example.test.mjs",
-      "sha256": "6268720737d085b0838724e3df2d9461b477cdec9e5fbf27dfc34ff38cb810a8"
+      "sha256": "7fcb46c75b247ba5a3634e25a3753b4e03f216ba546ac75f4b579732b0b3fc74"
     },
     {
       "path": "examples/03-portfolio-agent/index.mjs",
-      "sha256": "e0c58b85a32651993327ccfec06d6f8cf6e0ee5e966b7c127b46a0db0bffa79b"
+      "sha256": "dc16de0a827ff7d1828ac8a13c51d924f9ffbcdcf38efd0fa06fc3ebf87da93d"
     },
     {
       "path": "examples/LICENSE",
@@ -452,7 +452,7 @@
     },
     {
       "path": "examples/README.md",
-      "sha256": "3a32a179d49ed372f6a71e3cedb27c6eed1a4587adca6c0083d77f4442f95620"
+      "sha256": "479e1725515554c60581c74864b914d8cdde75c268899bb59da19bafab9dba87"
     },
     {
       "path": "examples/eval-design.md",
@@ -460,19 +460,19 @@
     },
     {
       "path": "examples/package-lock.json",
-      "sha256": "4ff0a9082caa741bbc89229f7f3f9b7c480400876cdfb793ebafad6745c49565"
+      "sha256": "df912006c58ed272278491c54b99080903a65aa995f0cf3b2d2fa639125f02f6"
     },
     {
       "path": "examples/package.json",
-      "sha256": "7bdbea2495be1eda259a0023e2e31ea1c2b581fba63f6c234e19585a1f8b5962"
+      "sha256": "20e6f5284f1a248c87d1e371ef099d2790b972932ce259c0be442873def5352d"
     },
     {
       "path": "examples/shared/client.mjs",
-      "sha256": "974cf809e9443158cb1f0b2b7b04e24e2c1a6cf3490aef1423be411162049271"
+      "sha256": "99b909ff8570c9d2fb0734bf278d7ed69c76b633f3cc618f2ca4144618ca2ded"
     },
     {
       "path": "examples/shared/fixtures.mjs",
-      "sha256": "13a8d663d42b34edd7d9b1faefa112497a93a6f9fc618df86e61f18d0d2e2261"
+      "sha256": "aabc661c2ab13040bd72e47d38b03b16d5332fc3d1c35931b467026d0b035218"
     },
     {
       "path": "examples/test-packed.mjs",
@@ -484,19 +484,19 @@
     },
     {
       "path": "examples/test/cli.test.mjs",
-      "sha256": "656d70c478da52e6cad645b0c95b72f7085cfab4562d6e94cd0acde0e82d7a18"
+      "sha256": "b9c49020d17dff5cd1452b7e5f2d71515a311ad9941b1cdac015a82f6ff2baaa"
     },
     {
       "path": "llms.txt",
-      "sha256": "66bbb1915215e66a5d40e42ea12cbc1d87f5a5f30d3ed05a3703054f415d2040"
+      "sha256": "2b2df2b507bef5d0c83771f0fb86023e27e32b7cfb7266c9c78399f3edbf96ed"
     },
     {
       "path": "plugins/oak/.claude-plugin/plugin.json",
-      "sha256": "1c6ad014c9df548e9d98abeff9898aea24fbde27abf1ea2067e566a065178b56"
+      "sha256": "a0fc9e86e20c3d075f6f628dc57b1135af927a2791bf87f2c46f0b5e5803d607"
     },
     {
       "path": "plugins/oak/.mcp.json",
-      "sha256": "4eb9774b9cb8d8dd733fbd7a33959301ef5bcca52fcb7ecacb78478238757b8a"
+      "sha256": "e6bcec878efdad758f6929d4e381d822e9cdf6e50feb3cd8864640e34ca4a733"
     },
     {
       "path": "plugins/oak/LICENSE",
@@ -504,7 +504,7 @@
     },
     {
       "path": "plugins/oak/README.md",
-      "sha256": "49067805bae39cb7b177520472fd92660f7e8c4f11ea4f953639eaf7f34e66fe"
+      "sha256": "24318eb9b11bc0e4d95aa65fb493c75b4f1c8f4cc61f30999f9f1ce5ebc89785"
     }
   ]
 }

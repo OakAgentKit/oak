@@ -1,6 +1,6 @@
 # Claude Desktop Setup
 
-Install Oak and connect the MCP below. The wallet creates itself on first use; your agent calls `account`, asks you to fund the returned address with ETH and USDG on the named network, then re-checks `balances`. See [shared setup](README.md#shared-prerequisites-do-this-once) for identity registration, subscription approval and optional backup guidance.
+Install Oak and connect the MCP below. The wallet creates itself on first use; your agent calls `account`, asks once whether you want a daily spending limit in USD, asks you to fund the wallet address with ETH on the named network, then re-checks `balances`. See [shared setup](README.md#shared-prerequisites-do-this-once) for identity registration, chat confirmation and optional backup guidance.
 
 ## 1. Add Oak to `claude_desktop_config.json`
 
@@ -28,15 +28,15 @@ Add the `oak` server under `mcpServers`:
 
 Restart Claude Desktop so it spawns `oak mcp` over `stdio`, then test a read and a previewed action:
 
-1. **Read test (works without identity or subscription):**
+1. **Read test (works without an identity):**
    *"Call `balances` and `positions` to check my Robinhood Chain wallet."*
-2. **Swap flow (`find_token` → `quote` → `preview` → `swap`):**
-   *"Find the verified TSLA token on Robinhood Chain, quote swapping `10000000` USDG (`10 USDG`) with `50` bps slippage, and show me the `preview` token deltas before executing."*
+2. **Swap flow (`find_token` → `quote` → `swap` (prepare) → chat yes → `oak_execute`):**
+   *"Find the verified TSLA token on Robinhood Chain, quote swapping `10000000` USDG (`10 USDG`) with `50` bps slippage, prepare `swap`, show its summary, `actionId` and expiry, and wait for my yes before `oak_execute`."*
 
 ## Safety & Custody Reminders
 
 - Never run `oak init` or `oak export` inside a chat prompt, and never paste a private key or 24-word recovery phrase into Claude Desktop.
-- While `oak mcp` is running, renewal can run within 3 days of expiry. Since 0.1.1, new payment signatures require human confirmation by default; unattended renewal requires the owner's explicit auto setting. Run `oak cancel` in your terminal to cancel immediately.
+- Every action prepares a six-part summary and asks for your yes or no in chat (calling a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after you say yes) before signing locally.
 
 The absolute Oak executable still uses Node from `PATH`. Set both Node and Oak paths explicitly when the GUI has a minimal path. Run `command -v node` and `command -v oak` in your own terminal and substitute their absolute paths below (including spaces if present):
 
@@ -48,8 +48,6 @@ Use the Node 22 binary from your version manager. Alternatively set the MCP proc
 
 ## Confirmation and current access
 
-Hosted actions require a verified ERC-8004 identity and an active subscription in 0.2.0 paid mode. Since **0.1.1**,
-action signing requires your client's MCP confirmation form by default. A missing
-form, decline or timeout stops signing. Verify form support in your installed client;
-a connection or tool list alone does not establish action support.
+Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+Before signing an action, the agent prepares it (with a listed action tool or `oak_prepare`) and shows the six-part summary, `actionId`, and UTC expiry in chat; saying yes runs `oak_execute` with `{"actionId": "<actionId>"}`, which re-simulates, checks terms and your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
 Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.
