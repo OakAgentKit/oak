@@ -15,6 +15,14 @@ for (const [directory, expected] of [
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Fixture mode/);
+    if (directory === '02-preview-sign-swap') {
+      assert.match(result.stdout, /Leaves wallet:/);
+      assert.match(result.stdout, /Comes back:/);
+      assert.match(result.stdout, /Token approval:/);
+      assert.match(result.stdout, /Action: oa_/);
+      assert.match(result.stdout, /Expires: .*Z/);
+      assert.doesNotMatch(result.stdout, /execution requested after yes/);
+    }
     if (expected) assert.match(result.stdout, expected);
     else {
       const output = /^(\d+) tools \(names and JSON input schemas\):\n([\s\S]+)$/m.exec(result.stdout);

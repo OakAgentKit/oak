@@ -22,15 +22,18 @@ To migrate a passphrase wallet, configure a persistent keychain, then run `oak i
 Confirm the recovered address, keep the encrypted backup, and store your recovery words offline.
 Recovery restores the same wallet and sends no transaction. Oak cannot recover a lost key.
 
-Starting `oak mcp` can renew subscriptions with local signing and available USDG when renewal is due. Since **0.1.1**, new renewal signatures prompt in default ask mode.
+Starting `oak mcp` reconciles pending transactions and checks ERC-8004 identity status.
+Oak is free to use; there is no subscription renewal.
 Use the [client setup prerequisites](client-setup/README.md) before connecting a host.
 
-## Unattended operation
+## Signing confirmations and daily spending limit
 
-Automatic wallet creation works without a terminal. Action signing in default
-`confirm ask` mode still needs an MCP client that supports form elicitation.
-A headless process without that form refuses new action signatures.
-The owner can deliberately select `oak config set confirm auto` in their own
-terminal to skip prompts; local transaction checks remain. Restore prompts with
-`oak config set confirm ask`. Never have an agent allocate a PTY to choose auto.
-See [security](security.md) for what is checked and what remains outside those checks.
+Headless wallet creation does not skip chat confirmation.
+Every action is prepared first with a listed common action tool or `oak_prepare`.
+The agent shows the six-part summary, `actionId`, and UTC expiry in chat
+and asks for a yes or no. After you say yes, it calls `oak_execute` with
+`{"actionId": "<the exact actionId>"}`. Oak re-simulates, checks that terms
+have not worsened, checks your optional daily spending limit in USD, and
+signs locally with the [local transaction guards](security.md).
+You can set, change or clear the optional daily spending limit in chat
+with `oak_spending_limit`. Skipping the first-run question leaves no limit.

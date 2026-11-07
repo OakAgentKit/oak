@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url';
 import { createInterface } from 'node:readline/promises';
 import { baseUnits } from '@oakagentkit/core/amounts';
 import { normalizeQuote, buildSwapFromQuote } from '@oakagentkit/core/swap';
-import { openExample, readTool } from '../shared/client.mjs';
+import { openExample, readTool, prepareAction, executeAction } from '../shared/client.mjs';
 
 export async function previewSwap(client, { from = 'USDG', to = 'WETH', amountIn = '10000000', slippageBps = 50 } = {},
   { show = console.log, confirm = async () => false, now = () => Math.floor(Date.now() / 1000) } = {}) {
@@ -20,21 +20,28 @@ export async function previewSwap(client, { from = 'USDG', to = 'WETH', amountIn
   const output = await token(to);
   const raw = await readTool(client, 'quote', { from: input.address, to: output.address, amountIn, slippageBps });
   show(JSON.stringify({ quote: raw }, null, 2));
-  // Never invent calldata or call the action tool to obtain it.
-  if (!raw.data) throw new Error('Quote has no prepared calldata; cannot preview this route without an action.');
+  // Fail closed on incomplete route data; never invent calldata.
+  if (!raw.data) throw new Error('Quote has no prepared calldata; request a complete route.');
   const same = (a, b) => typeof a === 'string' && a.toLowerCase() === b.toLowerCase();
   if (!same(raw.from, input.address) || !same(raw.to, output.address) || raw.amountIn !== amountIn ||
       raw.chainId !== 4663 || raw.slippageBps !== slippageBps) throw new Error('Quote does not match the request.');
   const quote = normalizeQuote(raw, { now });
   const txs = buildSwapFromQuote(quote, { now });
-  const preview = await readTool(client, 'preview', { txs });
-  show(JSON.stringify({ txs, preview }, null, 2));
-  if (BigInt(quote.expiresAt) <= BigInt(now())) throw new Error('Quote expired; request a fresh quote and preview.');
-  const confirmed = await confirm();
-  if (confirmed !== true) return { status: 'stopped', quote, txs, preview };
-  if (BigInt(quote.expiresAt) <= BigInt(now())) throw new Error('Quote expired while confirming; request a fresh preview.');
-  show('Confirmed for manual handoff only. No transaction was signed or sent. Request a fresh quote and preview in your wallet client before approving its swap action.');
-  return { status: 'manual-handoff', quote, txs, preview };
+  const prepared = await prepareAction(client, 'swap', { quoteId: quote.quoteId });
+  if (typeof prepared.summary !== 'string' || !prepared.summary.trim() ||
+      !/^oa_[0-9a-f]{40}_[0-9a-f]{32}_[0-9a-f]{64}$/.test(prepared.actionId) ||
+      !Number.isSafeInteger(prepared.expiresAt)) throw new Error('Oak returned an invalid prepared action.');
+  const expired = () => now() >= prepared.expiresAt || BigInt(now()) >= BigInt(quote.expiresAt);
+  if (expired()) throw new Error('Action or quote expired; prepare a fresh summary.');
+  await show(prepared.summary);
+  await show(`Action: ${prepared.actionId}\nExpires: ${new Date(prepared.expiresAt * 1000).toISOString()}`);
+  // The callback represents the person's answer after reading this exact summary.
+  const confirmed = await confirm(prepared);
+  if (confirmed !== true) return { status: 'stopped', quote, txs, prepared };
+  if (expired()) throw new Error('Action or quote expired while confirming; prepare a fresh summary.');
+  const execution = await executeAction(client, prepared.actionId);
+  await show(execution.summary);
+  return { status: execution.status, quote, txs, prepared, execution };
 }
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const connection = await openExample();
@@ -45,7 +52,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     }, { confirm: async () => {
       if (!process.stdin.isTTY || !process.stdout.isTTY) return false;
       const prompt = createInterface({ input: process.stdin, output: process.stdout });
-      try { return await prompt.question('Review complete? Type CONFIRM for manual handoff (no signing): ') === 'CONFIRM'; }
+      try { return (await prompt.question('Execute this action? Type yes or no: ')).trim().toLowerCase() === 'yes'; }
       catch { return false; }
       finally { prompt.close(); }
     } });

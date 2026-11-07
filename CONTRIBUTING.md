@@ -6,7 +6,7 @@ Oak Agent Kit uses a split public/private model:
 
 - **Open source in this repository ([MIT](LICENSE)):** Documentation (`docs/`), runnable examples (`examples/`), and smart contracts (`contracts/`). Recipes are separate opt-in packages.
 - **Published npm packages ([`LICENSE-PACKAGES.md`](LICENSE-PACKAGES.md)):** `@oakagentkit/addon` and `@oakagentkit/core` are published on npm as compiled packages under a free-to-use, no-copying license. Their TypeScript source is private.
-- **Hosted service (private):** The Oak hosted service (which reads chain and project APIs, verifies ERC-8004 identities and subscription access, runs transaction previews, and issues signed price notes) is private and closed source.
+- **Hosted service (private):** The Oak hosted service (which reads chain and project APIs, verifies ERC-8004 identities, runs transaction previews, and issues signed price notes) is private and closed source.
 
 ---
 

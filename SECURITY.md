@@ -10,16 +10,16 @@ hosted service, or deployed contracts on Robinhood Chain `4663`), reproduction s
 the commit SHA or package version, and the impact against the bounds in [THREAT_MODEL.md](THREAT_MODEL.md).
 
 We acknowledge reports within **48 hours** and give a triage assessment within **7 days**, then coordinate
-the fix and public disclosure. Good-faith research on local forks or testnet `46630` is welcome under the
+the fix and public disclosure. Good-faith research on local test environments or testnet `46630` is welcome under the
 safe harbor in [docs/security.md](docs/security.md#1-reporting-a-vulnerability), which is the full policy.
 
 ## Supported versions
 
 | Version | Supported |
 | --- | --- |
-| 0.2.0 (staged candidate; publication pending) | Local checks only; launch acceptance pending |
-| 0.1.9 (latest published until 0.2.0 release) | Yes |
-| 0.1.2 | Yes |
+| 0.3.0 (published 2026-11-07) | Yes |
+| 0.2.x | Upgrade to 0.3.0 for current fixes |
+| 0.1.x | Upgrade to 0.3.0 for current fixes |
 | Earlier versions | Fixes ship in the latest release; please upgrade |
 
 The [security policy](docs/security.md) also covers local custody, confirmation and transaction checks,

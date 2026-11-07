@@ -1,6 +1,27 @@
 # Changelog
 
-## 0.2.6 — prepared, unpublished
+## 0.3.0 — 2026-11-07 (published)
+
+- [Changed] Oak is free to use. Holding `$OAK` gives no access perks. Actions require approval in chat, and the daily spending limit in USD is optional.
+- [Changed] Actions use two steps: prepare and review the six-part summary, then call `oak_execute` with its `actionId` after a yes. Oak checks the terms and optional daily limit again before signing locally.
+- [Added] `oak connect <claude|codex|cursor|gemini|grok>` connects Oak to an AI app.
+- [Changed] Fee disclosures cover Oak's 0.25% swap and bridge fee; hood.ag's 5% registration and 4% resale referrals with matching buyer discounts and treasury payer/seller exceptions; and Borro's Bookrunners program. Borro charges a 10% performance fee on vault interest; on eligible deposits tagged with code `oak`, Borro pays Oak that fee for the first 12 months, then half, monthly in USDG. Deposits use on-chain `minShares` through `BorroBuilders` when eligible, with direct-vault fallback. Borro is an official Oak partner. Borro's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Security] Hosted daily budgets and wallet/IP rate limits protect the free service. Agent Wormhole checks outside text returned through Oak tools; it cannot see pages, files or email the agent reads elsewhere. Unavailable or incomplete checks stay unknown.
+- [Added] Upoch's two mainnet reads, `upoch_agent` and `upoch_explorer`, cover workflow roles, checkpoints, recovery history and on-chain Upoch Scores. Upoch is a project Oak reads from. Its score measures recovery policy and checkpoint activity; it does not rate trading performance or safety.
+- [Changed] Relay and KyberSwap service keys stay on Oak's server. Default RPC connections include Robinhood Chain and Base, with hosted action checks and an own-RPC override for each chain.
+- [Added] Agent 1's website tracker shows public positions, activity and thesis stamps, with explicit coverage gaps.
+- [Deprecated] `oak_subscribe`, `oak_renew` and `oak_redeem` remain reachable for this release, report that Oak is free and sign nothing.
+- [Fixed] Seven broken query operations inside `meridian_predict_read` are hidden from discovery and refused before HTTP.
+- [Changed] Catalog totals from the integrated tool-surface tests: 737 mainnet / 50 testnet callable tools, 23 / 17 listed tools, 694 shared module-manifest tools, 695 server tools, 35 module factories and 34 projects excluding the `earn_options` helper.
+
+## 0.2.7 — 2026-11-07 (published)
+
+- [Added] Raeto model calls, web search and page reading, with USDG credit top-ups and local spending limits. Record pairing remains switched off pending pinned approval details. Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Added] Factor's 11 agent-side tools for plain wallets: profiles, pay links, job discovery, applications, advances and work delivery. Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- [Fixed] A definite Gloam relay refusal fails only that plan's fresh notes without a transaction hash and reports the refusal's HTTP status.
+- [Changed] Catalog totals from registration: 719 mainnet / 42 testnet callable tools, 110 / 22 listed tools, 691 hosted tools and 33 projects. Tool references regenerated from the integrated source.
+
+## 0.2.6 — 2026-11-05 (published)
 
 - [Added] Gloam private USDG payments (`gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`) and the opt-in `@oakagentkit/gloam@0.2.6` engine. Notes, receive keys and proving stay on the user's computer; shield uses exact approvals and local signing, pay/claim/cash-out use proof authorization through the relay. Claim is free; all actions require a human even in auto mode. Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them.
 - [Added] Chop on Robinhood Chain (`chop_logs`, `chop_position`, `chop_quote_unwrap`, `chop_wrap`, `chop_unwrap`, `chop_farm`, `chop_unfarm`, `chop_harvest`): verified log discovery against the Chop factory, position and lock reads, unwrap quotes, wrapping, unwrapping, two-sided 50/50 LP farming, unfarming and `CHOP` reward harvesting with `positions` coverage, exact approvals, locally re-read confirmation floors and a 1,000,000 gas floor on `chop_harvest`. Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them.

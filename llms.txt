@@ -1,24 +1,24 @@
 # Oak Agent Kit
 
-> Oak is independent and is not affiliated with Robinhood. Oak is one MCP install that connects an AI agent to 31 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. The wallet is created and kept on the user's machine. By default the user confirms each transaction before Oak signs it locally.
+> Oak is independent and is not affiliated with Robinhood. Oak is one MCP install that connects an AI agent to 34 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. Oak is free to use. The wallet is created and kept on the user's machine. The agent prepares a summary and asks for a yes or no in chat before Oak signs locally.
 
-Version 0.2.6 is prepared; publication is pending. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
+Version 0.3.0 is available on npm. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
 
-Install with `npm install -g @oakagentkit/addon@0.2.6` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
+Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
 
 ## Docs
 
 - [What is Oak](https://github.com/OakAgentKit/oak/blob/main/docs/what-is-oak.md): plain-English introduction
 - [Connect your agent](https://github.com/OakAgentKit/oak/blob/main/docs/client-setup/README.md): install, wallet, funding and the copy-paste setup prompt
-- [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions
-- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 31 configured projects and their tools
-- [Access and pricing](https://github.com/OakAgentKit/oak/blob/main/docs/access-and-pricing.md): plans, renewal and cancellation
+- [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions (`tools/list` shows 23 core tools on mainnet and 17 on testnet plus installed recipes; `find_tool` discovers all 737 mainnet and 50 testnet tools with `call`, `status`, `statusNote`, and `programNotes`)
+- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 34 configured projects and their tools
+- [Access and pricing](https://github.com/OakAgentKit/oak/blob/main/docs/access-and-pricing.md): free access, ERC-8004 identity setup, optional daily spending limit, and swap, bridge, and partner referral fees
 - [Security, custody and authority](https://github.com/OakAgentKit/oak/blob/main/docs/security.md): local custody, confirmation, key authority and vulnerability reporting
-- [Headless wallet](https://github.com/OakAgentKit/oak/blob/main/docs/headless-wallet.md): unattended operation chosen by the owner
+- [Headless wallet](https://github.com/OakAgentKit/oak/blob/main/docs/headless-wallet.md): local encrypted wallet storage, chat confirmation, and the optional daily spending limit
 
 ## Contracts
 
-- [Contract source and tests](https://github.com/OakAgentKit/oak/tree/main/contracts): OakSubscription, OakOracle and OakBurner with Foundry tests and ABIs
+- [Contract source and tests](https://github.com/OakAgentKit/oak/tree/main/contracts): OakOracle, OakBurner, and legacy billing contracts with Foundry tests and ABIs
 - [Deployments](https://github.com/OakAgentKit/oak/blob/main/contracts/deployments/README.md): published addresses per chain
 - [Contract invariants](https://github.com/OakAgentKit/oak/blob/main/docs/INVARIANTS.md)
 
@@ -27,4 +27,11 @@ Install with `npm install -g @oakagentkit/addon@0.2.6` (Node.js 22), then connec
 - [Examples](https://github.com/OakAgentKit/oak/blob/main/examples/README.md): runnable Node.js MCP examples
 - [Changelog](https://github.com/OakAgentKit/oak/blob/main/CHANGELOG.md)
 
-- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.2.6 -p @oakagentkit/gloam@0.2.6 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
+- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.3.0 -p @oakagentkit/gloam@0.3.0 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
+
+- **Factor:** Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them. Agent-side paid work for plain wallets: profiles, pay links, job discovery, applications, advances and delivery.
+- **Raeto:** Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak didn't build them and doesn't run them. AI model calls, web search and page reading with USDG credit top-ups and local spending limits. Record pairing remains switched off pending pinned approval details.
+
+- **Upoch:** `upoch_agent` and `upoch_explorer` are mainnet-only reads. Read workflow roles, checkpoints, recovery history and on-chain Upoch Scores; browse a bounded ranked workflow list. Upoch is a project Oak reads from. The Upoch Score measures recovery policy and checkpoint activity from on-chain facts; it does not rate trading performance or safety.
+
+The mainnet module manifest has 694 shared tools; the server has 695 tools including the server-only `oak_keyed_read` transport. There are 35 module factories and 34 projects, excluding the read-only `earn_options` helper.
