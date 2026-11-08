@@ -100,7 +100,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "1d4ea36750fcb638728d3c4055fe511cf24ccc72031e0421a56a0ef4fc88b8e9"
+      "sha256": "b696a6974f4d1ad401d3e91bca785f6557e619174f821c1bd7752c0548eca34b"
     },
     {
       "path": "SECURITY.md",
@@ -108,7 +108,7 @@
     },
     {
       "path": "THREAT_MODEL.md",
-      "sha256": "2a2e09df72a6adba05665009fc84237616561112852928515288b5f897fdcb35"
+      "sha256": "a8b30e2cea44fe750259e39a5b09cdb77396ddcda6a9114de252c623188d7b07"
     },
     {
       "path": "assets/arch-dark.svg",
@@ -176,7 +176,7 @@
     },
     {
       "path": "contracts/deployments/README.md",
-      "sha256": "ea4011d2fdd236ff554b45afe0bcf96a55e182437113622131b60250028443f7"
+      "sha256": "0ff42aaceb219c2f7885ddf0612cf4a7c4ad5931a147dbd6d94bba298f1eb5ae"
     },
     {
       "path": "contracts/foundry.toml",
@@ -328,7 +328,7 @@
     },
     {
       "path": "docs/INVARIANTS.md",
-      "sha256": "5a1fd7f1fb7393822a615405d77b045ccbcd4abb5963ffbd28ce8b8aadefe31b"
+      "sha256": "139089365eb7a7f98548e0508d80d7b3ad4a87eedcd278ec1bccb0c66488210e"
     },
     {
       "path": "docs/README.md",
@@ -336,7 +336,7 @@
     },
     {
       "path": "docs/access-and-pricing.md",
-      "sha256": "4e2981fc2c64a466b6c277d97dbf00a3e6f914754d5f24fcd43d9413c3958f37"
+      "sha256": "bd65f9152bc23706586f5ed0a3d9bb49f316356c2aad5be6f17622b693cd6b23"
     },
     {
       "path": "docs/client-setup/README.md",
@@ -388,7 +388,7 @@
     },
     {
       "path": "docs/security.md",
-      "sha256": "99aaa291aff4b179d0c8d985d58a80c89223103d84b2c1b94bf6422ab8ce9ccd"
+      "sha256": "f4268a45f3fd6d67952dd4e017269e796a4e7bcbfda85bd68a8d79eb6893f1bd"
     },
     {
       "path": "docs/what-is-oak.md",

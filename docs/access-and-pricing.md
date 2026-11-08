@@ -29,9 +29,9 @@ ETH network fees and project fees are separate.
 Holding $OAK has no access perks. Oak uses 25% of its income to buy back and burn $OAK.
 
 1. At least once a month, the operator converts 25% of that period's swap, bridge, and partner referral fee income to USDG.
-2. The operator transfers that USDG to `OakBurner` (`0x660b86c5a3f9E1278cB5F01763fd0a630221C18B`) on Robinhood Chain first.
+2. The operator transfers that USDG to `OakBurner` (`0x0704AE41934EE9b71A85cBd308786CfE503108f4`) on Robinhood Chain first.
 3. The operator wallet fetches a caller-bound `for: "burner"` price note from the hosted service (`OakOracle` verifies that `note.wallet == msg.sender`, that the note is within 300 seconds, and that the signed `$OAK`-per-ETH rate is within the 50% oracle guard band, while `OakBurner` enforces its tighter 10% live-spot check and output floor).
 4. The operator calls `buyAndBurn(usdgIn, note, sig)` on `OakBurner` in chunks of at most `oracle.liquidityUsdgE6() / 200` (`0.5%` of live pool USDG liquidity per call), swapping USDG -> WETH -> `$OAK` and sending the bought `$OAK` to `0x000000000000000000000000000000000000dEaD`.
 5. Public burn announcements state `"we burned"` and link the on-chain `OakBurner` transactions.
 
-See [security](security.md) for the exact on-chain oracle and burner checks. Legacy v1 and v2 billing contracts (`0xF1C5d40997e1151B125a41e822C4278b153c4610` and `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remain deployed on Robinhood Chain and are unused.
+See [security](security.md) for the exact on-chain oracle and burner checks. The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed on Robinhood Chain and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
