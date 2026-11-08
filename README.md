@@ -204,7 +204,7 @@ Gas is separate. Your computer, RPC and external projects remain trust
 boundaries. There is no completed third-party audit.
 
 One owner key controls treasury funds and contract administration, including
-the price signer on `OakOracle` and `OakBurner`. Legacy v1 and v2 billing contracts (`0xF1C5d40997e1151B125a41e822C4278b153c4610` and `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remain deployed on Robinhood Chain and are unused. There is no second-signature requirement. Compromise exposes those
+the price signer on `OakOracle` and `OakBurner`. The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed on Robinhood Chain and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address). There is no second-signature requirement. Compromise exposes those
 powers; loss can make funds and administration inaccessible. It cannot spend
 user wallet balances. [Authority details](docs/security.md#4-keys-and-authority-matrix)
 
