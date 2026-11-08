@@ -1,10 +1,10 @@
-# Robinhood Chain Ecosystem Projects (34 Configured Modules)
+# Robinhood Chain Ecosystem Projects (35 Configured Modules)
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.0, published on npm) provides normalized MCP modules for **34 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
+Oak Agent Kit (`@oakagentkit/addon` 0.3.3, published on npm) provides normalized MCP modules for **35 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
 
 Instead of configuring 34 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, and Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks (unused ETH is refunded in the same transaction). Local transaction checks and yes-or-no confirmation in chat (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) precede signing. Oak is free to use; hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). Oak earns a 0.25% fee on swaps and bridges (KyberSwap swaps, Velora swaps, and Relay bridges and swaps), plus partner referral fees (`hood.ag` registrations at 5% and resales at 4% with matching buyer discounts, zero on treasury self-referral; Borro Bookrunners 10% of the Borro vault interest fee on tagged deposits — 100% of that share to Oak for the first 12 months, then 50%, paid monthly in USDG). Projects keep their own protocol fees.
 
-> **Network scope:** All 34 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_spending_limit` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
+> **Network scope:** All 35 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_spending_limit` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
 
 > **Tool list:** The Tools column names every tool each project registers. The [tool reference](mcp-tools-reference.md) gives each tool's one-line description and marks which ones `tools/list` shows. An agent finds any tool that is not listed with `find_tool` and runs it with `run_tool`.
 
@@ -101,3 +101,7 @@ Any Robinhood Chain (`4663`) project can ship opt-in declarative JSON recipes (`
 - **Buyability does not prove sellability:** A token you can buy is not always one you can sell. A successful buy `preview` does not prove you can exit later; transfer restrictions, token taxes, or changing token rules can block a sale.
 - **Simulation boundaries:** `preview` (`eth_simulateV1`) simulates on-chain execution at the current block and excludes gas fees. It does not prove off-chain settlement for external relayers (such as Relay cross-chain fills or Meridian RFQ execution).
 - **Typed-data paths:** Gasless identity linking/unlinking and Meridian RFQ continuations bind EIP-712 typed data and do not claim an EVM transaction preview. The agent prepares a summary and asks for a yes or no in chat before signing typed actions while retaining the applicable local checks.
+
+## FOBO
+
+FOBO is an official Oak partner. Browse and search launches, read token details, current taxes and fees, holdings, rankings, claims, limit orders, supported payment currencies and transaction status. Prepare buys, sells, launches, limit orders, cancellations and creator, referral or vesting claims; Oak asks in chat before anything is signed. All 16 FOBO tools run locally through FOBO's MCP. FOBO's own team runs its product and contracts; Oak didn't build them and doesn't run them.

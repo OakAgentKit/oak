@@ -3,7 +3,7 @@
 Goal: discover verified tokens, quote exact input, check unsigned approvals and
 swap calldata with core's public API, then call `oak_prepare` for a simulated
 action. Read its plain summary, answer yes or no, and call `oak_execute` with
-that exact `actionId` only after yes. This is the 0.3.0 approval flow.
+that exact `actionId` only after yes. This is the 0.3.3 approval flow.
 
 Prerequisites: Node 22 and the [packed-package installation](../README.md).
 Fixtures need no wallet. Optional live reads require a local mainnet wallet and

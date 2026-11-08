@@ -13,7 +13,7 @@ Report a vulnerability privately as described in [SECURITY.md](SECURITY.md).
 
 ## Ecosystem assets and trust boundaries
 
-Oak connects to **34 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
+Oak connects to **35 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
 
 | Asset | What is at stake |
 | --- | --- |
