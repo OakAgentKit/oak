@@ -76,11 +76,11 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "4ff7194d22922c903ec00572b79dbf03704aa685c4dbab3de17c7d1601581e88"
+      "sha256": "41c8ad6caae93e2604d825f42d36f32d688e2980b6bae35b1153be60fd4b25fa"
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "fab9b0b4df4a8b469cc50c90d19178e577d2f6167202fb1f6259bfe79e2701dc"
+      "sha256": "b586e7f8d92d28d46471202ce5ddcfc639e67cf70658c282da9ac104403e6e03"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -96,11 +96,11 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "000ab1cce457567852dbbe8ad28ac12186d4156d7771411049938c07fc4653bf"
+      "sha256": "c76d82e4f8c347bb2110436c9c2999f2077f01d120b6b5d417d4658d1b79ed02"
     },
     {
       "path": "README.md",
-      "sha256": "842c3034a62a71d776cfbb6c6ba95a551db87f8a6a56e0a35b58f68018acccce"
+      "sha256": "1d4ea36750fcb638728d3c4055fe511cf24ccc72031e0421a56a0ef4fc88b8e9"
     },
     {
       "path": "SECURITY.md",
@@ -108,7 +108,7 @@
     },
     {
       "path": "THREAT_MODEL.md",
-      "sha256": "34e3ecbcbb21ae084104374618d5dc5cb7bd9eb9ac1ba80142b9bb84b9e915ee"
+      "sha256": "2a2e09df72a6adba05665009fc84237616561112852928515288b5f897fdcb35"
     },
     {
       "path": "assets/arch-dark.svg",
@@ -332,7 +332,7 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "40f77f8fd26e909ec81b8d362f3a99c456e491f30f226d8a3e40bb144373dda0"
+      "sha256": "bd1bf5f72dc13cfb96b0451cc30cb8bd97aafef5d99342b8696e23c8a8cfd07d"
     },
     {
       "path": "docs/access-and-pricing.md",
@@ -340,11 +340,11 @@
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "94c29b9e753ce394f034642eb7a82828730e538df18beb9602578e7f4a9e10c5"
+      "sha256": "f5ed042015cbe6e170c615d205781224c9e07487b15188b1513db1e58753bca1"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "9beaf12da1ca5db39fd59faee1ef011ed8fc91fe90724d9aec723760bd87c1b1"
+      "sha256": "015c2c60e22890b2a4516fff3871c4c933699504f575e2fded759d8172e9d5b7"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
@@ -356,7 +356,7 @@
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "8f8e502395d130c6376191cbf77da5c0ca3cbfc945eb8bfb520dee7a372201ec"
+      "sha256": "91ae1d6ac02df3857225a897d88ff9a511528bd9cfcbc36273f748907db07fd2"
     },
     {
       "path": "docs/client-setup/gemini.md",
@@ -368,7 +368,7 @@
     },
     {
       "path": "docs/contract-development.md",
-      "sha256": "f3090055c1e2be71b31c4dd4d92c06d73081a8357532558aba02958450ee351a"
+      "sha256": "87a024460f69e014532bb6404a0cba836a35069c9c4ab24b8feb5eec70b3abaf"
     },
     {
       "path": "docs/headless-wallet.md",
@@ -376,7 +376,7 @@
     },
     {
       "path": "docs/mcp-tools-reference.md",
-      "sha256": "9d143f815c0cb8160eb4c2c8c7325ba713413f86d3799feb97ff606a552ca9b6"
+      "sha256": "9208298aac93c4e4b5dc03c52a8878601cca0cc85536dc8a6830c468c69ffa10"
     },
     {
       "path": "docs/reviews.md",
@@ -384,15 +384,15 @@
     },
     {
       "path": "docs/robinhood-chain-projects.md",
-      "sha256": "87bea569948ccc92cd1d883a46180a6e904254b8004b6839d5451d4de61cfa9d"
+      "sha256": "799601f5291828645960120cc4ff3ebaf2680e79af71f076118037962d5c527b"
     },
     {
       "path": "docs/security.md",
-      "sha256": "46d8f129583fbb7a526a5195420146c0662be6517b5cbc3ebbb6ffe9ca7ff28a"
+      "sha256": "99aaa291aff4b179d0c8d985d58a80c89223103d84b2c1b94bf6422ab8ce9ccd"
     },
     {
       "path": "docs/what-is-oak.md",
-      "sha256": "0a2cd1f3fddea0c7d131526d732a180bf6104e3cea723bf545c02eb519743658"
+      "sha256": "965188c743b0392bd546c99d80d957aceeb06444f7f7a446d816f66520a104e2"
     },
     {
       "path": "examples/.gitignore",
@@ -420,7 +420,7 @@
     },
     {
       "path": "examples/02-preview-sign-swap/README.md",
-      "sha256": "312b59a76f17d641611b66e2f9b6b88c48b92ecbbede09974c7478fbe9807c51"
+      "sha256": "68c728bf4b1238d4499b902e3cf27d4a06785d89e5dbd1739c4c816c505e4793"
     },
     {
       "path": "examples/02-preview-sign-swap/example.test.mjs",
@@ -436,7 +436,7 @@
     },
     {
       "path": "examples/03-portfolio-agent/README.md",
-      "sha256": "f4cf222e0cb0f7e19a6638e8f3a1879f9a53c8d5c49c64a58b67b6ccfd846980"
+      "sha256": "f0436bbbbabbfdf44fba3573d1399455b543b3b01ed181590c359e206916c89d"
     },
     {
       "path": "examples/03-portfolio-agent/example.test.mjs",
@@ -452,7 +452,7 @@
     },
     {
       "path": "examples/README.md",
-      "sha256": "479e1725515554c60581c74864b914d8cdde75c268899bb59da19bafab9dba87"
+      "sha256": "456e49b1aa1e2f9af6be214f06ec4d36e868625ea3adc357facf57ecebc24a00"
     },
     {
       "path": "examples/eval-design.md",
@@ -460,11 +460,11 @@
     },
     {
       "path": "examples/package-lock.json",
-      "sha256": "df912006c58ed272278491c54b99080903a65aa995f0cf3b2d2fa639125f02f6"
+      "sha256": "eca8a834ce558e5e08333cc343571c61efb2947b954320ab84ceb75ed7a36799"
     },
     {
       "path": "examples/package.json",
-      "sha256": "20e6f5284f1a248c87d1e371ef099d2790b972932ce259c0be442873def5352d"
+      "sha256": "88d9ad15c8c7229f45fac555bf9d2d8a4b602f345d2dbae7c157d0d9bc895beb"
     },
     {
       "path": "examples/shared/client.mjs",
@@ -488,15 +488,15 @@
     },
     {
       "path": "llms.txt",
-      "sha256": "2b2df2b507bef5d0c83771f0fb86023e27e32b7cfb7266c9c78399f3edbf96ed"
+      "sha256": "4cc9804650b19afb38b5d42446c7d9ab30211e4fd68cc70efa96829e6175669f"
     },
     {
       "path": "plugins/oak/.claude-plugin/plugin.json",
-      "sha256": "a0fc9e86e20c3d075f6f628dc57b1135af927a2791bf87f2c46f0b5e5803d607"
+      "sha256": "bf41212ed1a993437d1ae3cacb4e46bcf6a7d05a16e91dd2674e23fefd63c682"
     },
     {
       "path": "plugins/oak/.mcp.json",
-      "sha256": "e6bcec878efdad758f6929d4e381d822e9cdf6e50feb3cd8864640e34ca4a733"
+      "sha256": "7843ecd7859b5485f37e1d8cf1f43dfbe6bc280252ae60519b8fda560a915772"
     },
     {
       "path": "plugins/oak/LICENSE",
@@ -504,7 +504,7 @@
     },
     {
       "path": "plugins/oak/README.md",
-      "sha256": "24318eb9b11bc0e4d95aa65fb493c75b4f1c8f4cc61f30999f9f1ce5ebc89785"
+      "sha256": "3e7d02891ccfa75c2629ee15dbf20f8a28db8d0087a0c9bbb58675c09b8048d3"
     }
   ]
 }

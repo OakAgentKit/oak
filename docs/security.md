@@ -1,6 +1,6 @@
 # Security, Custody, and Authority
 
-**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.3.0**; see the [live deployment record](../contracts/deployments/README.md). Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.3.3**; see the [live deployment record](../contracts/deployments/README.md). Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 
 The treasury and contract admin is the single-owner wallet `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`. One owner key can spend treasury funds, replace the price signer on `OakOracle`, and arm or execute the 90-day stuck-funds sweep on `OakBurner`. Legacy v1 and v2 billing contracts (`0xF1C5d40997e1151B125a41e822C4278b153c4610` and `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remain deployed on Robinhood Chain and are unused. There is no second-signature requirement. Key compromise exposes these powers; key loss can make treasury funds and administration inaccessible. It cannot spend user wallet balances. Safe support is an optional deployment profile, not the launch setup.
 
@@ -16,7 +16,7 @@ Use **GitHub private vulnerability reporting** on the official OakAgentKit repos
 
 Include in your report:
 
-1. The affected surface (local CLI/MCP add-on, 34 ecosystem connectors, smart contracts in `contracts/`, hosted service, or deployed contracts on Robinhood Chain `4663`).
+1. The affected surface (local CLI/MCP add-on, 35 ecosystem connectors, smart contracts in `contracts/`, hosted service, or deployed contracts on Robinhood Chain `4663`).
 2. Minimal reproduction steps, proof-of-concept test or Foundry test (`forge test`), and the exact commit SHA or package version.
 3. The concrete impact against the authority boundaries documented below.
 
@@ -84,7 +84,7 @@ Across all of Oak, the **only service-held signing key is the sign-only price si
 
 Legacy v1 and v2 billing contracts (`0xF1C5d40997e1151B125a41e822C4278b153c4610` and `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remain deployed on Robinhood Chain and are unused.
 
-USDG is an external, upgradeable EIP-1967 proxy with issuer freeze authority. Oak's internal review measured implementation `0x68184c449e1a8f34fa18d289737129fd27b66f8f`, but deployment must reread the proxy implementation slot and pin the reviewed implementation code hash. A freeze of `OakBurner` stops burner swaps and sweeps while frozen. Exact-balance checks make incompatible transfer behavior fail closed, but Oak cannot prevent an issuer freeze or proxy upgrade.
+USDG is an external, upgradeable EIP-1967 proxy with issuer freeze authority. Oak's internal review measured implementation `0x68184c449e1a8f34fa18d289753129fd27b66f8f`, but deployment must reread the proxy implementation slot and pin the reviewed implementation code hash. A freeze of `OakBurner` stops burner swaps and sweeps while frozen. Exact-balance checks make incompatible transfer behavior fail closed, but Oak cannot prevent an issuer freeze or proxy upgrade.
 
 ---
 

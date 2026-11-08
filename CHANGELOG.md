@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.3 — 2026-11-08 (published)
+
+- [Fixed] Accept FOBO's live sign-in challenge when the `Version: 1` line is omitted and timestamps are recorded in milliseconds from a clock about one second ahead.
+- [Security] Allow `Version: 1` to be present or absent on FOBO sign-in challenges (never another version value) with up to 2 seconds of clock skew inside the 5-minute window, while still refusing any changed wallet address or statement.
+
+## 0.3.2 — 2026-11-08 (published)
+
+- [Fixed] Accept FOBO's updated sign-in challenge wording (`"sign in with your wallet"`, statement `"Sign in to FOBO. This is free: no transaction, no gas."`).
+- [Fixed] Keep the reviewed transaction bytes for Morpho full repayment and measure current debt at execution so repaying a full balance no longer fails after interest moves.
+- [Fixed] Keep ordinary swaps of other tokens working during a FOBO outage while routing coins known to be FOBO coins exclusively through FOBO.
+
+## 0.3.1 — 2026-11-08 (published)
+
+- [Added] FOBO on the Oak MCP for buying, selling, launching coins and managing limit orders and claims, with FOBO-only routing for FOBO coins at no Oak fee.
+- [Fixed] Prepare flows for withdraw, borrow and claim actions, back-to-back action nonces, identity registration when a daily spending limit is active, and `oak_doctor` price reads.
+
 ## 0.3.0 — 2026-11-07 (published)
 
 - [Changed] Oak is free to use. Holding `$OAK` gives no access perks. Actions require approval in chat, and the daily spending limit in USD is optional.

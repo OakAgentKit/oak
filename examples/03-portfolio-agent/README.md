@@ -3,7 +3,7 @@
 Goal: make only `balances` and `positions` calls, preserve each token's address,
 symbol, decimals, chain ID and base-unit amount, and display human amounts using
 integer arithmetic. Positions retain their project/module and any error rows.
-Oak 0.3.0's MCP `structuredContent` exposes balances under `items`; the example
+Oak 0.3.3's MCP `structuredContent` exposes balances under `items`; the example
 also accepts the older array text form. Setup next steps and funding summaries
 remain visible when the balance response includes them.
 
