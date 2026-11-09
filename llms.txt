@@ -2,7 +2,7 @@
 
 > Oak is independent and is not affiliated with Robinhood. Oak is one MCP install that connects an AI agent to 35 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. Oak is free to use. The wallet is created and kept on the user's machine. The agent prepares a summary and asks for a yes or no in chat before Oak signs locally.
 
-Version 0.3.3 is available on npm. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
+Version 0.3.4 is available on npm. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
 
 Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
 
@@ -27,7 +27,7 @@ Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the 
 - [Examples](https://github.com/OakAgentKit/oak/blob/main/examples/README.md): runnable Node.js MCP examples
 - [Changelog](https://github.com/OakAgentKit/oak/blob/main/CHANGELOG.md)
 
-- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.3.3 -p @oakagentkit/gloam@0.3.3 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
+- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.3.4 -p @oakagentkit/gloam@0.3.4 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
 
 - **Factor:** Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them. Agent-side paid work for plain wallets: profiles, pay links, job discovery, applications, advances and delivery.
 - **Raeto:** Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak didn't build them and doesn't run them. AI model calls, web search and page reading with USDG credit top-ups and local spending limits. Record pairing remains switched off pending pinned approval details.

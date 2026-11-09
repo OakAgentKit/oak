@@ -72,4 +72,4 @@ Every error message in Oak is a plain sentence naming the cause and the exact co
 
 Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 Before signing an action, the agent prepares it (with a listed action tool or `oak_prepare`) and shows the six-part summary, `actionId`, and UTC expiry in chat; saying yes runs `oak_execute` with `{"actionId": "<actionId>"}`, which re-simulates, checks terms and your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
-Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.
+Read [shared confirmation guidance](README.md#confirmation-support) and [per-client MCP tool annotations](README.md#per-client-mcp-tool-annotations-and-approval-prompts) (`readOnlyHint: true` on `oak_prepare`, `destructiveHint: true` on `oak_execute`; Grok's xAI Remote MCP `allowed_tools` list does not enforce `destructiveHint` prompts, so keep `oak_execute` gated behind human chat confirmation) before testing an action.

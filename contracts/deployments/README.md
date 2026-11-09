@@ -37,7 +37,7 @@ See the [vesting tests](../test/OakTeamVesting.t.sol) and [custody disclosures](
 
 ## Current access
 
-The published core and add-on packages are **0.3.0**. Oak is free to use.
+The published core and add-on packages are **0.3.4**. Oak is free to use.
 Reads need no identity; actions require a verified ERC-8004 identity, except the
 free `gloam_claim` action. Every action requires a yes in chat before signing.
 The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
