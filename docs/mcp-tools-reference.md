@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.3, published on npm) exposes **753 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **27 local lifecycle tools**, and **714 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.3.4, published on npm) exposes **750 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **714 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **23** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 753 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **23** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 750 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **50 active tools**, **17** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 27 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_subscribe`, `oak_renew`, `oak_redeem`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 34 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **17** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 34 ecosystem modules are mainnet-only.
 
 ---
 
@@ -46,16 +46,13 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **50 acti
 
 ---
 
-## Local Lifecycle Tools (27)
+## Local Lifecycle Tools (24)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
 | `oak_setup` | via `run_tool` | Register an ERC-8004 ID (name fills Oak's default profile) or link one; external-owner signing stays in the owner terminal. |
 | `oak_identity_unlink` | via `run_tool` | Revoke the linked identity without gas; owner revocation requires owner-terminal signing. |
-| `oak_subscribe` | via `run_tool` | Retired. Oak is free; no plan is needed. Returns this notice without signing. |
-| `oak_renew` | via `run_tool` | Retired. Oak is free; no plan is needed. Returns this notice without signing. |
-| `oak_redeem` | via `run_tool` | Retired. Oak is free; no plan is needed. Returns this notice without signing. |
-| `send` | yes | Prepare to send ETH or a pinned token (USDG, WETH, USDe, OAK) from the local wallet to an address; requires connection tracing and human confirmation of token, amount and recipient. |
+| `send` | yes | Prepare to send ETH, a pinned token (USDG, WETH, USDe, OAK) or an issuer-verified official stock token (NVDA, TSLA; mainnet) from the local wallet to an address; requires connection tracing and human confirmation of token, amount and recipient. |
 | `lend` | yes | Prepare a deposit or lend from amount in token base units and optional venue. Without a venue, uses the first offered USDG earn_options choice. Show the summary; oak_execute after yes. |
 | `withdraw` | yes | Prepare a withdrawal from the named venue, amount in token base units and its position selectors. Show the checked summary; oak_execute after yes. |
 | `borrow` | yes | Prepare borrowing on the named venue with amount in token base units and its market or agent selectors. Existing collateral or credit is required. Show the summary; oak_execute after yes. |
@@ -387,7 +384,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **50 acti
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `relay_bridge_out` | via `run_tool` | Prepare bridging ETH or ERC-20 out; checks tracing via hosted Base RPC or your own OAK_RPC_URL_<chainId>. Default slippage 500 bps; review the minimum. |
+| `relay_bridge_out` | via `run_tool` | Prepare bridging ETH or ERC-20 out; checks tracing via hosted RPC on Base, Arbitrum, Ethereum and Optimism or your own OAK_RPC_URL_<chainId>. Default slippage 500 bps; review the minimum. |
 | `relay_status` | via `run_read_tool` | Read a known Relay requestId status without an API key; requestId is required. Optional destination receipt checks need its chain RPC. |
 | `relay_bridge_in` | via `run_tool` | Prepare an inbound Relay bridge route to Robinhood Chain. A fresh wallet may bridge ETH or USDG to itself before it has an identity; every other shape needs a verified identity. Every bridge requires chat confirmation. |
 | `relay_quote` | via `run_read_tool` | Read a Relay estimate through server-hosted authenticated reads; no client API key. quote/v2 needs authentication since October 2, 2026. Nothing is signed. |

@@ -1,6 +1,6 @@
 # MCP client setup guides
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.3, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 35 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
+Oak Agent Kit (`@oakagentkit/addon` 0.3.4, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 35 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
 
 ---
 
@@ -41,7 +41,7 @@ The remaining user steps are funding ETH for network fees, saying yes in chat to
 
 Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak token, oracle, burner, and pool addresses; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. Transaction signing requires `eth_simulateV1` with complete per-call logs and `traceTransfers`; the default public RPC supplies that evidence. `debug_traceCall`/`callTracer` is optional extra coverage: when supported Oak validates nested delegate targets, while an explicit unsupported-method response selects simulation-only mode and leaves that documented residual risk. A keyed RPC is therefore an optional reliability and extra-coverage override, not a prerequisite for the default simulation-only path. Malformed responses, transport errors, or loss of a tracer previously shown available fail closed.
 
-Oak is free to use on mainnet; version 0.3.3 is available on npm.
+Oak is free to use on mainnet; version 0.3.4 is available on npm.
 $OAK has graduated on Pons. Reads need no identity; actions require
 a verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
 wallet address, network, and ERC-8004 identity status. See [access and pricing](../access-and-pricing.md).
@@ -88,10 +88,29 @@ The agent shows that summary in chat and asks for a yes or no.
 When you say yes, the agent calls `oak_execute` with `{"actionId": "<the exact actionId>"}`, which re-simulates immediately before signing, checks that terms have not worsened and checks your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
 Reads and session authentication do not prompt. See [security](../security.md).
 
+### Per-client MCP tool annotations and approval prompts
+
+Oak sets [MCP `2025-03-26` `ToolAnnotations`](https://modelcontextprotocol.io/specification/2025-03-26/server/tools) on the two-step approval tools:
+
+- `oak_prepare`: `{"readOnlyHint": true, "destructiveHint": false, "idempotentHint": true, "openWorldHint": false}` — previews and simulates without signing, so clients that honour `readOnlyHint` do not add an extra pre-tool dialog on the dry-run summary.
+- `oak_execute`: `{"readOnlyHint": false, "destructiveHint": true, "idempotentHint": false, "openWorldHint": true}` — flags signing and broadcasting as a state-changing action so clients that inspect `destructiveHint` prompt before calling `oak_execute`.
+
+Oak sets `ToolAnnotations` only and adds no in-band MCP elicitation form; two-step chat confirmation (`oak_prepare` summary in chat, then your yes before `oak_execute`) remains required, and client bypass or auto-approve settings still skip the client's own pre-tool prompt:
+
+| Client | Default prompt behaviour | Honours `readOnlyHint` / `destructiveHint` | Bypass / auto-approve flags that skip client pre-tool prompts | Verified reference |
+| :--- | :--- | :--- | :--- | :--- |
+| **Claude Code** | Prompts per tool by default (`Allow once`, `Always allow`, `Deny`) and relaxes prompts on `readOnlyHint: true`. | Yes | `--dangerously-skip-permissions` (`bypassPermissions`) or session/workspace `Always allow` rules. | [Claude Code settings](https://code.claude.com/docs/en/settings), [claude-code#7108](https://github.com/anthropics/claude-code/issues/7108), [claude-code#16295](https://github.com/anthropics/claude-code/issues/16295) |
+| **Claude Desktop** | Prompts on first tool call (`Allow once`, `Always allow`, `Deny`) and separates read-only tools from write/modify tools. | Yes | Clicking `Always allow` for a tool in the workspace modal skips future pre-tool prompts in that chat/workspace. | [MCP tools spec](https://modelcontextprotocol.io/specification/2025-03-26/server/tools), [claude-ai-mcp#153](https://github.com/anthropics/claude-ai-mcp/issues/153) |
+| **Cursor** | `Ask Every Time` prompts per tool; `Auto-review` runs Cursor's permission layer and classifier subagent. | Yes | `Run Everything` mode or adding the server/tool to `.cursor/permissions.json`. | [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol), [Cursor changelog](https://cursor.com/changelog) |
+| **OpenAI Codex CLI** | Prompts by default (`--ask-for-approval on-request`) unless a tool is marked `readOnlyHint: true` and closed-world. | Yes | `--dangerously-bypass-approvals-and-sandbox` (`--yolo`), `--ask-for-approval never`, or `--approve-for-me`. | [codex#6992](https://github.com/openai/codex/issues/6992) |
+| **Gemini CLI** | Prompts per tool by default unless the server is trusted or matched by a policy rule. | Yes | `--yolo` (`--approval-mode=yolo`) or setting `"trust": true` on the server in `~/.gemini/settings.json`. | [Gemini CLI MCP docs](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md), [gemini-cli#19654](https://github.com/google-gemini/gemini-cli/issues/19654) |
+| **VS Code (Copilot)** | Auto-runs `readOnlyHint: true` tools (since v1.100) and prompts before mutating or `destructiveHint: true` tools. | Yes | Selecting `Always Allow` for the tool, session, or workspace in the approval dropdown. | [VS Code v1.100](https://code.visualstudio.com/updates/v1_100), [VS Code MCP guide](https://code.visualstudio.com/api/extension-guides/ai/mcp) |
+| **Grok / xAI Remote MCP** | No native pre-tool prompt in the xAI Remote MCP API (`allowed_tools` is a static allowlist). | No | Any tool in `allowed_tools` runs without a client prompt; keep `oak_execute` behind human chat confirmation. | [xAI Remote MCP docs](https://docs.x.ai/docs/tools/remote-mcp) |
+
 ## Quick connections
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.3.3 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.3.4 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and transactions still need
@@ -107,13 +126,13 @@ In Claude Code, run these two commands:
 Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
 2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuMyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.3%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.4%2522%252C%2522mcp%2522%255D%257D)
 
 
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.3.3 -p @oakagentkit/gloam@0.3.3 oak mcp
+npx -y -p @oakagentkit/addon@0.3.4 -p @oakagentkit/gloam@0.3.4 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

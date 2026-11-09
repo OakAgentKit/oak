@@ -50,4 +50,4 @@ Use the Node 22 binary from your version manager. Alternatively set the MCP proc
 
 Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 Before signing an action, the agent prepares it (with a listed action tool or `oak_prepare`) and shows the six-part summary, `actionId`, and UTC expiry in chat; saying yes runs `oak_execute` with `{"actionId": "<actionId>"}`, which re-simulates, checks terms and your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
-Read [shared confirmation guidance](README.md#confirmation-support) before testing an action.
+Read [shared confirmation guidance](README.md#confirmation-support) and [per-client MCP tool annotations](README.md#per-client-mcp-tool-annotations-and-approval-prompts) (`readOnlyHint: true` on `oak_prepare`, `destructiveHint: true` on `oak_execute`; clicking `Always allow` in Claude Desktop skips future pre-tool prompts in that workspace while chat confirmation remains required) before testing an action.

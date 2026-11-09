@@ -23,4 +23,4 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): release history.
 
-Core and add-on 0.3.3 are published on npm; Oak is free to use and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
+Core and add-on 0.3.4 are published on npm; Oak is free to use and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
