@@ -1,6 +1,6 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.4, published on npm) exposes **750 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **714 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.3.5, published on npm) exposes **750 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **714 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
 `tools/list` stays short. It shows the **23** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 750 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 

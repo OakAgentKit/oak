@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.5 — 2026-11-09 (published)
+
+- [Fixed] Approved actions finish: Oak's own hosted-RPC hiccups no longer use up an approval, and Oak retries on its own within the window; every prepared action now has 15 minutes for review; actions work right after a restart; and the daily-limit question is asked once.
+- [Fixed] `CHOP` and Chop: `CHOP` sells through KyberSwap or Velora when no safe Uniswap route exists; the Chop farm position is valued; `CHOP`, `chOAK` and `schOAK` show as verified; and unfarm quotes the live exit, suggests 1% minimums, and explains a too-high minimum.
+- [Fixed] Clearer screens: one risk block appears per summary with the decision first; LP burns read as burning farm receipt tokens; receipts default to the latest 10 and say what was refused; tool search finds exits and hides one-way venues; Oak no longer flags its own summaries as outside text; stale plan and subscription wording was removed; and an internal developer note was removed from the customer playbooks.
+
 ## 0.3.4 — 2026-11-08 (published)
 
 - [Added] Send issuer-verified official stock tokens such as NVDA and TSLA with exact transfers, recipient and balance checks, chat confirmation, and pinned proxy/implementation tracing; lookalikes and unverified tokens remain refused.

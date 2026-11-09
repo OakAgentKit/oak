@@ -1,6 +1,6 @@
 # MCP client setup guides
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.4, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 35 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
+Oak Agent Kit (`@oakagentkit/addon` 0.3.5, published on npm) runs as a local `stdio` Model Context Protocol (MCP) server via `oak mcp`. One install connects your AI agent to a local self-custodial wallet and an everyday MCP tool list across 35 ecosystem projects, plus `find_tool` and `run_tool` for the full catalog on **Robinhood Chain** (`4663`).
 
 ---
 
@@ -41,7 +41,7 @@ The remaining user steps are funding ETH for network fees, saying yes in chat to
 
 Mainnet uses `https://api.oakagentkit.org` and the public Robinhood Chain RPC by default. The service's public `GET /v1/config` supplies deployed Oak token, oracle, burner, and pool addresses; RPC credentials and server secrets are never returned. No contract-address copying is required with an upgraded deployed service. Explicit local deployment pins must agree, and mainnet/testnet settings cannot be mixed. Transaction signing requires `eth_simulateV1` with complete per-call logs and `traceTransfers`; the default public RPC supplies that evidence. `debug_traceCall`/`callTracer` is optional extra coverage: when supported Oak validates nested delegate targets, while an explicit unsupported-method response selects simulation-only mode and leaves that documented residual risk. A keyed RPC is therefore an optional reliability and extra-coverage override, not a prerequisite for the default simulation-only path. Malformed responses, transport errors, or loss of a tracer previously shown available fail closed.
 
-Oak is free to use on mainnet; version 0.3.4 is available on npm.
+Oak is free to use on mainnet; version 0.3.5 is available on npm.
 $OAK has graduated on Pons. Reads need no identity; actions require
 a verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
 wallet address, network, and ERC-8004 identity status. See [access and pricing](../access-and-pricing.md).
@@ -110,7 +110,7 @@ Oak sets `ToolAnnotations` only and adds no in-band MCP elicitation form; two-st
 ## Quick connections
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.3.4 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.3.5 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and transactions still need
@@ -126,13 +126,13 @@ In Claude Code, run these two commands:
 Restart Claude Code, then check `/mcp` for `plugin:oak:oak`. On Claude Code
 2.1.292 or later, the shell shortcut is `claude plugin install oak --marketplace OakAgentKit/oak`.
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.4%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuNSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.5%2522%252C%2522mcp%2522%255D%257D)
 
 
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.3.4 -p @oakagentkit/gloam@0.3.4 oak mcp
+npx -y -p @oakagentkit/addon@0.3.5 -p @oakagentkit/gloam@0.3.5 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.
