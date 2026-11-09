@@ -52,4 +52,4 @@ confirmation and local checks, custody responsibilities and their limits.
 
 ## Optional Gloam engine
 
-`@oakagentkit/gloam@0.3.4` is installed separately beside the add-on; it is not an add-on dependency. Its package LICENSE uses the same Oak license text as the add-on, as directed by the owner before publication. Its SDK and proving dependency graph includes GPL-3.0 packages (including snarkjs, circomlibjs and ffjavascript); their own licenses continue to apply. Core and the add-on do not import the SDK or snarkjs.
+`@oakagentkit/gloam@0.3.5` is installed separately beside the add-on; it is not an add-on dependency. Its package LICENSE uses the same Oak license text as the add-on, as directed by the owner before publication. Its SDK and proving dependency graph includes GPL-3.0 packages (including snarkjs, circomlibjs and ffjavascript); their own licenses continue to apply. Core and the add-on do not import the SDK or snarkjs.
