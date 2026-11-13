@@ -1,8 +1,8 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.5, published on npm) exposes **750 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **714 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.3.7, published on npm) exposes **770 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **734 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **23** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 750 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **23** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 770 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
 On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **17** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 34 ecosystem modules are mainnet-only.
 
@@ -42,7 +42,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | :--- | :--- | :--- |
 | `find_tool` | yes | Read or search every Oak tool, listed or not, by what you want to do or by exact name; gives matches with names, descriptions, read or action, required inputs and call path (direct, run_read_tool or run_tool), plus full schemas for an exact name. |
 | `run_tool` | yes | Run any Oak tool by name with its arguments, including unlisted tools from find_tool. Reads stay free; actions keep the access gate, local guard, preview, exact approvals and human confirmation. |
-| `run_read_tool` | yes | Read through any Oak read tool by name with its arguments, including unlisted reads from find_tool. Refuses actions (use run_tool). Free; needs no identity or subscription. |
+| `run_read_tool` | yes | Read through any Oak read tool by name with its arguments, including unlisted reads from find_tool. Refuses actions (use run_tool). Free; needs no identity. |
 
 ---
 
@@ -65,7 +65,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `oak_cleanup_allowances` | yes | Separate wallet allowance cleanup: preview and confirm each recorded leftover approval revoke. Costs network fees. Never bundled into an unrelated action. No identity needed. |
 | `oak_allowances` | via `run_read_tool` | Read current ERC-20 and Permit2 allowances from the local wallet to known Oak spenders at one block. Optional tokens array; defaults include pinned tokens and Beefy wants/shares. Flags token-level default Permit2 approvals separately from wallet permissions; defaults are not wallet-made grants and should not be advised for revocation. Unavailable reads remain unknown. No identity, signing or cleanup. |
 | `oak_approval_census_status` | via `run_read_tool` | Read local approval-history catch-up progress and estimated time. Uniswap and reads remain available during catch-up. |
-| `oak_receipts` | yes | List or export receipts as JSON or CSV; view accounting exports a spreadsheet. Exports enter the chat. Verify the hash chain against a saved head. |
+| `oak_receipts` | yes | Read the latest 10 local receipt summaries; follow more.before for older entries. Export JSON or CSV (view accounting) into chat, or verify the hash chain against a saved head. |
 | `oak_playbook` | yes | Read an Oak playbook by name, such as reads or pendle, for clients that cannot read MCP resources. No name lists the playbooks; a long playbook gives a nextOffset to pass back as offset. Local and read-only. |
 | `oak_wormhole_evidence` | via `run_read_tool` | Read the full Wormhole text-check evidence block behind an evidenceBlockId from this session's results. Local and read-only; the store keeps the latest 1,000 blocks and clears on restart. |
 | `oak_dry_run` | via `run_read_tool` | Test 1 to 8 transaction actions without transaction signing. Reports wouldWork, causes, fees and approvals; a real run checks again. |
@@ -77,7 +77,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 ---
 
-## 35 Ecosystem Project Modules (714 Tools)
+## 35 Ecosystem Project Modules (734 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -153,7 +153,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `chop_logs` | via `run_read_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Read verified, published Chop logs with plainSummary, backingNow, rewardPot, poolDepth, rough priceMovePer100Usd, and live fee and token terms through chain reads. Show returned risk lines as written. |
 | `chop_position` | via `run_read_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Read this wallet's underlying, log, staked LP and claimable CHOP position for a verified log, including locks and returned risk lines. |
 | `chop_quote_unwrap` | via `run_read_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Read a fresh base-unit unwrap quote for a verified log after checking this wallet's log balance, and keep its quotedNet for chop_unwrap. Fees and the net amount can change before inclusion. |
-| `chop_wrap` | via `run_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Prepare wrapping an underlying base-unit amount into a verified log with a positive minLogOut enforced on chain. Show the live fees, returned risks and the Holder-plan warning for $OAK before confirmation. |
+| `chop_wrap` | via `run_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Prepare wrapping an underlying base-unit amount into a verified log with a positive minLogOut enforced on chain. Show the live fees, returned risks and the underlying-custody warning for $OAK before confirmation. |
 | `chop_unwrap` | via `run_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. First call chop_quote_unwrap, then prepare unwrapping log base units with its quotedNet. Chop has no on-chain minimum for unwrap; Oak checks the simulated net and refuses a local rebuild below quotedNet, while state can still move before inclusion. |
 | `chop_farm` | via `run_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Prepare two-sided 50/50 farming with log and paired token base units, positive minima and deadline. The staked LP minimum is checked in simulation; price changes can cause impermanent loss. Stake and new rewards can be locked for 10 minutes. |
 | `chop_unfarm` | via `run_tool` | Oak x Chop. Chop's own team runs its product and contracts; Oak didn't build them and doesn't run them. Prepare withdrawing staked LP after its 10-minute lock, with positive on-chain log and paired-token minima and a deadline. Amounts are base units; show both token receipts and risks before confirmation. |
@@ -163,7 +163,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `gloam_status` | via `run_read_tool` | Read local Gloam note handles, receive tag and live USDG limits and fees; needs the optional @oakagentkit/gloam package. No memo scan. No identity or plan required. |
+| `gloam_status` | via `run_read_tool` | Read local Gloam note handles, receive tag and live USDG limits and fees; needs the optional @oakagentkit/gloam package. No memo scan. No identity required. Oak is free. |
 | `gloam_shield` | via `run_tool` | Prepare depositing USDG into Gloam from your wallet with exact approval; needs the optional @oakagentkit/gloam package. Human confirmation required. |
 | `gloam_pay` | via `run_tool` | Prepare paying USDG privately to a Gloam receive tag from one local note; needs the optional @oakagentkit/gloam package. Payments are private and irreversible from Oak's side; if Oak's server is unreachable, Oak uses Gloam's public relay. Human confirmation required. |
 | `gloam_claim` | via `run_tool` | Prepare claiming sealed Gloam tickets or scanning incoming payments and sweeping them into fresh notes; needs the optional @oakagentkit/gloam package. Free action; human confirmation required. |
@@ -362,7 +362,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `hoodlock_feature_claim` | via `run_tool` | Reconcile an already-paid HoodLock featured listing without paying again; human confirmation required. |
 | `hoodlock_referral_register` | via `run_tool` | Register a HoodLock referral code through a local wallet message and ephemeral session; human confirmation required. |
 
-### 17. Merkl (13)
+### 17. Merkl (14)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -371,6 +371,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `merkl_opportunities` | via `run_read_tool` | State oak.lpWarning first before preparing any liquidity addition. Browse Merkl reward opportunities by protocol, name or explorer address, with campaign conditions and indicative rates (Powered by Merkl — https://app.merkl.xyz). |
 | `merkl_campaigns` | via `run_read_tool` | Read Merkl campaign rules, optionally for one opportunity, creator or reward token symbol (Powered by Merkl — https://app.merkl.xyz). |
 | `merkl_earning_status` | via `run_read_tool` | Read this wallet's Merkl reward status: active opportunities, per-opportunity breakdowns, totals or claim history; API data can lag (Powered by Merkl — https://app.merkl.xyz). |
+| `merkl_stock_lp_rewards` | via `run_read_tool` | Read ranked stock-token Uniswap LP pools on Robinhood Chain by USDG rewards per dollar reported by Merkl; default top 4, with issuer stock names, unverified tokens, campaign end times and range requirements. Pool rates are not an Oak promise; LP can lose value versus holding. Read stock-lp-rewards.md before preparing liquidity (Powered by Merkl — https://app.merkl.xyz). |
 | `merkl_claim_config` | via `run_read_tool` | Read this wallet's saved Merkl claim recipients and whether a named operator may claim for it. |
 | `merkl_set_operator` | via `run_tool` | Prepare allowing or revoking a named operator to claim Merkl rewards for this wallet; the zero address allows anyone to claim, and payouts still follow your recipients. |
 | `merkl_set_recipient` | via `run_tool` | Prepare sending this wallet's future Merkl claims to a named recipient, for all tokens or one; the zero address restores claiming to yourself. |
@@ -384,9 +385,9 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `relay_bridge_out` | via `run_tool` | Prepare bridging ETH or ERC-20 out; checks tracing via hosted RPC on Base, Arbitrum, Ethereum and Optimism or your own OAK_RPC_URL_<chainId>. Default slippage 500 bps; review the minimum. |
+| `relay_bridge_out` | via `run_tool` | Prepare bridging ETH or ERC-20 out; checks tracing via hosted Base RPC or your own OAK_RPC_URL_<chainId>. Default slippage 500 bps; review the minimum. |
 | `relay_status` | via `run_read_tool` | Read a known Relay requestId status without an API key; requestId is required. Optional destination receipt checks need its chain RPC. |
-| `relay_bridge_in` | via `run_tool` | Prepare an inbound Relay bridge route to Robinhood Chain. A fresh wallet may bridge ETH or USDG to itself before it has an identity; every other shape needs a verified identity. Every bridge requires chat confirmation. |
+| `relay_bridge_in` | via `run_tool` | Prepare an inbound Relay bridge route to Robinhood Chain. A fresh wallet may bridge ETH or USDG to itself before it has an identity; other actions need verified identity. Oak is free. |
 | `relay_quote` | via `run_read_tool` | Read a Relay estimate through server-hosted authenticated reads; no client API key. quote/v2 needs authentication since October 2, 2026. Nothing is signed. |
 | `relay_chains` | via `run_read_tool` | Read Relay chains and supported currency metadata without an API key. |
 | `relay_chain_health` | via `run_read_tool` | Read Relay chain service health; chainId is required. |
@@ -484,8 +485,8 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `heyresearch_validate_receipt` | via `run_read_tool` | Read HEY Research Lab's stateless validation of a research receipt you submit (up to 64 KiB, sent to HEY Research Lab; nothing is stored or signed). Call only when the user explicitly asks for HEY Research Lab. |
 | `heyresearch_token_facts` | via `run_read_tool` | Only when the user asks for HEY Research Lab: facts about one token on Robinhood Chain (4663), with HEY Research Lab's own words, dated and linked, kept in a block apart from Oak's reads of the same token (Pons status, address counts, launch record; unread figures say not read). Runs on this computer; HEY Research Lab receives the token address and its project slug, never your wallet or amounts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
 | `heyresearch_feed` | via `run_read_tool` | Only when the user asks for HEY Research Lab: its builder updates, newest first, word for word with dates and source links. Browsing the feed can take about 30 seconds. mode browse lists recent updates; mode updates checks the tokens you follow. A complete updates check saves its last-checked time to the follow file on this computer, so this read changes that one local file and nothing else; nothing is sent to anyone but HEY Research Lab, and nothing runs in the background. Pass the continuation back to finish a long check. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
-| `heyresearch_follow` | via `run_tool` | Only when the user asks for HEY Research Lab: add a token and its HEY Research Lab project slug to your follow list, a local file on this computer (up to 20 tokens). Contacts no one, signs nothing and needs no subscription. The pairing is yours and stays unverified until you ask for a feed check. |
-| `heyresearch_unfollow` | via `run_tool` | Only when the user asks for HEY Research Lab: remove a token from your follow list, a local file on this computer. Contacts no one, signs nothing and needs no subscription. |
+| `heyresearch_follow` | via `run_tool` | Only when the user asks for HEY Research Lab: add a token and its HEY Research Lab project slug to your follow list, a local file on this computer (up to 20 tokens). Contacts no one, signs nothing and Oak is free. The pairing is yours and stays unverified until you ask for a feed check. |
+| `heyresearch_unfollow` | via `run_tool` | Only when the user asks for HEY Research Lab: remove a token from your follow list, a local file on this computer. Contacts no one, signs nothing and Oak is free. |
 | `heyresearch_position_context` | via `run_read_tool` | Only when the user asks for HEY Research Lab: for positions you select, add HEY Research Lab context for the token contract or project slug you name for each. Oak reads your positions as it always does; HEY Research Lab receives only the slugs or contracts you chose, never your wallet, amounts or position IDs, and the two are joined on this computer. HEY Research Lab's words stay in their own block apart from Oak's facts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
 
 ### 23. Priors (200)
@@ -752,7 +753,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `uniswap_swap_batch` | via `run_tool` | Prepare caller-selected split or mixed Uniswap v2/v3/v4 routes in one transaction, preserving every trade bound. Every route passes the same fee and value checks as uniswap_quote. |
 | `uniswap_oracle` | via `run_read_tool` | Read a factory-verified Uniswap v3 time-weighted mean tick over the requested observation window. |
 
-### 26. Hookr (34)
+### 26. Hookr (53)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -769,27 +770,46 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `hookr_relay` | via `run_tool` | Prepare a Hookr forwarder relay of a trader-signed swap intent; the local wallet is the named relayer and pays gas. |
 | `hookr_relay_receipt` | via `run_read_tool` | Read a mined relay's executed intent and relayer fee from the Hookr forwarder. |
 | `hookr_contracts` | via `run_read_tool` | Read Hookr contract coverage and typed function schemas: swaps, launches and dev buys, liquidity, saved hooks, own hooks, LP boost, programs, referrals, claims, registry and treasury administration. Filter contract/function to fetch only the needed schema. No network request. |
-| `hookr_read` | via `run_read_tool` | Read a pinned Hookr contract function. Fetch its exact parameter schema with hookr_contracts {contract,function}; no signing, subscription or identity required. |
+| `hookr_read` | via `run_read_tool` | Read a pinned Hookr contract function. Fetch its exact parameter schema with hookr_contracts {contract,function}; no signing or identity required. |
 | `hookr_action` | via `run_tool` | Prepare a pinned Hookr fungible-token action from an exact schema in hookr_contracts, with local reconstruction and human confirmation. NFT/6909 grants and registerSigned remain blocked. |
-| `hookr_launch_options` | via `run_read_tool` | Read pinned Hookr launch settings, live ETH launch fee, agent gate health, requested reviewer sets and admission caps at one named block. No launch transaction. |
-| `hookr_launch` | via `run_tool` | Launch a public fixed-supply token and one agents-only Hookr pool with exact deposit caps, atomic refunds and human approval. New tokens only; no locks. |
+| `hookr_launch_options` | via `run_read_tool` | Read agents-only or open Hookr launch settings, launch fee and admission caps at one block. Open profiles use one advisory and no agent gate. |
+| `hookr_agent_gate` | via `run_read_tool` | Read the active or pool gate, agent link, age and admission terms. |
+| `hookr_agent_link` | via `run_tool` | Prepare linking or unlinking your agent ID with the Hookr gate. |
+| `hookr_reviewer_set` | via `run_tool` | Prepare a reviewer set registration, or report when it already exists. |
+| `hookr_claim` | via `run_tool` | Prepare a claim of owed Hookr prizes, royalties or recapture credit. |
+| `hookr_launch` | via `run_tool` | Launch a new token with an agents-only gate or one open advisory Hook Block. Shows decoded payments, caps, refunds and recapture; human approval required. |
+| `hookr_pay_later_create` | via `run_tool` | Create the Pay Later vault for a Launcher family this wallet owns. Moves nothing. Shows beneficiary, premium and positions; every later step needs its own yes. |
+| `hookr_pay_later_transfer` | via `run_tool` | Start the transfer of the entire LP family to this wallet’s Pay Later vault. Choose how accrued fees are paid. Nothing moves until the separate accept step. |
+| `hookr_pay_later_cancel` | via `run_tool` | Cancel a pending Pay Later family transfer. The wallet keeps the family, and a new transfer can be started afterwards. |
+| `hookr_pay_later_accept` | via `run_tool` | Have the Pay Later vault accept custody of the entire LP family. The vault then owns it; LP principal cannot be removed while the vault holds it. |
+| `hookr_pay_later_release` | via `run_tool` | Start the two-step hand-back of the family from its Pay Later vault. The vault still owns it until accept_back; reserved inventory stays for open orders. |
+| `hookr_pay_later_accept_back` | via `run_tool` | Accept the released family back from its Pay Later vault. The wallet owns every position again; fees accrued then go to the vault as PoolManager claims. |
+| `hookr_pay_later_withdraw_earnings` | via `run_tool` | Withdraw what the Pay Later vault owes its beneficiary, in one currency, to the beneficiary wallet only. No other recipient can be chosen. |
+| `hookr_pay_later_withdraw_inventory` | via `run_tool` | Withdraw free, unreserved subject-token inventory from the Pay Later vault to the beneficiary wallet only. Reserved inventory stays for open orders. |
+| `hookr_pay_later_vault` | via `run_read_tool` | Read this wallet’s Pay Later vault for a family: custody state, owners, pending fee-claim choice, free and reserved inventory, amounts owed and terms. |
 | `hookr_lp_position` | via `run_read_tool` | Read one Launcher family LP position: owner, principal, uncollected LP fees, separate core credits, pending pool recapture, locks and read completeness. NFT/account reads await integration. |
 | `hookr_lp_add` | via `run_tool` | State oak.lpWarning first before preparing any liquidity addition. Add exact liquidity to your Hookr family’s existing range with finite caps, approval reset, refunds and cleanup. Human approval required. |
 | `hookr_lp_remove` | via `run_tool` | Remove exact Hookr family liquidity to your wallet, with principal minima enforced separately from LP fees. Principal locks apply. |
 | `hookr_lp_collect` | via `run_tool` | Collect Hookr family LP fees with zero principal removed, including during principal locks. Report core claim credits separately. |
 | `hookr_lp_positions` | via `run_read_tool` | List this wallet’s Launcher family LP positions at a fixed block with bounded event pagination and ownership checks. Continue nextCursor until complete; empty partial pages prove no absence. |
 | `hookr_release` | via `run_read_tool` | Read verified release contracts, block and recapture lane. |
-| `hookr_blocks` | via `run_read_tool` | Read all Hook Blocks and their current availability. |
 | `hookr_kings` | via `run_read_tool` | Read King of the Pool rounds, leaders, pots and endings. |
 | `hookr_claims` | via `run_read_tool` | Read the signing wallet's prizes, royalties, recapture and PoolManager claims. |
 | `hookr_revenue_tokens` | via `run_read_tool` | Read revenue tokens, tokenizer provenance, streams and income, page by page. |
 | `hookr_revenue_token` | via `run_read_tool` | Read a revenue token, stream endings, income, drops and the signing wallet's claims. |
 | `hookr_hook` | via `run_read_tool` | Read shared or owned hook provenance, ownership, allowed blocks, opening and pools. |
 | `hookr_api_read` | via `run_read_tool` | Read Hookr public catalog, protocol stats, pool rate, revenue directory/income, or one token's doors/mark. Marks are project metadata, not investment or security endorsements. |
+| `hookr_blocks` | via `run_read_tool` | List Hook Blocks, their availability and whether Oak supports launching them. |
+| `hookr_scan` | via `run_read_tool` | Check a hook address with Hookr’s static analyzer. Gives a verdict, score and finding count; an unavailable check does not block a trade. |
 | `hookr_revenue_read` | via `run_read_tool` | Read a registered Hookr revenue token or its derived drop box: balance, claimable, terms and indices. Checks tokenizer provenance on chain. |
 | `hookr_revenue_action` | via `run_tool` | Preview holder income/drop claims or permissionless sync/syncRange/syncSome on a registered Hookr revenue token. No approvals; local human confirmation required. Claims and syncs are separate actions. |
 | `hookr_addon_read` | via `run_read_tool` | Read factory-verified current Hookr revenue time shares, day wrappers or compounders: locks, day income, unwrap baskets, bands and side assets. Open factories via hookr_action. |
 | `hookr_addon_action` | via `run_tool` | Prepare a factory-verified current Hookr compounder action with exact funding and human confirmation. Time-share and day-wrapper actions await ERC-6909 trace and journal support. |
+| `hookr_swap` | via `run_tool` | Prepare a Hookr pool swap with a minimum received and human confirmation. |
+| `hookr_jobs` | via `run_read_tool` | Find available paid order fills and revenue syncs, with reward, gas and net estimates. Signed swap relays have no public list. |
+| `hookr_position_add` | via `run_tool` | State oak.lpWarning first. Prepare adding liquidity to a Hookr position with spending caps. |
+| `hookr_position_collect` | via `run_tool` | Prepare collecting fees from a Hookr position. |
+| `hookr_position_remove` | via `run_tool` | Prepare removing liquidity from a Hookr position with minimum amounts. |
 
 ### 27. Meridian (18)
 
@@ -927,17 +947,17 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `factor_sign_up` | via `run_tool` | Register this wallet as a Factor agent on Robinhood Chain, then sign its public profile with a name and description. Gas for registration; Verified identity and human confirmation required. Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them. Factor's desk contract has no owner, and its rules are fixed in its code. Factor's website and API are run by Factor and can lag the chain. Names are first come, and a fixed-price application can't be withdrawn. |
-| `factor_create_pay_link` | via `run_tool` | Sign a pay link for a fixed-price ETH job on Robinhood Chain. Price is a wei string; expiry is 1-30 days. No payment now; a customer pays later. Verified identity and human confirmation required. A signed pay link can't be revoked; anyone holding it can pay it until it expires. At most half of a job's price can be advanced before delivery. An advance costs a 1% fee taken from the advance, paid to Factor's burn pot contract. A settled job pays Factor's 2% job fee from the agent's payout. |
-| `factor_apply_to_job` | via `run_tool` | Sign an application for a fixed-price Factor open job. Verified identity and human confirmation required. This Factor job takes offers, which Oak can't send yet. Nothing was signed. Names are first come, and a fixed-price application can't be withdrawn. |
-| `factor_draw` | via `run_tool` | Draw an early or pool advance to this wallet on Robinhood Chain, with amount in integer wei. Verified identity and human confirmation required. At most half of a job's price can be advanced before delivery. An advance costs a 1% fee taken from the advance, paid to Factor's burn pot contract. A settled job pays Factor's 2% job fee from the agent's payout. If a job you drew on isn't delivered within 12 hours after its due time, anyone can refund it, and this wallet can never draw from Factor's pool again. Oak doesn't send compute advances: that ETH goes to Factor's gateway as off-chain credit Oak can't check. Nothing was sent. |
-| `factor_deliver` | via `run_tool` | Deliver a work fingerprint on Robinhood Chain. Show defaults to false; public posting follows successful delivery only when requested. Verified identity and human confirmation required. Your work text stays on this computer; only its fingerprint (a hash) goes on chain. With show true: Your work text will be public on Factor's job page and can't be edited. |
-| `factor_decline` | via `run_tool` | Decline a Factor job on Robinhood Chain and refund its price to the customer. Verified identity and human confirmation required. You can decline a job only before drawing on it. A rejected job settles at half, with no appeal. |
-| `factor_job` | via `run_read_tool` | Read a Factor job and its public details from the Factor API (can lag the chain). API data does not authorize an action. No identity or plan required. |
-| `factor_can_draw` | via `run_read_tool` | Read the desk's early and pool advance amounts in wei on Robinhood Chain; these amounts share the same half-price cap. No identity or plan required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |
-| `factor_my_jobs` | via `run_read_tool` | Read at most 50 Factor jobs for this wallet as agent or customer from the Factor API (can lag the chain). No identity or plan required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |
-| `factor_open_jobs` | via `run_read_tool` | Read at most 25 Factor open-job listings from the Factor API (can lag the chain). Filter by this wallet or verified owners when requested. No identity or plan required. |
-| `factor_open_job` | via `run_read_tool` | Read a Factor open-job listing and public application details from the Factor API (can lag the chain). No identity or plan required. |
+| `factor_sign_up` | via `run_tool` | Register this wallet as a Factor agent on Robinhood Chain, then sign its public profile with a name and description. Gas for registration; identity and human confirmation required. Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them. Factor's desk contract has no owner, and its rules are fixed in its code. Factor's website and API are run by Factor and can lag the chain. Names are first come, and a fixed-price application can't be withdrawn. |
+| `factor_create_pay_link` | via `run_tool` | Sign a pay link for a fixed-price ETH job on Robinhood Chain. Price is a wei string; expiry is 1-30 days. No payment now; a customer pays later. Identity and human confirmation required. A signed pay link can't be revoked; anyone holding it can pay it until it expires. At most half of a job's price can be advanced before delivery. An advance costs a 1% fee taken from the advance, paid to Factor's burn pot contract. A settled job pays Factor's 2% job fee from the agent's payout. |
+| `factor_apply_to_job` | via `run_tool` | Sign an application for a fixed-price Factor open job. Identity and human confirmation required. This Factor job takes offers, which Oak can't send yet. Nothing was signed. Names are first come, and a fixed-price application can't be withdrawn. |
+| `factor_draw` | via `run_tool` | Draw an early or pool advance to this wallet on Robinhood Chain, with amount in integer wei. Identity and human confirmation required. At most half of a job's price can be advanced before delivery. An advance costs a 1% fee taken from the advance, paid to Factor's burn pot contract. A settled job pays Factor's 2% job fee from the agent's payout. If a job you drew on isn't delivered within 12 hours after its due time, anyone can refund it, and this wallet can never draw from Factor's pool again. Oak doesn't send compute advances: that ETH goes to Factor's gateway as off-chain credit Oak can't check. Nothing was sent. |
+| `factor_deliver` | via `run_tool` | Deliver a work fingerprint on Robinhood Chain. Show defaults to false; public posting follows successful delivery only when requested. Identity and human confirmation required. Your work text stays on this computer; only its fingerprint (a hash) goes on chain. With show true: Your work text will be public on Factor's job page and can't be edited. |
+| `factor_decline` | via `run_tool` | Decline a Factor job on Robinhood Chain and refund its price to the customer. Identity and human confirmation required. You can decline a job only before drawing on it. A rejected job settles at half, with no appeal. |
+| `factor_job` | via `run_read_tool` | Read a Factor job and its public details from the Factor API (can lag the chain). API data does not authorize an action. No identity required. |
+| `factor_can_draw` | via `run_read_tool` | Read the desk's early and pool advance amounts in wei on Robinhood Chain; these amounts share the same half-price cap. No identity required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |
+| `factor_my_jobs` | via `run_read_tool` | Read at most 50 Factor jobs for this wallet as agent or customer from the Factor API (can lag the chain). No identity required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |
+| `factor_open_jobs` | via `run_read_tool` | Read at most 25 Factor open-job listings from the Factor API (can lag the chain). Filter by this wallet or verified owners when requested. No identity required. |
+| `factor_open_job` | via `run_read_tool` | Read a Factor open-job listing and public application details from the Factor API (can lag the chain). No identity required. |
 
 ### 34. Raeto (8)
 
