@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.7 — 2026-11-13 (published)
+
+- [Fixed] Sends check the recipient, token, balance and spending rules before asking for your yes. Oak checks stock-token contracts again before signing and saves allowance scans safely when several commands run at once.
+- [Fixed] Approval summaries use verified stock names and show token addresses for each swap step. Multi-step swaps now track what arrived through both Uniswap v3 and v4 routes before continuing.
+- [Fixed] Incoming token transfers appear in history when you use your own RPC, with coverage notes for the blocks searched.
+- [Added] Find Merkl rewards for stock liquidity pools with the read-only `merkl_stock_lp_rewards` tool and a stock LP rewards playbook. Reading rewards does not deposit funds or claim them.
+- [Changed] Pons v4 liquidity is unavailable in this release.
+
+## 0.3.6 — 2026-11-11 (published)
+
+- [Fixed] Sends, including official stock tokens, show the recipient and amount clearly. Receiving displays discovered tokens with coverage notes. Stock prices are estimates and the daily spending limit handles unpriced spends safely. CLI setup and signing flows are more reliable, and multi-step swaps have time for review.
+- [Added] Hookr supports all 20 Hook Blocks: agents-only launches, six open advisory profiles, decoded fee and Holder Pot payments, optional arb recapture, and the full Pay Later vault workflow with a separate approval for each step: create, transfer, cancel, accept, release, accept back and withdrawals, plus a vault status read. Trade Hookr pools, manage positions, claim proceeds, link an agent, see a hook check before every v4 trade, and find paid jobs with reward and gas estimates.
+
 ## 0.3.5 — 2026-11-09 (published)
 
 - [Fixed] Approved actions finish: Oak's own hosted-RPC hiccups no longer use up an approval, and Oak retries on its own within the window; every prepared action now has 15 minutes for review; actions work right after a restart; and the daily-limit question is asked once.
