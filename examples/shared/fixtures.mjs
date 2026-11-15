@@ -5,8 +5,8 @@ import { OAK_SWAP_FEE, oakSwapFeeAmount } from '@oakagentkit/core/oak-fee';
 import { buildSwapFromQuote, normalizeQuote, computeMinAmountOut, encodeKyberSwapData, encodeVeloraSwapData, formatVenueFeeDisclosure, veloraCalldataMinimum } from '@oakagentkit/core/swap';
 import { connect, disabled, publicAddress } from './client.mjs';
 
-export const usdg = { address: '0x2222222222222222222222222222222222222222', symbol: 'USDG', decimals: 6, chainId: 4663 };
-export const weth = { address: '0x3333333333333333333333333333333333333333', symbol: 'WETH', decimals: 18, chainId: 4663 };
+export const usdg = { address: ADDRESSES[4663].tokens.USDG.address, symbol: 'USDG', decimals: 6, chainId: 4663 };
+export const weth = { address: ADDRESSES[4663].tokens.WETH.address, symbol: 'WETH', decimals: 18, chainId: 4663 };
 export const balances = [{ token: usdg, amount: '25000000' }];
 export const positions = ['steakhouse', 'morpho', 'uniswap'].map((module, index) => ({
   module, id: String(index + 1), chainId: 4663, assets: [{ token: usdg, amount: '1000000' }], description: `${module} fixture`,
@@ -50,14 +50,26 @@ export const previewFixture = {
   changes: [{ token: usdg, amount: '-10000000' }, { token: weth, amount: '5000000000000000' }],
 };
 export async function fixtureConnection({ overrides = {}, calls = [], responses = [], toolCalls = [], senderCalls = [], signingCalls = [],
-  now = () => Math.floor(Date.now() / 1000) } = {}) {
+  rpcCalls = [], rpcOverrides = {}, now = () => Math.floor(Date.now() / 1000) } = {}) {
   let quoted;
   let simulated;
   let sequence = 0;
   const pending = new Map();
   const signingTrap = name => () => { signingCalls.push(name); disabled(); };
   const handlers = {
-    find_token: args => ({ matches: [{ ...(args.query === 'USDG' ? usdg : weth), verified: true }], unverified: [], warnings: [] }),
+    find_token: args => ({ matches: [{ ...(/^(USDG)$/i.test(args.query) || args.query.toLowerCase() === usdg.address.toLowerCase() ? usdg : weth), verified: true }], unverified: [], warnings: [] }),
+    // Published 0.3.9 compares aggregator output with a pinned Uniswap route.
+    // This deterministic direct pool pays less; the requested aggregator stays selected.
+    uniswap_pools: args => ({ pools: args.version === 'v3' &&
+      [usdg, weth].every(token => [args.tokenA, args.tokenB].some(address => address.toLowerCase() === token.address.toLowerCase()))
+      ? [{ version: 'v3', token0: usdg, token1: weth, fee: 500, tickSpacing: 10, initialized: true, liquidity: '100' }] : [] }),
+    uniswap_quote: args => ({ quote: {
+      input: { token: usdg, amount: args.amountIn }, output: { token: weth, amount: '4488750000000000' },
+      grossAmountOut: '4500000000000000', oakFee: '11250000000000', oakFeeBps: 25, oakFeeToken: weth.address,
+      minAmountOut: computeMinAmountOut('4488750000000000', args.slippageBps), expiresAt: String(now() + 60),
+    } }),
+    price: args => ({ token: args.token.toLowerCase() === usdg.address.toLowerCase() ? usdg : weth,
+      usdE18: args.token.toLowerCase() === usdg.address.toLowerCase() ? '1000000000000000000' : '2000000000000000000000', timestamp: now(), stale: false }),
     quote: args => quoteFixture(args, now()), preview: args => ({ ...previewFixture,
       ...(quoted ? {
         summary: `Fixture: spend ${quoted.input.humanAmount} USDG; receive ${quoted.output.humanAmount} WETH; excludes gas.`,
@@ -108,7 +120,25 @@ export async function fixtureConnection({ overrides = {}, calls = [], responses 
     },
     fixtureOptions: {
       now, wormhole: { payerMode: 'off' }, wormholeFetch: async () => Response.json({}),
-      moduleClientFor: () => { throw new Error('Unexpected fixture RPC.'); },
+      // FOBO escrow is read locally, including order zero and a stable block check.
+      moduleClientFor: chainId => {
+        if (chainId !== 4663) throw new Error('Unexpected fixture chain.');
+        const methods = {
+          getChainId: async () => 4663,
+          getBlock: async () => ({ number: 123n, hash: `0x${'1'.repeat(64)}` }),
+          readContract: async args => {
+            if (args.functionName === 'orderCount') return 0n;
+            if (args.functionName === 'getOrder' && args.args[0] === 0n)
+              return { owner: publicAddress, remaining: 0n, kind: 0 };
+            throw new Error(`Unexpected fixture contract read: ${args.functionName}`);
+          }, ...rpcOverrides,
+        };
+        return Object.fromEntries(Object.entries(methods).map(([name, method]) => [name, async (...args) => {
+          rpcCalls.push({ name, args }); return method(...args);
+        }]));
+      },
+      foboClient: () => { throw new Error('Unexpected fixture FOBO HTTP.'); },
+      signatureJournal: { openSummary: async () => undefined },
       balanceJournal: { receivedTokens: async () => [] },
       autoDailyBudget: { status: async () => ({ capAnswered: 'skipped', capUsd: null }) },
       receiptLog: { decision: async () => {} },

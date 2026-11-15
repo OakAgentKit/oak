@@ -3,14 +3,14 @@
 Goal: make only `balances` and `positions` calls, preserve each token's address,
 symbol, decimals, chain ID and base-unit amount, and display human amounts using
 integer arithmetic. Positions retain their project/module and any error rows.
-Oak 0.3.7's MCP `structuredContent` exposes balances under `items`; the example
+Oak 0.3.9's MCP `structuredContent` exposes balances under `items`; the example
 also accepts the older array text form. Setup next steps and funding summaries
 remain visible when the balance response includes them.
 
 Prerequisites: Node 22 and the [packed-package installation](../README.md).
 Fixtures need no wallet, RPC or funds. Optional live reads require a local
 mainnet wallet and published service URL; no ERC-8004 identity is required for
-these reads. Oak is free to use. Project coverage depends on the installed release.
+these reads. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Project coverage depends on the installed release.
 Hosted `positions` cannot read Gloam notes because Gloam has no positions reader; use local `gloam_status` for those notes.
 
 From the installed examples directory:

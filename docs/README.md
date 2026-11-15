@@ -11,7 +11,7 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 
 ## Understand access and custody
 
-- [Access and pricing](access-and-pricing.md): free access, ERC-8004 identity setup, optional daily spending limit, and swap, bridge, and partner referral fees.
+- [Access and pricing](access-and-pricing.md): no-subscription access, ERC-8004 identity setup, optional daily spending limit, and swap, bridge, send, Morpho bundle, optional Clanker LP reward share, and partner referral fees.
 - [Security](security.md): chat confirmation, local checks, custody, authority and private reporting.
 - [Headless wallets](headless-wallet.md): key storage, legacy wallets and the optional daily spending limit.
 - [Review summaries](reviews.md): what was reviewed and what remains unmeasured.
@@ -23,4 +23,4 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): release history.
 
-Core and add-on 0.3.7 are published on npm; Oak is free to use and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
+Core and add-on 0.3.9 are published on npm; Oak has no subscription, reads are free, and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).

@@ -15,9 +15,9 @@ Oak is independent and is not affiliated with Robinhood.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Version 0.3.7 is published on npm** for `@oakagentkit/core` and
+**Version 0.3.9 is published on npm** for `@oakagentkit/core` and
 `@oakagentkit/addon`, plus the optional `@oakagentkit/gloam` engine. See the [changelog](CHANGELOG.md) for the fixes in this release.
-Oak is free to use. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
+Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
 
 [Website](https://oakagentkit.org) · [Setup guides](docs/client-setup/README.md) ·
 [Tool reference](docs/mcp-tools-reference.md) · [Security](docs/security.md) ·
@@ -33,7 +33,7 @@ npm install -g @oakagentkit/addon
 oak --version
 ```
 
-Version 0.3.7 is available.
+Version 0.3.9 is available.
 Run `oak --version` to check your installed version.
 
 ## Connect your agent
@@ -61,7 +61,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.3.7 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.3.9 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -90,9 +90,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuNyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.7%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuOSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.9%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.3.7 package through `npx`.
+These shortcuts run the pinned 0.3.9 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -108,7 +108,7 @@ Oak creates the wallet automatically on first use. On first run, the agent asks
 once whether you want a daily spending limit in USD; skipping leaves no limit,
 and you can set or change it anytime in chat (`oak_spending_limit`). Fund the
 wallet address with ETH for network fees, then re-check `balances`.
-Oak is free to use. Reads work without an identity. Actions require a verified
+Oak has no subscription; reads work without an identity, and some actions carry an Oak fee, always shown before you say yes. Actions require a verified
 ERC-8004 identity (except the free `gloam_claim` action). Approve public identity
 registration separately; registration costs ETH gas.
 Linking an existing identity is gasless. An external owner signs the link in
@@ -168,13 +168,16 @@ Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak 
 
 ## Access and fees
 
-Oak is free to use, and installing the npm packages is free under their [package license](LICENSE-PACKAGES.md).
-Read tools need no identity. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+Oak has no subscription, and installing the npm packages is free under their [package license](LICENSE-PACKAGES.md).
+Reads, quotes, and previews are free and need no identity. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action), and every fee is shown in the approval summary before you say yes.
 Call `account` to check your wallet address, network, and ERC-8004 identity status.
 
-Oak takes a 0.25% fee on swaps and bridges, plus partner referral fees:
+Oak takes a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees:
 
-- **Swaps and bridges:** 0.25% (`25 bps`) on KyberSwap swaps, Velora swaps, and Relay bridges and swaps.
+- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps (FOBO, Pons, and Hookr routes carry 0 bps from Oak).
+- **Plain sends (`send`, `0.25%`, `25 bps`):** Added on top (`floor(amount * 25 / 10000)` in the token being sent to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`), so the recipient receives the full amount. Dust too small to carry a fee (`< 400` base units) and sends to or from the Oak treasury (`0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`) carry none.
+- **Morpho bundles (`morpho_bundle`, `0.25%`, `25 bps`):** Charged on the loan amount across `supply`, `withdraw`, `supplyCollateralAndBorrow`, `repayAndWithdrawCollateral`, and `migrateBorrowPosition` to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf` (deducted on supply, withdraw, and borrow; added on top on repay and migrate). Collateral-only steps and ordinary `morpho_supply`, `morpho_withdraw`, `morpho_borrow`, `morpho_repay`, `morpho_supply_collateral`, and `morpho_withdraw_collateral` carry none.
+- **Clanker launches (`clanker_launch`):** An opt-in choice (`oakRewardShare: true`) to share 10% (`1000 bps`) of future distributable LP creator rewards with Oak; off unless the person chooses it.
 - **hood.ag:** 5% referral fee on `.hood` registrations and 4% on marketplace resales, with matching buyer discounts (zero on treasury self-referral).
 - **Borro:** Bookrunners referral partner (`10%` of the Borro vault interest fee on tagged deposits — `100%` of that share to Oak for the first 12 months, then `50%`, paid monthly in USDG, routed via `BorroBuilders` `0x082Ae609bdC7ccEec0C58B2361a21c49dc2aE291` with code `oak` and on-chain `minShares` or direct vault fallback).
 
@@ -233,7 +236,7 @@ The [offline examples](examples/README.md) run with fixture data.
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.3.7 -p @oakagentkit/gloam@0.3.7 oak mcp
+npx -y -p @oakagentkit/addon@0.3.9 -p @oakagentkit/gloam@0.3.9 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

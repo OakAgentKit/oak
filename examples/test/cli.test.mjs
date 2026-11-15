@@ -3,13 +3,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+// The real CLI runs with all sockets and ambient fetch blocked; fixture transports still work.
+const offlineGuard = 'data:text/javascript,' + encodeURIComponent(`
+  import net from 'node:net';
+  const blocked = () => { throw new Error('Unexpected network in offline example'); };
+  net.Socket.prototype.connect = blocked;
+  globalThis.fetch = blocked;
+`);
 for (const [directory, expected] of [
   ['01-quickstart-mcp', null],
   ['02-preview-sign-swap', /stopped\s*$/],
   ['03-portfolio-agent', /"humanAmount": "25"/],
 ]) {
   test(`${directory} runs offline as a CLI without a terminal`, () => {
-    const result = spawnSync(process.execPath, [fileURLToPath(new URL(`../${directory}/index.mjs`, import.meta.url))], {
+    const result = spawnSync(process.execPath, ['--import', offlineGuard, fileURLToPath(new URL(`../${directory}/index.mjs`, import.meta.url))], {
       encoding: 'utf8', timeout: 10000,
       env: { PATH: process.env.PATH, OAK_EXAMPLE_LIVE: '0' },
     });
