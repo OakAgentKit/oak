@@ -5,7 +5,7 @@ Install Oak and connect the MCP below. The wallet creates itself on first use; y
 ## Plugin shortcut
 
 Requires Node.js 22.12.0 or newer (`>=22.12.0`) and npm on your PATH. These shortcuts run
-`npx -y @oakagentkit/addon@0.3.7 mcp`, so no global Oak install is needed.
+`npx -y @oakagentkit/addon@0.3.9 mcp`, so no global Oak install is needed.
 Review your app’s install confirmation, then start a fresh session. If you already
 configured Oak manually, use that connection or remove it before adding a second one.
 Installing connects tools; identity registration and transactions still need
@@ -62,6 +62,6 @@ Then run a first read or action inside Claude Code:
 
 ## Confirmation and current access
 
-Oak is free to use. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 Before signing an action, the agent prepares it (with a listed action tool or `oak_prepare`) and shows the six-part summary, `actionId`, and UTC expiry in chat; saying yes runs `oak_execute` with `{"actionId": "<actionId>"}`, which re-simulates, checks terms and your optional daily spending limit in USD (`oak_spending_limit`), and signs locally.
 Read [shared confirmation guidance](README.md#confirmation-support) and [per-client MCP tool annotations](README.md#per-client-mcp-tool-annotations-and-approval-prompts) (`readOnlyHint: true` on `oak_prepare`, `destructiveHint: true` on `oak_execute`; `--dangerously-skip-permissions` skips Claude Code's pre-tool prompt while chat confirmation remains required) before testing an action.

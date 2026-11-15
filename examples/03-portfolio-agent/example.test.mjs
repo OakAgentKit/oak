@@ -3,9 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fixtureConnection } from '../shared/fixtures.mjs';
 import { portfolio } from './index.mjs';
-test('balances and cross-project positions use only two read calls', async () => {
-  const calls = [];
-  const connection = await fixtureConnection({ calls });
+test('balances and cross-project positions use two hosted reads plus local FOBO escrow reads', async () => {
+  const calls = [], rpcCalls = [], signingCalls = [];
+  const connection = await fixtureConnection({ calls, rpcCalls, signingCalls });
   try {
     const result = await portfolio(connection.client);
     assert.deepEqual(calls.map(call => call.name).sort(), ['balances', 'positions']);
@@ -15,6 +15,10 @@ test('balances and cross-project positions use only two read calls', async () =>
     assert.deepEqual(result.warnings, []);
     assert.deepEqual(result.coverage.incomplete, []);
     assert.deepEqual(result.coverage.notIndexed, []);
+    assert.deepEqual(result.coverage.programs.at(-1), { program: 'fobo', status: 'complete' });
+    assert.deepEqual(rpcCalls.map(call => call.name), ['getChainId', 'getBlock', 'readContract', 'readContract', 'getBlock']);
+    assert.deepEqual(rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName), ['orderCount', 'getOrder']);
+    assert.deepEqual(signingCalls, []);
   } finally { await connection.close(); }
 });
 test('partial module failures remain visible, not zero balances', async () => {
@@ -45,7 +49,42 @@ test('structured balances preserve the empty-wallet summary without inventing se
     const result = await portfolio(connection.client);
     assert.deepEqual(result.balances, []);
     assert.equal(typeof result.balanceSummary, 'string');
-    assert.equal(result.nextStep, undefined, 'missing ETH/USDG rows leave funding state unknown');
+    assert.equal(result.nextStep, 'Ask me to check your balance again.', 'missing rows prompt another read, not invented funding or setup state');
+    assert.doesNotMatch(result.balanceSummary, /register|funded|ready to trade/i);
+  } finally { await connection.close(); }
+});
+
+test('local FOBO escrow outage remains incomplete instead of being reported as zero', async () => {
+  const signingCalls = [];
+  const connection = await fixtureConnection({ signingCalls, rpcOverrides: {
+    getBlock: async () => { throw new Error('Fixture FOBO block unavailable'); },
+  } });
+  try {
+    const result = await portfolio(connection.client);
+    assert.deepEqual(result.coverage.incomplete, ['fobo']);
+    assert.equal(result.coverage.programs.at(-1).status, 'incomplete');
+    assert.match(result.warnings.join('\n'), /FOBO escrow could not be read/);
+    assert.deepEqual(signingCalls, []);
+  } finally { await connection.close(); }
+});
+
+test('local FOBO nonzero escrow is retained separately from wallet balances', async () => {
+  const connection = await fixtureConnection({ rpcOverrides: {
+    readContract: async args => {
+      if (args.functionName === 'orderCount') return 0n;
+      if (args.functionName === 'getOrder') return {
+        owner: '0x1111111111111111111111111111111111111111', remaining: 42n, kind: 0,
+        payToken: `0x${'0'.repeat(40)}`,
+      };
+      throw new Error('Unexpected fixture read');
+    },
+  } });
+  try {
+    const result = await portfolio(connection.client);
+    assert.equal(result.positions.at(-1).module, 'fobo');
+    assert.equal(result.positions.at(-1).assets[0].amount, '42');
+    assert.equal(result.balances[0].amount, '25000000');
+    assert.deepEqual(result.coverage.incomplete, []);
   } finally { await connection.close(); }
 });
 

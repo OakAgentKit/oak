@@ -26,7 +26,8 @@ for (const confirmed of [false, true, 'yes', undefined]) {
         },
       });
       assert.equal(result.status, confirmed === true ? 'not_submitted' : 'stopped');
-      assert.deepEqual(calls.map(call => call.name), ['find_token', 'find_token', 'quote', 'swap', 'preview']);
+      assert.deepEqual(calls.map(call => call.name), ['find_token', 'find_token', 'quote',
+        'uniswap_pools', 'uniswap_quote', 'price', 'price', 'swap', 'preview']);
       assert.deepEqual(toolCalls.map(call => call.name), ['find_token', 'find_token', 'quote', 'oak_prepare', ...(confirmed === true ? ['oak_execute'] : [])]);
       assert.deepEqual(toolCalls[3].arguments, { name: 'swap', arguments: { quoteId: result.quote.quoteId } });
       assert.deepEqual(senderCalls.map(call => call.name), ['prepareAction', ...(confirmed === true ? ['executeAction'] : [])]);
@@ -51,6 +52,11 @@ for (const [label, overrides, pattern] of [
   ['wrong pair', { quote: args => ({ ...quoteFixture({ ...args, provider }), from: '0x4444444444444444444444444444444444444444' }) }, /does not match/],
   ['unverified token', { find_token: () => ({ matches: [], unverified: [], warnings: [] }) }, /unambiguous verified/],
   ['simulation failure', { preview: () => { throw new Error('Simulation failed'); } }, /unavailable|failed/i],
+  ['comparison unavailable', { uniswap_pools: () => { throw new Error('Fixture discovery unavailable'); } }, /could not be checked against another venue/],
+  ['comparison wrong pair', { uniswap_quote: () => ({ quote: {
+    input: { token: weth, amount: '10000000' }, output: { token: usdg, amount: '1000000' },
+    minAmountOut: '990000', expiresAt: String(Math.floor(Date.now() / 1000) + 60),
+  } }) }, /could not be checked against another venue/],
 ]) {
   test(`${provider} ${label} stops before confirmation`, async () => {
     const calls = [], toolCalls = [], senderCalls = [], signingCalls = [];
@@ -59,7 +65,7 @@ for (const [label, overrides, pattern] of [
     } });
     try {
       await assert.rejects(previewSwap(connection.client, {}, { show, confirm: () => assert.fail('must not confirm') }), pattern);
-      assert.ok(calls.every(call => ['find_token', 'quote', 'swap', 'preview'].includes(call.name)));
+      assert.ok(calls.every(call => ['find_token', 'quote', 'uniswap_pools', 'uniswap_quote', 'price', 'swap', 'preview'].includes(call.name)));
       assert.ok(toolCalls.every(call => call.name !== 'oak_execute'));
       assert.deepEqual(senderCalls, [], 'invalid routes and failed simulations never reach the sender');
       assert.deepEqual(signingCalls, []);

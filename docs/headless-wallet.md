@@ -23,7 +23,7 @@ Confirm the recovered address, keep the encrypted backup, and store your recover
 Recovery restores the same wallet and sends no transaction. Oak cannot recover a lost key.
 
 Starting `oak mcp` reconciles pending transactions and checks ERC-8004 identity status.
-Oak is free to use; there is no subscription renewal.
+Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. There is no subscription renewal.
 Use the [client setup prerequisites](client-setup/README.md) before connecting a host.
 
 ## Signing confirmations and daily spending limit

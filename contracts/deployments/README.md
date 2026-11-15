@@ -37,11 +37,11 @@ See the [vesting tests](../test/OakTeamVesting.t.sol) and [custody disclosures](
 
 ## Current access
 
-The published core and add-on packages are **0.3.7**. Oak is free to use.
+The published core and add-on packages are **0.3.9**. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
 Reads need no identity; actions require a verified ERC-8004 identity, except the
 free `gloam_claim` action. Every action requires a yes in chat before signing.
 The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
-Oak charges a 0.25% fee on swaps and bridges, plus partner referral fees.
+Oak earns a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees.
 25% of Oak's income buys back and burns `$OAK`; holding `$OAK` has no access perks.
 The treasury/admin is `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`.
 There is no second-signature requirement. See [access and pricing](../../docs/access-and-pricing.md).

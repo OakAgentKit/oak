@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.9 — 2026-11-14 (published)
+
+- [Changed] Public install examples and plugin configuration target 0.3.9. Reads are free; some actions carry an Oak fee, always shown before you say yes.
+
+- [Changed] Direct Uniswap swaps (`uniswap_quote`, `uniswap_swap`, `uniswap_swap_batch`, and generic `quote`/`swap` when Uniswap wins) and official stock-token swaps (`priors_stock_quote`, `priors_stock_swap`) carry Oak's 0.25% fee, taken from the output; FOBO, Pons, and Hookr routes stay at 0.
+- [Changed] Plain sends (`send`) carry a 0.25% Oak fee added on top so the recipient receives the full amount; dust under 400 base units and sends to or from the Oak treasury carry none.
+- [Changed] Morpho bundle actions (`morpho_bundle`: `supply`, `withdraw`, `supplyCollateralAndBorrow`, `repayAndWithdrawCollateral`, and `migrateBorrowPosition`) carry a 0.25% Oak fee on the loan amount; collateral-only steps and ordinary Morpho actions carry none.
+- [Added] Clanker token launches (`clanker_launch`) offer an optional `oakRewardShare: true` choice to share 10% of future distributable LP creator rewards with Oak, off unless chosen.
+
 ## 0.3.7 — 2026-11-13 (published)
 
 - [Fixed] Sends check the recipient, token, balance and spending rules before asking for your yes. Oak checks stock-token contracts again before signing and saves allowance scans safely when several commands run at once.
