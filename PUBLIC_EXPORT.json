@@ -80,7 +80,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "d3196e812949109f5f38479a3fcbd561ab519998e4fcddee43a296d2ba42ec92"
+      "sha256": "f5b1a87a0ce03b95ff1a8868e8b421906b1ba245e3e2b29ec76c615def974f79"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -96,15 +96,15 @@
     },
     {
       "path": "LICENSE-PACKAGES.md",
-      "sha256": "5c7fecbc5b1310b2c051e7666b4bb692b45fe133219fcc522aeded38277a75e4"
+      "sha256": "73ccb8d4cc38e72b518f205b1dea9ec4b6712e732d7a7ecb5a515624e49112d9"
     },
     {
       "path": "README.md",
-      "sha256": "4a49df5bea135235990d45ad1bae788db5ff11aacbb09f5cc0254eba346e2039"
+      "sha256": "9bd5505d41599ece9fd3e98f60ab4a92afbd863bc6e1001cda63e792e329fc6c"
     },
     {
       "path": "SECURITY.md",
-      "sha256": "bd476c805d4ee3e206498726c0f48d41e2a868bdebe00ecf580de46bff1a2fbc"
+      "sha256": "cc8a7de5babb2fcd3c8700c8b1e54dc24096867e1acf3b5e6b92f0ea3320fcac"
     },
     {
       "path": "THREAT_MODEL.md",
@@ -176,7 +176,7 @@
     },
     {
       "path": "contracts/deployments/README.md",
-      "sha256": "dd25021e409ce64d15e49db0576522db5e38ac15b89b938ee49e5f3bc2209fed"
+      "sha256": "a14e59d5a7dccaa2a04e52ea8cfa90c3e7b3d01cab24215357161e8575249ce4"
     },
     {
       "path": "contracts/foundry.toml",
@@ -332,7 +332,7 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "01ae78280796635a5e24703787293a0897b6c9708e814629291ec804efdb020b"
+      "sha256": "7794fa0935b4a1ae8fdf84ac37561d2462a43247b8708cf7a5f8f97650517807"
     },
     {
       "path": "docs/access-and-pricing.md",
@@ -340,11 +340,11 @@
     },
     {
       "path": "docs/client-setup/README.md",
-      "sha256": "81853053aa0dcc0a6ac597f3aa8ecba716fcca00c9c0f1ff7206e086aaf6d590"
+      "sha256": "e74ec88be33d473925d375ccee974f939036a015207c7d7c3fca5b62b57b3ae1"
     },
     {
       "path": "docs/client-setup/claude-code.md",
-      "sha256": "ce864888d7bd5af0889055ea568638ff2ee2943017a50440f773480a81c387c5"
+      "sha256": "d9421b4c843ec99982ab883d0d6ae044757642a24cadba3d078f5dcf7767ee58"
     },
     {
       "path": "docs/client-setup/claude-desktop.md",
@@ -356,7 +356,7 @@
     },
     {
       "path": "docs/client-setup/cursor.md",
-      "sha256": "e067269f4857ca81c81f25f5c80d393553d7bfde6b5d0493d496f5d7e3d67f59"
+      "sha256": "09ab295eb36a98f90ed96cdb073c2f044cfcc0f415c0c6cf84e5346b889c5ea5"
     },
     {
       "path": "docs/client-setup/gemini.md",
@@ -368,7 +368,7 @@
     },
     {
       "path": "docs/contract-development.md",
-      "sha256": "6bcdf00ad983d792882f7950bc3358d530c063276889826fa1ce2bf7ed8f9d79"
+      "sha256": "c8dd7f40cb7adacd8cb23d160d3dbaaa5667b2adb7149d798d7a1034019cd3f2"
     },
     {
       "path": "docs/headless-wallet.md",
@@ -384,15 +384,15 @@
     },
     {
       "path": "docs/robinhood-chain-projects.md",
-      "sha256": "b88aaebe92860d9367d27b631f4d2d0308de0e93c4818922ceba08016063da3e"
+      "sha256": "8244b798a08e51fd260f3469c119bd672144dc983aa0dee5315cecc315051650"
     },
     {
       "path": "docs/security.md",
-      "sha256": "ed02c3b272f787dd97d2bdf2f1255f7f03d4da70237f373c71f1eb6d9490cf04"
+      "sha256": "4b6f2b0f9bb8c428990b015dc9b073508b0fe17e8c800a5a3e700c80fde628b3"
     },
     {
       "path": "docs/what-is-oak.md",
-      "sha256": "3cbdfbb06bcc99bb6d3eec32212c34f59bcf17e1191a42fa9b423665d66069cb"
+      "sha256": "7e7e46c52b806eda79226d7061082d0c4a657ea96548104d1b929b8288faf261"
     },
     {
       "path": "examples/.gitignore",
@@ -420,7 +420,7 @@
     },
     {
       "path": "examples/02-preview-sign-swap/README.md",
-      "sha256": "9afa2421423bd90e66769bff7de3dc3f0512c6055c19ec0cfb2d338e32d5daee"
+      "sha256": "e0a7f12f7c974bd6cdac347630a15cb8c5ccfffaf81f7864d01126b142279650"
     },
     {
       "path": "examples/02-preview-sign-swap/example.test.mjs",
@@ -436,7 +436,7 @@
     },
     {
       "path": "examples/03-portfolio-agent/README.md",
-      "sha256": "a31fdb6203990b856cd6a1d09e35b4d854ef7db22aa12b0ed68e833037a74983"
+      "sha256": "6fbf11068f3af12fa239c45c319ae24b6bbf9d45bd98f179d7111cccdb4b2aca"
     },
     {
       "path": "examples/03-portfolio-agent/example.test.mjs",
@@ -452,7 +452,7 @@
     },
     {
       "path": "examples/README.md",
-      "sha256": "334a546051eeb7f567a5853768f9b55f32ec3176342fb17ad6d874e47a54efb8"
+      "sha256": "b44607f02d39e9a379931cab6b67da86618ddb736b526aa8a7bbd6e2a769bd87"
     },
     {
       "path": "examples/eval-design.md",
@@ -460,11 +460,11 @@
     },
     {
       "path": "examples/package-lock.json",
-      "sha256": "e41c727422ffde1a31f7fcde92f1c44ff80e16d5de36ea0f10d268955d1f5ef3"
+      "sha256": "9383e38655e3df6efd42f37e2ae9ff5a138c9180470ba3bf63300d71148376c7"
     },
     {
       "path": "examples/package.json",
-      "sha256": "4965214ea8ebaf468117cd50e0a64e60f3f89ff9e6664b7678408f3afc415cb4"
+      "sha256": "cd4c4f3c846ad320555ad4936a15fbd25541951c580dcd963a591221ccaf8171"
     },
     {
       "path": "examples/shared/client.mjs",
@@ -488,15 +488,15 @@
     },
     {
       "path": "llms.txt",
-      "sha256": "3d160bf966d95138beae0bcf3a6307d7a2f3db9d826d66d6f398a46bf83c42fa"
+      "sha256": "d9674f7ffdd6791e6db2ab386bf94e097da81b2669cfac3c6eff0ab50a217d8b"
     },
     {
       "path": "plugins/oak/.claude-plugin/plugin.json",
-      "sha256": "a23fbf22285eb356dc904208fd53f206fd538703973bc5efedf9ce0651156037"
+      "sha256": "fa54f4a5b37675ef08aaa095563087d811f5ca511e6ef5626de06816a725931e"
     },
     {
       "path": "plugins/oak/.mcp.json",
-      "sha256": "8c2f429e420f1be94929ef66c90c768c59020653710401d001431cd4883d0d96"
+      "sha256": "85d11e09be096f730cc4ff14e6919e97d812e65e9a60205bfef4e5df64ce1319"
     },
     {
       "path": "plugins/oak/LICENSE",
@@ -504,7 +504,7 @@
     },
     {
       "path": "plugins/oak/README.md",
-      "sha256": "a38b1904eb35923232a22a8cfc06a31fed4aba84b8ecc445a4838c5762bea639"
+      "sha256": "97572e876e1860fc24f632b53005763e1dec039e5333877533d5f3bddb25230f"
     }
   ]
 }
