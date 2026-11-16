@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Public read/prepare adapter. No key access, signer, approval, or transaction sender.
+import { validateTradePlan } from './trade-plan.mjs';
 const ENDPOINT = 'https://qhooks.com/mcp';
 const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
 const amount = { type: 'string', pattern: '^[1-9][0-9]{0,37}$' };
@@ -101,7 +102,10 @@ export function createQHooksModule({ client = createQHooksClient(), account, ref
     if (remote === 'prepare_launch') {
       let u; try { u = new URL(data.link); } catch { throw new QHooksError('Missing QHooks launch review link.'); }
       if (u.origin !== 'https://qhooks.com' || u.username || u.password) throw new QHooksError('Invalid QHooks launch review link.');
-    } else if (String(data.chain) !== '4663' || data.trader?.toLowerCase() !== input.trader || data.token?.toLowerCase() !== input.token || data.amountIn !== input.amountIn || !Array.isArray(data.transactions) || !data.transactions.length || data.transactions.length > 8 || data.transactions.some(t => !ADDRESS.test(t.to || '') || !/^0x(?:[0-9a-f]{2})+$/i.test(t.data || '') || !/^(?:0x[0-9a-f]+|[0-9]+)$/i.test(String(t.value ?? '')))) throw new QHooksError('QHooks unsigned plan does not match the request.');
+    } else {
+      try { validateTradePlan(data, input); }
+      catch { throw new QHooksError('QHooks unsigned plan does not match the request.'); }
+    }
     return { status: 'prepared_only', executionSupported: false, source: 'QHooks', data,
       next: 'Review the unsigned plan. Native Oak execution requires Oak-maintained pinned module guards and the normal oak_prepare summary, yes/no confirmation and oak_execute checks. This adapter never signs or sends.' };
   } };

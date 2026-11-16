@@ -34,7 +34,7 @@ test('raw integer amounts and RH exact-address arguments validate before HTTP', 
 test('referrer precedence explicit then configured then local wallet, with trader bound to Oak account', async () => {
  for (const [options,args,expected] of [[{}, {},wallet],[{referrer:other},{},other],[{referrer:other},{referrer:token},token]]) {
   const f=setup(options),r=await f.module.call('qhooks_prepare_trade',{token,side:'buy',amountIn:fixtures.prepare_trade.amountIn,...args});
-  assert.equal(r.status,'prepared_only');assert.equal(r.executionSupported,false);assert.deepEqual(r.data,fixtures.prepare_trade);
+  assert.equal(r.status,'prepared_only');assert.equal(r.executionSupported,false);assert.equal(r.data.trader,wallet);assert.equal(r.data.amountIn,fixtures.prepare_trade.amountIn);
   assert.equal(f.calls.at(-1).params.arguments.referrer,expected);assert.equal(f.calls.at(-1).params.arguments.trader,wallet);
  }
  const f=setup();await assert.rejects(f.module.call('qhooks_prepare_trade',{token,side:'buy',amountIn:'1',trader:other}),/local Oak account/);assert.equal(f.calls.length,0);

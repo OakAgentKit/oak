@@ -19,7 +19,7 @@ Run these commands from `examples/`. Amounts are positive decimal **base-unit st
 | `qhooks_prepare_trade` | `prepare_trade` | Ordered unsigned transactions for the public Oak wallet. |
 | `qhooks_prepare_launch` | `prepare_launch` | A QHooks browser review link; no launch transaction is submitted. |
 
-These are the example adapter's names, **not a claim that Oak 0.3.9 registers seven new native tools**. No catalog counts are changed. Public module exports are `QHOOKS_TOOLS`, `createQHooksClient`, and `createQHooksModule`; consumers can supply their existing standard Oak MCP client for the `account` callback. `index.mjs` demonstrates this wiring without private package files.
+These are the example adapter's names, **not a claim that Oak 0.3.10 registers seven new native tools**. No catalog counts are changed. Public module exports are `QHOOKS_TOOLS`, `createQHooksClient`, and `createQHooksModule`; consumers can supply their existing standard Oak MCP client for the `account` callback. `index.mjs` demonstrates this wiring without private package files.
 
 ```js
 import {createQHooksClient, createQHooksModule} from './qhooks.mjs';
@@ -34,6 +34,16 @@ const result = await qhooks.call('qhooks_prepare_trade', {
 ```
 
 Use real full contract addresses in application code. `referrer` maps unchanged to QHooks, in this order: explicit argument, module option, public Oak wallet. A supplied trader must match the public Oak account. No referrer reward, affiliate arrangement or earnings is promised.
+
+## Local trade-plan validation
+
+Before returning a trade preparation, the adapter checks RH `4663` on the plan and **every transaction**, and binds the trader to the public Oak account. It allows only the exact input token, the pinned QFeeRouter and Permit2 as destinations; the current direct-router route accepts only an optional exact-amount ERC-20 approval to QFeeRouter followed by its supported single-hop swap. Permit2 execution is not implemented and unknown selectors, extra operations and wallet-authorization fields are rejected.
+
+The local decoder checks the pool manager, currencies and direction, requested raw amount, quote-derived minimum output and slippage, 100-bps fee, referrer, expiry, empty hook data and native value. ERC-20 operations must have zero native value; native-input swaps must carry exactly the input amount. QFeeRouter's `swap()` pays `msg.sender`: there is no separate trader/recipient argument in its ABI. The plan, quote and any transaction `from` must therefore match the actual Oak account.
+
+The required `qhooks.trade-plan.v1` SHA-256 digest detects plan changes but is **not a server signature or a trusted price source**. Independently validated request and ABI constraints still apply even when a tampered response has a recomputed digest. Server responses without the new per-transaction `chainId` and integrity metadata fail closed; live trading preparation requires that QHooks server update. The offline example includes that exact metadata. Signing plans is future work.
+
+The fixture tests include an unlimited approval plus a 5-ETH attacker transfer, changed chains/senders, wrong approval spender/amount, altered swap fields, expired plans and invalid native value. Nothing signs or executes during validation. Oak's own local simulation, spending limits and approval remain required before native execution can be enabled.
 
 ## Execution boundary
 
@@ -57,4 +67,4 @@ oak recipes add ./qhooks-oak-recipes-0.1.0.tgz
 
 Imported names are `qhooks.escrow-fee-bps`, `qhooks.escrow-fee-recipient`, `qhooks.agreement-fee-bps`, and `qhooks.agreement-fee-recipient`. No transaction recipes, approvals or install scripts are included.
 
-The module and fixtures target QHooks' seven named read/prepare tools captured from the current server source. They intentionally exclude feedback, paid x402 scans, submissions and all direct transaction execution. Oak-native registration and packed 0.3.9 bridge qualification remain maintainer acceptance work; this candidate does not claim those checks passed.
+The module and fixtures target QHooks' seven named read/prepare tools captured from the current server source. They intentionally exclude feedback, paid x402 scans, submissions and all direct transaction execution. Oak-native registration and packed 0.3.10 bridge qualification remain maintainer acceptance work; this candidate does not claim those checks passed.
