@@ -1,0 +1,10 @@
+{
+  "name": "qhooks-oak-recipes",
+  "version": "0.1.0",
+  "description": "Opt-in read-only QHooks fee configuration on Robinhood Chain",
+  "license": "MIT",
+  "oakProject": "qhooks",
+  "files": [
+    "recipes/*.recipe.json"
+  ]
+}

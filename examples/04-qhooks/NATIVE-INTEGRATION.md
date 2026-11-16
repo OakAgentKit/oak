@@ -1,0 +1,12 @@
+# Oak maintainer integration seam
+
+Public source cannot register a native module: core/add-on TypeScript and the hosted service are private. This public read/prepare module is supplied under the repository's MIT example license and requires no package internals. The native implementation must be made by the Oak module owner before advertising executable tools.
+
+1. Register the seven adapter definitions through Oak's existing module manifest, including bounded schemas and read-only preparation annotations. Route fixed upstream tool names to `https://qhooks.com/mcp`, with an accurate Oak clientInfo. No user-supplied server URL, credentials or arbitrary method forwarding.
+2. Resolve the public local account as trader; preserve exact raw input, source chain/token/pool identity, net output/minimum, expiry and disclosed protocol/router fees. Referrer precedence is explicit → configured → signing wallet. The example returns source timestamps, missing coverage and not_checked/stale states verbatim.
+3. Before executable trading, pin QHooks' live router and allowlisted approval spender, independently decode its supported calldata, reconstruct the requested input/output/recipient/referrer/minimum/deadline and reject anything else. Retain finite approvals. Native value, swap output floor, fee-on-input/output and pool currencies are relevant; do not pretend the generic hookless v4 route is equivalent.
+4. Use normal Oak prepare/preview → display exact summary/actionId/expiry → person's yes/no → execute. Oak must freshly simulate and apply its existing local sender guards, fee disclosures, journal and spending limit. No retry of unknown outcomes or new signature without reconciliation. No signing path is implemented in this public adapter.
+5. Keep prepare_launch as a browser review link until Oak implements the actual supported launch/key lifecycle. It is not an already executable EVM action. Do not fabricate a QHooks-native oak_prepare action or execute another module's action ID.
+6. Maintain the contract read recipes as separately opt-in data packages labelled as-is, not reviewed by Oak. They do not imply native HTTP module installation.
+
+Required acceptance is the real packed bridge/native module with sign/send traps in fixtures, then Oak-owned read-only and unsigned-preview validation against current QHooks. Every funded or signing check requires the owner's authorization. No existing partner relationship, production integration version or revenue arrangement is inferred from this code.

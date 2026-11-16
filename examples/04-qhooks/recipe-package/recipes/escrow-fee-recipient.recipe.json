@@ -1,0 +1,22 @@
+{
+  "schema": "oak-recipe/v1",
+  "project": "qhooks",
+  "name": "escrow-fee-recipient",
+  "description": "Read QOtcEscrow fee recipient. As-is, not reviewed by Oak.",
+  "chainId": 4663,
+  "contract": "0xBea24499f82f1e018A4DFF5607b7c54141cBfbF8",
+  "function": {
+    "type": "function",
+    "name": "feeRecipient",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ]
+  },
+  "inputs": [],
+  "kind": "read"
+}
