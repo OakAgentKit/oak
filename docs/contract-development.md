@@ -37,7 +37,7 @@ not verify a live deployment. See [review summaries](reviews.md).
 1. Copy [deploy.env.sample](../deploy.env.sample) to an ignored local `.env` and supply the public addresses and launch parameters. The sample intentionally has no key field.
 2. Run the build and tests above. Load the public configuration locally.
 3. Simulate `LaunchOakToken` if a token launch is required, then `DeployOracle` and `DeployBurner` in that order.
-   `DeploySubscription` is a legacy billing rehearsal only; Oak 0.3.9 has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes:
+   `DeploySubscription` is a legacy billing rehearsal only; Oak 0.3.10 has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes:
 
 ```sh
 forge script script/DeployOracle.s.sol:DeployOracle --rpc-url "$OAK_RPC_URL"

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.10 — 2026-11-16 (published)
+
+- [Fixed] Multi-step swaps, including USDG to stock buys and stock sells, no longer expire after their first approval and re-check the price before the swap.
+- [Fixed] The agent tracker now values stock tokens using the official stock list.
+- [Fixed] Oak no longer flags its own plan summaries as instruction-like text.
+- [Fixed] A plan with two token approvals of the same amount, such as two buys with the same USDG input, now prepares instead of being refused.
+- [Fixed] A plan with several swaps keeps each swap's five-minute window while Oak checks it, instead of expiring after one minute.
+- [Fixed] Once a plan starts, Oak can sign its later steps until the time limit the summary states, instead of stopping when the summary itself expires.
+
 ## 0.3.9 — 2026-11-14 (published)
 
 - [Changed] Public install examples and plugin configuration target 0.3.9. Reads are free; some actions carry an Oak fee, always shown before you say yes.
