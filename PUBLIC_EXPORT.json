@@ -80,7 +80,7 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "f5b1a87a0ce03b95ff1a8868e8b421906b1ba245e3e2b29ec76c615def974f79"
+      "sha256": "f0f86de92bed2158e3a9ab59466c80b9cc9b1bbc83dbcddb7d4160155059b1f0"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -100,7 +100,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "9bd5505d41599ece9fd3e98f60ab4a92afbd863bc6e1001cda63e792e329fc6c"
+      "sha256": "9dcc0f83cb03683e56b8989aca1bb0b0ca659283cf9badb2ba675de032d1a8cf"
     },
     {
       "path": "SECURITY.md",
@@ -108,7 +108,7 @@
     },
     {
       "path": "THREAT_MODEL.md",
-      "sha256": "a8b30e2cea44fe750259e39a5b09cdb77396ddcda6a9114de252c623188d7b07"
+      "sha256": "d61b07714a40c1d45d9d37fd002aa9f880ad89ad4faecbfa3aaf64bcff1f447d"
     },
     {
       "path": "assets/arch-dark.svg",
@@ -148,7 +148,7 @@
     },
     {
       "path": "contracts/abi/IOakBurner.json",
-      "sha256": "22e749390bc2d5ebf7989bfe6c6da856187a935b771c9b91d8ebaaeaa1909eab"
+      "sha256": "ed80b4912cf31cba7db76d6a77bfa05d49e95e3009c44f72f629de4a1125dfa4"
     },
     {
       "path": "contracts/abi/IOakOracle.json",
@@ -176,7 +176,7 @@
     },
     {
       "path": "contracts/deployments/README.md",
-      "sha256": "a14e59d5a7dccaa2a04e52ea8cfa90c3e7b3d01cab24215357161e8575249ce4"
+      "sha256": "7106692345b0ae6521520e97b75681ae4639a795511eba8a47aafae0314dcd4c"
     },
     {
       "path": "contracts/foundry.toml",
@@ -216,11 +216,11 @@
     },
     {
       "path": "contracts/src/OakBurner.sol",
-      "sha256": "229d4fcffd3694838512c3604b862047f1832fc4a06b83362c9827f935489f96"
+      "sha256": "55d7452cacb55e308bb7c21547df99320393b8291717d33c42f897cbacf45832"
     },
     {
       "path": "contracts/src/OakOracle.sol",
-      "sha256": "d37fd4a93738abe78a3439dcba9205526529f7d477e95dc6e1ddd1aa80f96cb7"
+      "sha256": "edecafca8747633daed3e2218b66d1c38e3b8ee583cffc13a27f6cef73c1f78c"
     },
     {
       "path": "contracts/src/OakSubscription.sol",
@@ -232,11 +232,11 @@
     },
     {
       "path": "contracts/src/interfaces/IOakBurner.sol",
-      "sha256": "28d8f96bc0d83791bfaded01dc92ce78da1e0ce0c3d425df478d006f7b984e4c"
+      "sha256": "1786cbe81249ed09b54463a4af42b7784bebb3062c05dedd9375e10a0fa1034c"
     },
     {
       "path": "contracts/src/interfaces/IOakOracle.sol",
-      "sha256": "8bcbb112605aaa9517fd689625eb3a181a22ea3a4230390c53d46c1e526c0870"
+      "sha256": "8f3e714cee339ed966083de564378d60733ec15c9bb475137043675d17b49503"
     },
     {
       "path": "contracts/src/interfaces/IOakSubscription.sol",
@@ -264,7 +264,7 @@
     },
     {
       "path": "contracts/test/OakBurner.t.sol",
-      "sha256": "527a375f43c5d9db338db70cd0908c2e2e1e0589ad0f63cbdbe119eaf7de0e2c"
+      "sha256": "fa157e7c96bead8ad5266ef4d312a67d68e24b809add83b32c68ce4c29d76a20"
     },
     {
       "path": "contracts/test/OakMerkle.t.sol",
@@ -272,7 +272,7 @@
     },
     {
       "path": "contracts/test/OakOracle.t.sol",
-      "sha256": "2c3425040431ae7a125f28d506a539bc48f2ef7a08cdc4f6e1607350effc5a51"
+      "sha256": "79bd4422afb7c6664751584de2ac669b67d1a10b7f35cd7fdb67d1061ff94583"
     },
     {
       "path": "contracts/test/OakPriceNote.t.sol",
@@ -328,7 +328,7 @@
     },
     {
       "path": "docs/INVARIANTS.md",
-      "sha256": "dfd20be7892b009ca3673e276a20a8d611469dd06e2a537a9e4c6cbfcbb235bf"
+      "sha256": "29bc9965f11f82a4ad4bbf2ecadc6f48aebf520c737ada01d34cd46032d98fe5"
     },
     {
       "path": "docs/README.md",
@@ -336,7 +336,7 @@
     },
     {
       "path": "docs/access-and-pricing.md",
-      "sha256": "a942cb5a8c3aca4f5d53dc9e021af6f68c94608eb3cdc398bbfa64237255dcbf"
+      "sha256": "c5ff635db2c0c4192b6d416dcd0279805126e60f4161eed82b2c79756e8ba2fb"
     },
     {
       "path": "docs/client-setup/README.md",
@@ -368,7 +368,7 @@
     },
     {
       "path": "docs/contract-development.md",
-      "sha256": "c8dd7f40cb7adacd8cb23d160d3dbaaa5667b2adb7149d798d7a1034019cd3f2"
+      "sha256": "d157362fcf61bdcdd78b388841917e22eca71172fef5062999dcce62c5c213f8"
     },
     {
       "path": "docs/headless-wallet.md",
@@ -388,7 +388,7 @@
     },
     {
       "path": "docs/security.md",
-      "sha256": "4b6f2b0f9bb8c428990b015dc9b073508b0fe17e8c800a5a3e700c80fde628b3"
+      "sha256": "ac3fec6e9b913f41c4a2b1638e2bb271e826bcc151af0d0bd4451a9f3f43f9a1"
     },
     {
       "path": "docs/what-is-oak.md",

@@ -11,6 +11,18 @@ Use these sections when describing the impact of a report:
 
 Report a vulnerability privately as described in [SECURITY.md](SECURITY.md).
 
+## Contract source changes awaiting deployment
+
+The deployed contracts were built from the reviewed source. The revised oracle and burner changes are not deployed yet; see the [deployment record](contracts/deployments/README.md).
+
+Burns depend on price notes from Oak's server. Since the Oak 0.3.10 server release (2026-11-16), burner notes are issued only to the operator wallet, with no permissionless fallback. The owner address (`safe`) can pause every note-based action, such as burns, by setting the price signer on `OakOracle` to zero.
+
+The revised burner bounds each call by the lower of 0.5% of live pool USDG liquidity and 250 USDG. Its first leg permits at most 0.5% less WETH than the 30-minute ETH/USD average implies; a lagging average remains a risk. The OAK floor uses the higher of the note price and live spot and is re-derived from the WETH actually received. OAK must have 18 decimals. Tokens other than USDG sent to `OakBurner` cannot be recovered.
+
+The owner address can arm a sweep with 90 days of notice. Only a burn spending at least 1% of the armed balance, rounded up, or consuming the armed remainder disarms it. The payout is limited to the armed balance not yet burned and the current USDG balance. A price signer change after arming voids the sweep, and anyone can flag that change.
+
+`OakBurner` removes OAK by calling `oak.burn()`, and the legacy holder signup path calls `oak.burnFrom()`; both reduce `totalSupply`. A transfer to `0x000000000000000000000000000000000000dEaD` leaves `totalSupply` unchanged. These bounds do not guarantee a fair market price or service availability.
+
 ## Ecosystem assets and trust boundaries
 
 Oak connects to **35 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.

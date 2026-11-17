@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- [Fixed] Contract fixes from an external review: validate oracle pool token order and PoolManager readability; tighten burner swap floors, per-call spending and sweep limits; require 18-decimal OAK.
+- [Changed] The deployed contracts were built from the reviewed source. These source changes are not deployed yet.
+- [Changed] Clarify that burner and legacy holder signup burns reduce `totalSupply`, burns depend on operator-only server price notes, and the owner address can pause note-based actions by setting the price signer on `OakOracle` to zero.
+
 ## 0.3.10 — 2026-11-16 (published)
 
 - [Fixed] Multi-step swaps, including USDG to stock buys and stock sells, no longer expire after their first approval and re-check the price before the swap.

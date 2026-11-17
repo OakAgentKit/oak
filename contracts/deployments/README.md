@@ -6,6 +6,8 @@ The [mainnet deployment record](4663.json) contains addresses and transaction ha
 The [testnet record](46630.json) remains a placeholder; it is not mainnet configuration.
 Verify chain ID, contract code and current state before use.
 
+The deployed contracts were built from the reviewed source. The oracle and burner source changes described in [Unreleased](../../CHANGELOG.md#unreleased) are not deployed yet. The npm/server 0.3.10 release does not deploy these contract fixes. The [contract invariants](../../docs/INVARIANTS.md) describe the revised source; the addresses and receipts below remain historical deployment records.
+
 | Contract | Address | Deployment transaction |
 | --- | --- | --- |
 | OAK token | `0x6511c233790Ec10f7d673c64DC82C3F941D57828` | `0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58` |

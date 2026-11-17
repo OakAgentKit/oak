@@ -93,7 +93,18 @@ contract MockPoolManager {
     }
 }
 
+contract MockOracleTokenMetadata {
+    uint8 public immutable decimals;
+
+    constructor(uint8 decimals_) {
+        decimals = decimals_;
+    }
+}
+
 contract MockObservePool {
+    address public token0 = address(new MockOracleTokenMetadata(18));
+    address public token1 = address(new MockOracleTokenMetadata(6));
+
     int56 internal first;
     int56 internal second;
     uint8 internal revertMode;
@@ -256,6 +267,91 @@ contract OakOracleTest is Test {
         }
     }
 
+    function test_ConstructorAcceptsCorrectOrderAndReadableZeroPoolWord() public {
+        assertGt(ethPool.token0().code.length, 0);
+        assertEq(poolManager.extsload(bytes32(0)), bytes32(0));
+        OakOracle accepted = _oracleWithPool(address(ethPool));
+        assertEq(accepted.ethUsdE18(), oracle.ethUsdE18());
+        assertEq(accepted.poolManager(), address(poolManager));
+    }
+
+    function test_ConstructorRejectsReversedEthUsdgOrder() public {
+        address weth = ethPool.token0();
+        address stable = ethPool.token1();
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(stable));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token1()"), abi.encode(weth));
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+    }
+
+    function testFuzz_ConstructorRequires18And6Decimals(uint8 firstDecimals, uint8 secondDecimals) public {
+        address first = address(new MockOracleTokenMetadata(firstDecimals));
+        address second = address(new MockOracleTokenMetadata(secondDecimals));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(first));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token1()"), abi.encode(second));
+        if (firstDecimals != 18 || secondDecimals != 6) {
+            vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        }
+        _oracleWithPool(address(ethPool));
+    }
+
+    function test_ConstructorRejectsUnreadablePoolAndTokenMetadata() public {
+        address[3] memory sources =
+            [address(0xE0A), address(new EmptyReturnTarget()), address(new FacetNotFoundTarget())];
+        for (uint256 i; i < sources.length; ++i) {
+            vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", sources[i]));
+            _oracleWithPool(sources[i]);
+            vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(sources[i]));
+            vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+            _oracleWithPool(address(ethPool));
+        }
+    }
+
+    function test_ConstructorRejectsUnreadableSecondTokenAndWrongSecondDecimals() public {
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token1()"), hex"12");
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token1()"), abi.encode(address(0)));
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token1()"), abi.encode(ethPool.token0()));
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+    }
+
+    function test_ConstructorRejectsMalformedTokenAddressAndShortMetadata() public {
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(uint256(1) << 160));
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(address(0)));
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), hex"12");
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+        address token = ethPool.token1();
+        vm.mockCall(address(ethPool), abi.encodeWithSignature("token0()"), abi.encode(token));
+        vm.mockCall(token, abi.encodeWithSignature("decimals()"), hex"12");
+        vm.expectRevert(abi.encodeWithSignature("EthUsdgPoolShape(address)", address(ethPool)));
+        _oracleWithPool(address(ethPool));
+    }
+
+    function test_ConstructorRejectsUnreadableManager() public {
+        address[3] memory managers =
+            [address(0xE0A), address(new EmptyReturnTarget()), address(new FacetNotFoundTarget())];
+        for (uint256 i; i < managers.length; ++i) {
+            vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, managers[i]));
+            new OakOracle(address(factory), address(oak), managers[i], address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+        }
+    }
+
+    function testFuzz_ConstructorRejectsShortManagerResponse(uint8 rawLength) public {
+        uint256 length = bound(uint256(rawLength), 0, 31);
+        vm.mockCall(address(poolManager), abi.encodeCall(IPons.extsload, (bytes32(0))), new bytes(length));
+        vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, address(poolManager)));
+        _oracleWithPool(address(ethPool));
+    }
+
     function test_ConstructorRejectsMismatchedTickSpacingOrHook() public {
         MockPonsFactory.LaunchedToken memory record = factory.getLaunchedToken(address(oak));
         record.tickSpacing = 100;
@@ -409,11 +505,13 @@ contract OakOracleTest is Test {
         );
 
         address unreadableManager = address(0xBADC0DE);
-        OakOracle badManager = new OakOracle(
-            address(factory), address(oak), unreadableManager, address(ethPool), SAFE, vm.addr(SIGNER_KEY)
-        );
         vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, unreadableManager));
-        badManager.spotOakPerEthE18();
+        new OakOracle(address(factory), address(oak), unreadableManager, address(ethPool), SAFE, vm.addr(SIGNER_KEY));
+
+        // A readable constructor probe does not promise that later pool reads remain readable.
+        vm.etch(address(poolManager), address(new EmptyReturnTarget()).code);
+        vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, address(poolManager)));
+        oracle.spotOakPerEthE18();
     }
 
     function test_EthUsdOutOfTickRangeAndZeroResultAreUnreadable() public {
@@ -780,6 +878,9 @@ contract OakOracleTest is Test {
     }
 
     function _expectUnreadable(address source) internal {
+        // Isolate observation-read failures from the constructor's token-order checks.
+        vm.mockCall(source, abi.encodeWithSignature("token0()"), abi.encode(ethPool.token0()));
+        vm.mockCall(source, abi.encodeWithSignature("token1()"), abi.encode(ethPool.token1()));
         OakOracle candidate = _oracleWithPool(source);
         vm.expectRevert(abi.encodeWithSelector(IOakOracle.OracleUnreadable.selector, source));
         candidate.ethUsdE18();
@@ -852,6 +953,7 @@ contract DeployOracleTest is Test {
         script = new DeployOracle();
         vm.etch(TOKEN, hex"00");
         _mockIdentity(script.MAINNET_PONS_FACTORY(), TOKEN, 0, 200, script.PONS_HOOK(), true);
+        _mockSources(script.MAINNET_POOL_MANAGER(), script.MAINNET_ETH_USDG_POOL());
     }
 
     function test_DeployScript_MainnetPinsAccepted_DeploysExactImmutables() public {
@@ -961,6 +1063,7 @@ contract DeployOracleTest is Test {
         script.deploy(config);
         vm.etch(testPool, hex"00");
         _mockIdentity(testFactory, TOKEN, 0, 200, script.PONS_HOOK(), true);
+        _mockSources(config.poolManager, testPool);
         _assertDeployed(script.deploy(config), config);
 
         // The mainnet Pons factory has no code on 46630, so the production pins are refused there.
@@ -976,6 +1079,16 @@ contract DeployOracleTest is Test {
 
         config.poolManager = address(0xBEEF);
         _expectUnpinned(config, "OAK_POOL_MANAGER_ADDRESS", script.TESTNET_POOL_MANAGER(), address(0xBEEF));
+    }
+
+    function _mockSources(address manager, address observations) internal {
+        vm.mockCall(manager, abi.encodeCall(IPons.extsload, (bytes32(0))), abi.encode(bytes32(0)));
+        vm.mockCall(
+            observations, abi.encodeWithSignature("token0()"), abi.encode(address(new MockOracleTokenMetadata(18)))
+        );
+        vm.mockCall(
+            observations, abi.encodeWithSignature("token1()"), abi.encode(address(new MockOracleTokenMetadata(6)))
+        );
     }
 
     function _mainnetConfig() internal view returns (DeployOracle.Config memory) {

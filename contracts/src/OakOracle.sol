@@ -2,6 +2,7 @@
 pragma solidity 0.8.26;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {IOakOracle} from "./interfaces/IOakOracle.sol";
 import {IPons, PonsRead} from "./interfaces/IPons.sol";
@@ -100,6 +101,7 @@ contract OakOracle is IOakOracle {
 
     error OnlySafe();
     error InvalidAddress();
+    error EthUsdgPoolShape(address pool);
     error LaunchRecordUnreadable(address factory);
     error LaunchRecordMismatch(address expectedToken, address actualToken, bool exists);
     error PoolIdentityMismatch(address pairToken, uint24 poolFee, int24 tickSpacing, address hook);
@@ -117,6 +119,14 @@ contract OakOracle is IOakOracle {
                 || ethUsdgPool_ == address(0) || safe_ == address(0) || priceSigner_ == address(0)
         ) revert InvalidAddress();
         _validatePoolIdentity(ponsFactory_, oakToken_);
+        // The ETH/USD conversion assumes an 18-decimal token0 and a 6-decimal token1.
+        if (
+            _decimals(ethUsdgPool_, bytes4(keccak256("token0()"))) != 18
+                || _decimals(ethUsdgPool_, bytes4(keccak256("token1()"))) != 6
+        ) revert EthUsdgPoolShape(ethUsdgPool_);
+        (bool managerOk, bytes memory managerData) =
+            poolManager_.staticcall(abi.encodeWithSelector(IPons.extsload.selector, bytes32(0)));
+        if (!managerOk || managerData.length < 32) revert OracleUnreadable(poolManager_);
 
         ponsFactory = ponsFactory_;
         oakToken = oakToken_;
@@ -143,6 +153,18 @@ contract OakOracle is IOakOracle {
         }
     }
 
+    function _decimals(address pool, bytes4 tokenGetter) private view returns (uint256) {
+        (bool ok, bytes memory data) = pool.staticcall(abi.encodeWithSelector(tokenGetter));
+        if (!ok || data.length < 32) revert EthUsdgPoolShape(pool);
+        uint256 tokenWord = abi.decode(data, (uint256));
+        if (tokenWord >> 160 != 0) revert EthUsdgPoolShape(pool);
+        (ok, data) = address(uint160(tokenWord)).staticcall(abi.encodeCall(IERC20Metadata.decimals, ()));
+        if (!ok || data.length < 32) revert EthUsdgPoolShape(pool);
+        return abi.decode(data, (uint256));
+    }
+
+    /// @notice Read Pons before consulting the READY latch, deliberately failing closed.
+    /// @dev Unreadable or unknown Pons phase data reverts even after graduation is latched.
     function phase() public view returns (uint8) {
         (bool readable, uint8 p,) = _launchRecord();
         if (!readable) revert OracleUnreadable(ponsFactory);
@@ -229,6 +251,8 @@ contract OakOracle is IOakOracle {
         return IERC20(oakToken).totalSupply();
     }
 
+    /// @notice Set the price signer; zero intentionally pauses every note-based action.
+    /// @dev The owner address (`safe`) may restore a nonzero signer to resume note-based actions such as burns.
     function setPriceSigner(address signer) external {
         if (msg.sender != safe) revert OnlySafe();
         priceSigner = signer;
