@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createQHooksClient, createQHooksModule } from './qhooks.mjs';
 import { validateTradePlan, tradePlanHash, RH } from './trade-plan.mjs';
-import { tradeFixture, fixtures, fixtureFetch, wallet, token } from './fixtures.mjs';
+import { tradeFixture, fixtures, fixtureFetch, wallet, token, independentEvidence } from './fixtures.mjs';
 const attacker = '0x4444444444444444444444444444444444444444';
 const args = (p, extra = {}) => ({ chain: '4663', token, side: p.side, trader: wallet, amountIn: p.amountIn, slippageBps: p.slippageBps, referrer: wallet, ...extra });
 function changeWord(tx, index, value) {
@@ -12,16 +12,16 @@ function changeWord(tx, index, value) {
   tx.data = tx.data.slice(0, at) + BigInt(value).toString(16).padStart(64, '0') + tx.data.slice(at + 64);
 }
 function reseal(p) { p.integrity.hash = tradePlanHash(p); return p; }
-const rejects = p => assert.throws(() => validateTradePlan(p, args(p)), /does not match/);
+const rejects = p => assert.throws(() => validateTradePlan(p, args(p), {evidence:independentEvidence(tradeFixture({native:p.inputCurrency==='0x'+'0'.repeat(40),side:p.side,amountIn:p.amountIn}))}));
 
 test('native and ERC20 buys/sells accept canonical exact-input single-hop plans', () => {
   for (const native of [true, false]) for (const side of ['buy', 'sell']) {
     const p = tradeFixture({ native, side });
-    assert.equal(validateTradePlan(p, args(p)), p);
-    assert.equal(validateTradePlan(p, args(p), { now: (p.deadline - 600) * 1000 }), p);
+    assert.equal(validateTradePlan(p, args(p), {evidence:independentEvidence(p)}), p);
+    assert.equal(validateTradePlan(p, args(p), { now: (p.deadline - 600) * 1000, evidence:independentEvidence(p) }), p);
   }
   const p = tradeFixture(); p.transactions[0].from = wallet;
-  assert.equal(validateTradePlan(reseal(p), args(p)), p);
+  assert.equal(validateTradePlan(reseal(p), args(p), {evidence:independentEvidence(p)}), p);
 });
 
 test('review proof: unlimited approval and 5 ETH to attacker never leave module', async () => {
@@ -85,4 +85,9 @@ test('integrity follows the shared UTF8 tuple format and is mandatory, never a s
   assert.equal(p.integrity.hash, expected);
   p.transactions[0].value = '1'; rejects(p);
   const absent = tradeFixture(); delete absent.integrity; rejects(absent);
+});
+
+test('independent pool key and quote reject rehashed in-range edits',async()=>{
+ const edits=[p=>changeWord(p.transactions.at(-1),15,attacker),p=>changeWord(p.transactions.at(-1),13,500),p=>changeWord(p.transactions.at(-1),14,200),p=>{for(const k of ['amountOut','grossAmountOut','netAmountOut'])p.quote[k]='50000';p.minOut='49500';changeWord(p.transactions.at(-1),3,49500);}];
+ for(const edit of edits){const p=tradeFixture();edit(p);reseal(p);const module=createQHooksModule({account:async()=>({address:wallet}),client:createQHooksClient({fetch:fixtureFetch({responses:{...fixtures,prepare_trade:p}})})});await assert.rejects(module.call('qhooks_prepare_trade',{token,side:'buy',amountIn:p.amountIn}));}
 });

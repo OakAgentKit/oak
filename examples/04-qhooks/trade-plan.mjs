@@ -1,3 +1,4 @@
+import { QHOOKS_SECURITY } from './plan-security.mjs';
 // SPDX-License-Identifier: MIT
 import { createHash } from 'node:crypto';
 
@@ -41,7 +42,7 @@ export function tradePlanHash(plan) {
   return '0x' + createHash('sha256').update(JSON.stringify(tuple), 'utf8').digest('hex');
 }
 
-export function validateTradePlan(plan, input, { now = Date.now() } = {}) {
+export function validateTradePlan(plan, input, { now = Date.now(), evidence } = {}) {
   const chain = input.chain ?? RH.chainId, trader = addr(input.trader), token = addr(input.token);
   const amount = uint(input.amountIn, U128), slippage = input.slippageBps ?? 100;
   if (chain !== RH.chainId || amount === 0n || !['buy', 'sell'].includes(input.side) || !Number.isInteger(slippage) || slippage < 0 || slippage > 9999) fail();
@@ -69,6 +70,7 @@ export function validateTradePlan(plan, input, { now = Date.now() } = {}) {
   const currency0 = wordAddress(w[11]), currency1 = wordAddress(w[12]); wordAddress(w[15]);
   const [currencyIn, currencyOut] = q.zeroForOne ? [currency0, currency1] : [currency1, currency0];
   if (BigInt(currency0) >= BigInt(currency1) || currencyIn !== inputCurrency || (feeOnInput ? currencyOut !== token : currencyIn !== token) || valueOf(swap.value) !== (inputCurrency === ZERO ? amount : 0n)) fail();
+  QHOOKS_SECURITY.checkTrade(plan,input,{currency0,currency1,fee:Number(number(w[13])),tickSpacing:Number(signed24(w[14])),hooks:wordAddress(w[15])},evidence);
   // swap() returns output to msg.sender; it has no trader/recipient calldata field.
   // plan.trader, quote.trader and any tx.from are bound to the actual Oak account.
   if (plan.integrity?.schema !== 'qhooks.trade-plan.v1' || plan.integrity.algorithm !== 'sha256' || !/^0x[0-9a-f]{64}$/.test(plan.integrity.hash || '') || tradePlanHash(plan) !== plan.integrity.hash) fail();

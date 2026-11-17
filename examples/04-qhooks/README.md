@@ -68,3 +68,11 @@ oak recipes add ./qhooks-oak-recipes-0.1.0.tgz
 Imported names are `qhooks.escrow-fee-bps`, `qhooks.escrow-fee-recipient`, `qhooks.agreement-fee-bps`, and `qhooks.agreement-fee-recipient`. No transaction recipes, approvals or install scripts are included.
 
 The module and fixtures target QHooks' seven named read/prepare tools captured from the current server source. They intentionally exclude feedback, paid x402 scans, submissions and all direct transaction execution. Oak-native registration and packed 0.3.10 bridge qualification remain maintainer acceptance work; this candidate does not claim those checks passed.
+
+## Independent plan checks
+
+Before a spot plan is returned, the adapter separately reads `token_info` and `quote` through the same configured public transport. It selects the listed launch pool (otherwise the first listed pool), binds the decoded currencies, hook, fee and tick spacing to that independent metadata, and computes the minimum from the independent raw quote, the original slippage and the router fee. Changing both the returned plan quote and its minimum, even with a recomputed digest, is refused. Missing or stale independent quote evidence stops preparation; there is no wallet call or automatic retry. This adds two bounded read calls per spot preparation.
+
+The SHA-256 integrity value detects inconsistency; it is not a server signature or a price guarantee. Independent reads must come from the adapter's own transport, never model-supplied evidence or fields copied from the plan. Wallet review and signing remain outside the adapter.
+
+This example remains `prepared_only`: Oak has no registered native QHooks executor here. It does not add OTC/agreement execution or bypass local wallet approval.

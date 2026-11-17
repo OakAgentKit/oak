@@ -1,3 +1,4 @@
+import { QHOOKS_SECURITY } from './plan-security.mjs';
 // SPDX-License-Identifier: MIT
 // Public read/prepare adapter. No key access, signer, approval, or transaction sender.
 import { validateTradePlan } from './trade-plan.mjs';
@@ -103,7 +104,7 @@ export function createQHooksModule({ client = createQHooksClient(), account, ref
       let u; try { u = new URL(data.link); } catch { throw new QHooksError('Missing QHooks launch review link.'); }
       if (u.origin !== 'https://qhooks.com' || u.username || u.password) throw new QHooksError('Invalid QHooks launch review link.');
     } else {
-      try { validateTradePlan(data, input); }
+      try { const evidence = await QHOOKS_SECURITY.readTrade(input, (name, args) => client.call(name,args)); validateTradePlan(data, input, { evidence }); }
       catch { throw new QHooksError('QHooks unsigned plan does not match the request.'); }
     }
     return { status: 'prepared_only', executionSupported: false, source: 'QHooks', data,

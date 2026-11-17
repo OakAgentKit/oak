@@ -20,6 +20,14 @@ export function tradeFixture({ native = true, side = 'buy', referrer = wallet, a
   plan.integrity = { schema: 'qhooks.trade-plan.v1', algorithm: 'sha256', hash: tradePlanHash(plan) };
   return plan;
 }
+export function independentEvidence(p = tradeFixture()) {
+  const words=p.transactions.at(-1).data.slice(10).match(/.{64}/g),addr=i=>'0x'+words[i].slice(24);
+  return {key:{chainId:'4663',poolId:p.quote.poolId,currency0:addr(11),currency1:addr(12),hooks:addr(15),fee:3000,tickSpacing:60,zeroForOne:p.quote.zeroForOne,amountIn:p.quote.amountIn,trader:p.trader},quote:{...p.quote}};
+}
+export function independentReplies(p=tradeFixture()) {
+ const e=independentEvidence(p);
+ return {token_info:{meta:{chainId:'4663',token,pools:[{label:'launch',id:e.key.poolId,key:e.key}]}},quote:e.quote};
+}
 export const fixtures = {
   list_launches: { markets: [], at: '2026-11-16T00:00:00Z', source: 'QHooks fixture' },
   token_info: { meta: { token, chainId: '4663', stale: true }, observedAt: '2026-11-15T00:00:00Z' },
@@ -30,12 +38,15 @@ export const fixtures = {
   prepare_launch: { chain: '4663', style: 'fixed', link: 'https://qhooks.com/launch?chain=4663&name=Example&ticker=EX', notes: ['Review in browser.'] },
 };
 export function fixtureFetch({ calls = [], responses = fixtures } = {}) {
+  let original;
   return async (url, options) => {
     if (url !== 'https://qhooks.com/mcp') throw new Error('Unexpected endpoint.');
     const request = JSON.parse(options.body); calls.push({ ...request, headers: options.headers });
     if (request.method === 'notifications/initialized') return new Response(null, { status: 202 });
+    if(request.params?.name==='prepare_trade') original=tradeFixture(request.params.arguments);
+    const independent=original&&independentReplies(original);
     const result = request.method === 'initialize' ? { protocolVersion: '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'QHooks fixture', version: '8.0.1' } }
-      : { content: [{ type: 'text', text: JSON.stringify(responses === fixtures && request.params.name === 'prepare_trade' ? tradeFixture(request.params.arguments) : responses[request.params.name]) }] };
+      : { content: [{ type: 'text', text: JSON.stringify(independent&&['token_info','quote'].includes(request.params.name)?independent[request.params.name]:responses === fixtures && request.params.name === 'prepare_trade' ? original : responses[request.params.name]) }] };
     return Response.json({ jsonrpc: '2.0', id: request.id, result }, { headers: { 'mcp-session-id': 'offline-fixture-only' } });
   };
 }
