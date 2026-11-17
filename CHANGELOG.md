@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.11 — 2026-11-17 (published)
+
+- [Fixed] Stock buys are faster, with fewer repeated checks and quicker receipt updates.
+- [Fixed] Fewer trades fail when the hosted server briefly refuses a request; Oak retries and explains when approval history is still catching up.
+- [Fixed] Newly listed official stocks, including ANT, can show live prices once verified.
+- [Fixed] Pending rewards no longer blank an agent's total value.
+
 ## Unreleased
 
 - [Fixed] Contract fixes from an external review: validate oracle pool token order and PoolManager readability; tighten burner swap floors, per-call spending and sweep limits; require 18-decimal OAK.
