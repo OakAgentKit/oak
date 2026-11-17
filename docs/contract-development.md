@@ -32,12 +32,21 @@ all 1,774,545 iterations in one test transaction.
 Fork/RPC-gated tests remain skipped without their explicit inputs; local tests do
 not verify a live deployment. See [review summaries](reviews.md).
 
+## Constructor and pricing checks
+
+The revised contract source is not deployed yet. `OakOracle` keeps its constructor signature and checks that the ETH/USDG pool reports an 18-decimal token0 and a 6-decimal token1, and that PoolManager `extsload(bytes32(0))` is readable. A zero word is allowed before pool initialization. These checks validate shape and readability, not token identity or a price.
+
+`OakBurner` requires OAK to have 18 decimals. Its revised source adds a 250 USDG ceiling alongside the 0.5% live-liquidity cap, a 0.5% first-leg shortfall limit against the 30-minute ETH/USD average, and an OAK floor based on actual WETH received and the higher of note price and live spot.
+
+The owner address (`safe`) controls the price signer on `OakOracle`; zero pauses all note-based actions, such as burns. `phase()` deliberately reads Pons before the READY latch and fails closed on unknown or unreadable data.
+
+See [contract invariants](INVARIANTS.md) for the revised sweep rules, and [security](security.md) for owner powers and server dependencies.
+
 ## Rehearse deployment
 
 1. Copy [deploy.env.sample](../deploy.env.sample) to an ignored local `.env` and supply the public addresses and launch parameters. The sample intentionally has no key field.
 2. Run the build and tests above. Load the public configuration locally.
 3. Simulate `LaunchOakToken` if a token launch is required, then `DeployOracle` and `DeployBurner` in that order.
-   `DeploySubscription` is a legacy billing rehearsal only; Oak 0.3.10 has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes:
 
 ```sh
 forge script script/DeployOracle.s.sol:DeployOracle --rpc-url "$OAK_RPC_URL"

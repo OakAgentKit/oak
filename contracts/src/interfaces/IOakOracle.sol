@@ -5,6 +5,7 @@ import {PriceNote} from "../libraries/OakPriceNote.sol";
 
 interface IOakOracle {
     function syncPhase() external returns (uint8);
+    /// @notice Read Pons before the READY latch; unreadable or unknown data deliberately reverts even after latching.
     function phase() external view returns (uint8);
     function available() external view returns (bool);
     function ethUsdE18() external view returns (uint256);
@@ -16,6 +17,8 @@ interface IOakOracle {
     function liquidityUsdgE6() external view returns (uint256);
     function supplyNet() external view returns (uint256);
     function priceSigner() external view returns (address);
+    /// @notice The owner address (`safe`) may set zero to pause all note-based actions, such as burns.
+    /// @dev Setting a nonzero signer restores note verification.
     function setPriceSigner(address signer) external;
 
     event PriceSignerSet(address signer);

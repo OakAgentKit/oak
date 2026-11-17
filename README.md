@@ -186,6 +186,10 @@ ETH gas and project fees are separate.
 25% of Oak's income buys back and burns `$OAK`. Holding `$OAK` has no access perks. Oak uses 25% of its income to buy back and burn `$OAK`. [Full access and fee details](docs/access-and-pricing.md) ·
 [Website pricing](https://oakagentkit.org/pricing.html)
 
+`OakBurner` calls `oak.burn()` on bought OAK, lowering `totalSupply`. Burns depend on price notes from Oak's server. Since the Oak 0.3.10 server release (2026-11-16), burner notes are issued only to the operator wallet, with no permissionless fallback. The owner address can pause all note-based actions, such as burns, by setting the price signer on `OakOracle` to zero. Tokens other than USDG sent to `OakBurner` cannot be recovered.
+
+The [revised contract rules](docs/INVARIANTS.md) describe source changes that are not deployed yet; the [deployment record](contracts/deployments/README.md) distinguishes the deployed contracts built from the reviewed source.
+
 <a id="before-anything-signs"></a>
 
 ## Security model
@@ -207,7 +211,7 @@ Gas is separate. Your computer, RPC and external projects remain trust
 boundaries. There is no completed third-party audit.
 
 One owner key controls treasury funds and contract administration, including
-the price signer on `OakOracle` and `OakBurner`. The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed on Robinhood Chain and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address). There is no second-signature requirement. Compromise exposes those
+the price signer on `OakOracle`. There is no second-signature requirement. Compromise exposes those
 powers; loss can make funds and administration inaccessible. It cannot spend
 user wallet balances. [Authority details](docs/security.md#4-keys-and-authority-matrix)
 

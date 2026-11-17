@@ -4,6 +4,7 @@ pragma solidity 0.8.26;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 
 import {IOakBurner} from "./interfaces/IOakBurner.sol";
 import {IOakOracle} from "./interfaces/IOakOracle.sol";
@@ -74,9 +75,12 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     uint24 public constant V4_FEE = 0;
     int24 public constant V4_TICK_SPACING = 200;
     uint256 public constant SWEEP_DELAY = 90 days;
-    /// @dev A burn must spend at least 1% of the armed balance, capped at the
-    ///      per-call maximum accepted for that burn, to disarm the sweep.
+    /// @dev A burn disarms at ceil(1% of the fixed armed snapshot), or on consuming the armed remainder.
     uint256 public constant SWEEP_DISARM_DENOMINATOR = 100;
+    /// @notice Maximum shortfall in leg-1 WETH versus the oracle's 30-minute ETH/USD average, in basis points.
+    uint256 public constant LEG1_SLIPPAGE_BPS = 50;
+    /// @notice Absolute USDG ceiling per burn, also bounded by 0.5% of oracle liquidity (USDG has 6 decimals).
+    uint256 public constant MAX_CHUNK_USDG = 250e6;
 
     bytes1 private constant V4_SWAP_COMMAND = 0x10;
     bytes private constant V4_BUY_ACTIONS = hex"060c0f";
@@ -90,9 +94,17 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     uint8 public immutable override oakDecimals;
 
     mapping(address wallet => mapping(bytes32 nonce => bool used)) public override noteUsed;
+    /// @dev Adjacent uint64 timestamps share a storage slot; clearing the arming preserves lastBurnAt.
     uint64 public override armedAt;
-    uint256 public override armedBalance;
     uint64 public override lastBurnAt;
+    /// @inheritdoc IOakBurner
+    uint256 public override armedBalance;
+    /// @inheritdoc IOakBurner
+    uint256 public override armedRemaining;
+    /// @inheritdoc IOakBurner
+    address public override armedSigner;
+    /// @inheritdoc IOakBurner
+    bool public override armedSignerChanged;
 
     error InvalidAddress();
     error InvalidOakDecimals(uint8 decimals);
@@ -110,12 +122,14 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     error AlreadyArmed();
     error NotArmed();
     error SweepNotReady(uint256 readyAt);
+    error SignerChangedSinceArm();
 
+    /// @dev OAK must use 18 decimals; the argument is retained for constructor compatibility.
     constructor(address usdg_, address oak_, address oracle_, address safe_, uint8 oakDecimals_) {
         if (usdg_ == address(0) || oak_ == address(0) || oracle_ == address(0) || safe_ == address(0)) {
             revert InvalidAddress();
         }
-        if (oakDecimals_ < 6 || oakDecimals_ > 77) revert InvalidOakDecimals(oakDecimals_);
+        if (oakDecimals_ != 18) revert InvalidOakDecimals(oakDecimals_);
         usdg = IERC20(usdg_);
         oak = IBurnableERC20(oak_);
         oracle = IOakOracle(oracle_);
@@ -132,7 +146,7 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         if (usdgIn == 0) revert ZeroAmount();
 
         oracle.syncPhase();
-        uint256 maximum = oracle.liquidityUsdgE6() / CHUNK_DENOMINATOR;
+        uint256 maximum = Math.min(oracle.liquidityUsdgE6() / CHUNK_DENOMINATOR, MAX_CHUNK_USDG);
         if (usdgIn > maximum) revert ChunkTooLarge(usdgIn, maximum);
 
         uint256 oakPerEthE18 = oracle.verifyNote(n, sig, msg.sender);
@@ -144,11 +158,8 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         if (noteUsed[msg.sender][n.nonce]) revert NoteUsed();
         noteUsed[msg.sender][n.nonce] = true;
 
-        uint256 ethUsdE18 = oracle.ethUsdE18();
-        uint256 floorBps = _burnerFloorBps();
-        uint256 minOakOut = OakPricing.burnerMinOut(usdgIn, oakPerEthE18, ethUsdE18, oakDecimals, floorBps);
-        uint256 ethOut = _swapUsdgForWeth(usdgIn);
-        if (ethOut == 0) revert ZeroSwapOutput();
+        uint256 floorPrice = Math.max(oakPerEthE18, spotOakPerEthE18);
+        (uint256 ethOut, uint256 minOakOut) = _buyWethWithFloor(usdgIn, floorPrice);
         if (ethOut > type(uint128).max || minOakOut > type(uint128).max) revert RouterAmountOverflow();
 
         IWETH9(WETH).withdraw(ethOut);
@@ -160,44 +171,75 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         oak.burn(oakOut);
 
         lastBurnAt = uint64(block.timestamp);
-        _disarmSweepAfterBurn(usdgIn, maximum);
+        _disarmSweepAfterBurn(usdgIn);
         emit Burned(usdgIn, oakOut);
     }
 
-    function _disarmSweepAfterBurn(uint256 usdgIn, uint256 maximum) private {
+    /// @dev Protect both legs: the USDG-derived OAK floor never falls, and surplus WETH raises it.
+    function _buyWethWithFloor(uint256 usdgIn, uint256 floorPrice) private returns (uint256 ethOut, uint256 minOakOut) {
+        uint256 ethUsdE18 = oracle.ethUsdE18();
+        uint256 floorBps = _burnerFloorBps();
+        minOakOut = OakPricing.burnerMinOut(usdgIn, floorPrice, ethUsdE18, oakDecimals, floorBps);
+        uint256 minEthOut = Math.mulDiv(usdgIn * 1e12, 1e18 * (10_000 - LEG1_SLIPPAGE_BPS), ethUsdE18 * 10_000);
+        ethOut = _swapUsdgForWeth(usdgIn, minEthOut);
+        if (ethOut == 0) revert ZeroSwapOutput();
+        uint256 minOakFromEth = Math.mulDiv(ethOut, floorPrice * floorBps, 1e18 * 10_000);
+        minOakOut = Math.max(minOakOut, minOakFromEth);
+    }
+
+    /// @dev The threshold uses the fixed snapshot, independent of current liquidity or chunk size.
+    function _disarmSweepAfterBurn(uint256 usdgIn) private {
         if (armedAt == 0) return;
-        uint256 armedBalance_ = armedBalance;
-        uint256 minimumDisarmAmount = armedBalance_ / SWEEP_DISARM_DENOMINATOR;
-        if (armedBalance_ % SWEEP_DISARM_DENOMINATOR != 0) ++minimumDisarmAmount;
-        if (minimumDisarmAmount > maximum) minimumDisarmAmount = maximum;
-        if (usdgIn >= minimumDisarmAmount) {
-            armedAt = 0;
-            armedBalance = 0;
+        uint256 remaining = armedRemaining;
+        uint256 minimumDisarmAmount = Math.ceilDiv(armedBalance, SWEEP_DISARM_DENOMINATOR);
+        if (usdgIn >= minimumDisarmAmount || usdgIn >= remaining) {
+            _resetSweep();
             emit SweepDisarmed(0);
+        } else {
+            armedRemaining = remaining - usdgIn;
         }
+    }
+
+    /// @dev Clear every field tied to an arming on either disarm or completed sweep.
+    function _resetSweep() private {
+        armedAt = 0;
+        armedBalance = 0;
+        armedRemaining = 0;
+        armedSigner = address(0);
+        armedSignerChanged = false;
     }
 
     /// @inheritdoc IOakBurner
     function armSweep() external nonReentrant onlySafe {
-        if (armedAt != 0) revert AlreadyArmed();
+        address signer = oracle.priceSigner();
+        if (signer == address(0)) revert InvalidAddress();
+        if (armedAt != 0 && !armedSignerChanged) revert AlreadyArmed();
         uint256 balance = usdg.balanceOf(address(this));
         if (balance == 0) revert NoBalance();
         armedAt = uint64(block.timestamp);
         armedBalance = balance;
+        armedRemaining = balance;
+        armedSigner = signer;
+        armedSignerChanged = false;
         emit SweepArmed(armedAt, balance);
+    }
+
+    /// @inheritdoc IOakBurner
+    function flagSignerChange() external {
+        if (armedAt != 0 && oracle.priceSigner() != armedSigner) armedSignerChanged = true;
     }
 
     /// @inheritdoc IOakBurner
     function sweepStuck() external nonReentrant onlySafe {
         uint64 armedAt_ = armedAt;
         if (armedAt_ == 0) revert NotArmed();
+        if (armedSignerChanged || oracle.priceSigner() != armedSigner) revert SignerChangedSinceArm();
         uint256 readyAt = uint256(armedAt_) + SWEEP_DELAY;
         if (block.timestamp < readyAt) revert SweepNotReady(readyAt);
 
         uint256 balance = usdg.balanceOf(address(this));
-        uint256 amount = balance < armedBalance ? balance : armedBalance;
-        armedAt = 0;
-        armedBalance = 0;
+        uint256 amount = Math.min(balance, armedRemaining);
+        _resetSweep();
         emit SweepDisarmed(1);
         usdg.safeTransfer(safe, amount);
         emit Swept(amount);
@@ -222,7 +264,7 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         return OakPricing.burnerFloorBps(hookFeeBps, creatorTaxBps);
     }
 
-    function _swapUsdgForWeth(uint256 amountIn) private returns (uint256 amountOut) {
+    function _swapUsdgForWeth(uint256 amountIn, uint256 minAmountOut) private returns (uint256 amountOut) {
         usdg.forceApprove(SWAP_ROUTER_02, amountIn);
         amountOut = ISwapRouter02(SWAP_ROUTER_02)
             .exactInputSingle(
@@ -232,7 +274,7 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
                     fee: V3_FEE,
                     recipient: address(this),
                     amountIn: amountIn,
-                    amountOutMinimum: 0,
+                    amountOutMinimum: minAmountOut,
                     sqrtPriceLimitX96: 0
                 })
             );

@@ -100,18 +100,44 @@ contract MockWeth is MockToken("Wrapped Ether", "WETH", 18) {
 }
 
 contract MockSwapRouter02 is ISwapRouter02 {
+    error TooLittleReceived(uint256 minimum, uint256 actual);
+
+    IOakOracle public oracle;
     uint256 public amountOut;
+    bool public overrideAmountOut;
+    bool public ignoreMinimum;
+    uint256 public spendBps;
     IV3SwapRouter.ExactInputSingleParams public lastParams;
+
+    function setOracle(IOakOracle oracle_) external {
+        oracle = oracle_;
+        spendBps = 10_000;
+    }
+
+    function setSpendBps(uint256 value) external {
+        spendBps = value;
+    }
+
+    function setIgnoreMinimum(bool value) external {
+        ignoreMinimum = value;
+    }
 
     function setAmountOut(uint256 amountOut_) external {
         amountOut = amountOut_;
+        overrideAmountOut = true;
     }
 
     function exactInputSingle(IV3SwapRouter.ExactInputSingleParams calldata params) external payable returns (uint256) {
         lastParams = params;
-        require(IERC20(params.tokenIn).transferFrom(msg.sender, address(this), params.amountIn), "pull");
-        MockToken(params.tokenOut).mint(params.recipient, amountOut);
-        return amountOut;
+        require(
+            IERC20(params.tokenIn).transferFrom(msg.sender, address(this), params.amountIn * spendBps / 10_000), "pull"
+        );
+        uint256 output = overrideAmountOut ? amountOut : params.amountIn * 1e30 / oracle.ethUsdE18();
+        if (!ignoreMinimum && output < params.amountOutMinimum) {
+            revert TooLittleReceived(params.amountOutMinimum, output);
+        }
+        MockToken(params.tokenOut).mint(params.recipient, output);
+        return output;
     }
 }
 
@@ -280,7 +306,6 @@ contract OakBurnerTest is OakBurnerAssertions {
     uint256 internal constant DEFAULT_OAK_PER_ETH = 2_000_000e18;
     uint256 internal constant DEFAULT_ETH_USD = 2_000e18;
     uint256 internal constant DEFAULT_LIQUIDITY_USDG_E6 = 200_000_000_000;
-    uint256 internal constant DEFAULT_V3_OUT = 1 ether;
     uint256 internal constant DEFAULT_OAK_OUT = 1_000_000e18;
     address internal constant PONS_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
     address internal constant PONS_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
@@ -360,6 +385,7 @@ contract OakBurnerTest is OakBurnerAssertions {
 
     function test_ZeroFirstLegOutputRejected() public {
         MockSwapRouter02(burner.SWAP_ROUTER_02()).setAmountOut(0);
+        MockSwapRouter02(burner.SWAP_ROUTER_02()).setIgnoreMinimum(true);
         (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
         vm.expectRevert(OakBurner.ZeroSwapOutput.selector);
         burner.buyAndBurn(1_000_000, note, sig);
@@ -375,13 +401,12 @@ contract OakBurnerTest is OakBurnerAssertions {
     }
 
     function test_MinimumUint128OverflowRejected() public {
-        OakBurner highDecimals = _newBurner(77);
-        usdg.mint(address(highDecimals), 1);
-        (PriceNote memory note, bytes memory sig) =
-            _signedNoteFor(highDecimals, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        uint256 hugePrice = 1e45;
+        oracle.setSpotOakPerEthE18(hugePrice);
+        (PriceNote memory note, bytes memory sig) = _signedNote(hugePrice, address(this));
         vm.expectRevert(OakBurner.RouterAmountOverflow.selector);
-        highDecimals.buyAndBurn(1, note, sig);
-        assertFalse(highDecimals.noteUsed(note.wallet, note.nonce));
+        burner.buyAndBurn(1_000_000, note, sig);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
     }
 
     function test_BurnerChecksOutputEvenIfRouterIgnoresMinimum() public {
@@ -419,13 +444,8 @@ contract OakBurnerTest is OakBurnerAssertions {
             96_070_000_000_000_000_000_000
         );
 
-        OakBurner sixDecimalBurner = _newBurner(6);
-        usdg.mint(address(sixDecimalBurner), usdgIn);
-        (PriceNote memory note6, bytes memory sig6) =
-            _signedNoteFor(sixDecimalBurner, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
-        MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).setAmountOut(DEFAULT_OAK_OUT);
-        sixDecimalBurner.buyAndBurn(usdgIn, note6, sig6);
-        assertEq(MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).lastAmountOutMinimum(), 96_070_000_000);
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.InvalidOakDecimals.selector, uint8(6)));
+        _newBurner(6);
     }
 
     function test_RaisedGraduationFeeLowersFloorAndStillBurns() public {
@@ -553,23 +573,25 @@ contract OakBurnerTest is OakBurnerAssertions {
         (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
         burner.buyAndBurn(usdgIn, note, sig);
 
-        MockSwapRouter02 v3 = MockSwapRouter02(burner.SWAP_ROUTER_02());
-        (
-            address tokenIn,
-            address tokenOut,
-            uint24 fee,
-            address recipient,
-            uint256 amountIn,
-            uint256 amountOutMin,
-            uint160 sqrtLimit
-        ) = v3.lastParams();
-        assertEq(tokenIn, address(usdg));
-        assertEq(tokenOut, burner.WETH());
-        assertEq(fee, 100);
-        assertEq(recipient, address(burner));
-        assertEq(amountIn, usdgIn);
-        assertEq(amountOutMin, 0);
-        assertEq(sqrtLimit, 0);
+        {
+            MockSwapRouter02 v3 = MockSwapRouter02(burner.SWAP_ROUTER_02());
+            (
+                address tokenIn,
+                address tokenOut,
+                uint24 fee,
+                address recipient,
+                uint256 amountIn,
+                uint256 amountOutMin,
+                uint160 sqrtLimit
+            ) = v3.lastParams();
+            assertEq(tokenIn, address(usdg));
+            assertEq(tokenOut, burner.WETH());
+            assertEq(fee, 100);
+            assertEq(recipient, address(burner));
+            assertEq(amountIn, usdgIn);
+            assertEq(amountOutMin, usdgIn * 1e30 * 9_950 / (DEFAULT_ETH_USD * 10_000));
+            assertEq(sqrtLimit, 0);
+        }
 
         MockUniversalRouter v4 = MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2()));
         (address currency0, address currency1, uint24 v4Fee, int24 tickSpacing, address hooks) = v4.lastPoolKey();
@@ -579,11 +601,11 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(tickSpacing, 200);
         assertEq(hooks, burner.PONS_HOOK());
         assertTrue(v4.lastZeroForOne());
-        assertEq(v4.lastAmountIn(), DEFAULT_V3_OUT);
+        assertEq(v4.lastAmountIn(), usdgIn * 1e30 / DEFAULT_ETH_USD);
         assertEq(v4.lastMinHopPriceX36(), 0);
         assertEq(v4.lastHookDataLength(), 0);
         assertEq(v4.lastSettleCurrency(), address(0));
-        assertEq(v4.lastSettleAmount(), DEFAULT_V3_OUT);
+        assertEq(v4.lastSettleAmount(), usdgIn * 1e30 / DEFAULT_ETH_USD);
         assertEq(v4.lastTakeCurrency(), address(oak));
         assertEq(v4.lastTakeMinimum(), v4.lastAmountOutMinimum());
         assertEq(keccak256(v4.lastCommands()), keccak256(hex"10"));
@@ -833,7 +855,7 @@ contract OakBurnerTest is OakBurnerAssertions {
         target.sweepStuck();
     }
 
-    function test_ChunkCapIsAttainableDisarmThresholdWhenOnePercentIsLarger() public {
+    function test_ChunkCapDoesNotClampFixedOnePercentThreshold() public {
         uint256 maximum = 1_000_000;
         oracle.setLiquidityUsdgE6(maximum * 200);
         OakBurner target = _newBurner(18);
@@ -850,8 +872,9 @@ contract OakBurnerTest is OakBurnerAssertions {
         (PriceNote memory exact, bytes memory exactSig) =
             _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
         target.buyAndBurn(maximum, exact, exactSig);
-        assertEq(target.armedAt(), 0);
-        assertEq(target.armedBalance(), 0);
+        assertEq(target.armedAt(), armedAt);
+        assertEq(target.armedBalance(), maximum * 200);
+        assertEq(target.armedRemaining(), maximum * 198 + 1);
     }
 
     function test_FailedBurnDoesNotDisarm() public {
@@ -914,7 +937,7 @@ contract OakBurnerTest is OakBurnerAssertions {
     function testFuzz_ChunkBoundaryMatchesHalfPercent(uint64 liquiditySeed) public {
         uint256 liquidity = bound(uint256(liquiditySeed), 200, 1_000_000_000_000);
         oracle.setLiquidityUsdgE6(liquidity);
-        uint256 cap = liquidity / 200;
+        uint256 cap = Math.min(liquidity / 200, 250e6);
         MockUniversalRouter(payable(burner.UNIVERSAL_ROUTER_V2_1_2())).setAmountOut(1e30);
 
         (PriceNote memory tooLarge, bytes memory tooLargeSig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
@@ -942,6 +965,366 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(usdg.balanceOf(address(target)), later);
     }
 
+    function test_Leg1MinimumRejectsOneWeiBelow_AcceptsExactFloor() public {
+        uint256 usdgIn = 100e6;
+        uint256 minEth = 49_750_000_000_000_000;
+        assertEq(burner.LEG1_SLIPPAGE_BPS(), 50);
+        MockSwapRouter02 v3 = MockSwapRouter02(burner.SWAP_ROUTER_02());
+        v3.setAmountOut(minEth - 1);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        uint256 balanceBefore = usdg.balanceOf(address(burner));
+        vm.expectRevert(abi.encodeWithSelector(MockSwapRouter02.TooLittleReceived.selector, minEth, minEth - 1));
+        burner.buyAndBurn(usdgIn, note, sig);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
+        assertEq(usdg.balanceOf(address(burner)), balanceBefore);
+        assertEq(burner.lastBurnAt(), 0);
+
+        v3.setAmountOut(minEth);
+        burner.buyAndBurn(usdgIn, note, sig);
+        (,,,,, uint256 recordedMinimum,) = v3.lastParams();
+        assertEq(recordedMinimum, minEth);
+        assertTrue(burner.noteUsed(note.wallet, note.nonce));
+        // Lower WETH must never lower the original USDG-derived OAK floor.
+        assertEq(MockUniversalRouter(payable(burnerRouter())).lastAmountOutMinimum(), 96_070e18);
+    }
+
+    function test_ActualWethRaisesOakFloor_OneWeiBelowReverts() public {
+        MockSwapRouter02(burner.SWAP_ROUTER_02()).setAmountOut(0.1 ether);
+        MockUniversalRouter v4 = MockUniversalRouter(payable(burnerRouter()));
+        uint256 expectedMinimum = 192_140e18;
+        v4.setAmountOut(expectedMinimum - 1);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        vm.expectRevert(
+            abi.encodeWithSelector(MockUniversalRouter.TooLittleReceived.selector, expectedMinimum, expectedMinimum - 1)
+        );
+        burner.buyAndBurn(100e6, note, sig);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
+
+        v4.setAmountOut(expectedMinimum);
+        uint256 supplyBefore = oak.totalSupply();
+        burner.buyAndBurn(100e6, note, sig);
+        assertEq(v4.lastAmountOutMinimum(), expectedMinimum);
+        assertEq(supplyBefore - oak.totalSupply(), expectedMinimum);
+    }
+
+    function test_FloorPriceUsesMaxOfNoteAndSpot() public {
+        uint256[3] memory prices = [DEFAULT_OAK_PER_ETH * 9 / 10, DEFAULT_OAK_PER_ETH, DEFAULT_OAK_PER_ETH * 11 / 10];
+        uint256[3] memory expected = [uint256(96_070e18), uint256(96_070e18), uint256(105_677e18)];
+        for (uint256 i; i < prices.length; ++i) {
+            (PriceNote memory note, bytes memory sig) = _signedNote(prices[i], address(this));
+            burner.buyAndBurn(100e6, note, sig);
+            assertEq(MockUniversalRouter(payable(burnerRouter())).lastAmountOutMinimum(), expected[i]);
+        }
+    }
+
+    function test_AbsoluteChunkCeiling250Usdg_ExactAccepted_OneUnitAboveRejected() public {
+        assertEq(burner.MAX_CHUNK_USDG(), 250e6);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        vm.expectRevert(abi.encodeWithSelector(OakBurner.ChunkTooLarge.selector, 250e6 + 1, 250e6));
+        burner.buyAndBurn(250e6 + 1, note, sig);
+        assertFalse(burner.noteUsed(note.wallet, note.nonce));
+        burner.buyAndBurn(250e6, note, sig);
+        assertTrue(burner.noteUsed(note.wallet, note.nonce));
+    }
+
+    function test_SmallBurnThenDeposit_SweepsOnlyUnspentSnapshot() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 100e6);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 timer = target.armedAt();
+        (PriceNote memory note, bytes memory sig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(500_000, note, sig);
+        usdg.mint(address(target), 7e6);
+        assertEq(target.armedAt(), timer);
+        assertEq(target.armedBalance(), 100e6);
+        assertEq(target.armedRemaining(), 99_500_000);
+        vm.warp(uint256(timer) + 90 days);
+        vm.prank(safe);
+        target.sweepStuck();
+        assertEq(usdg.balanceOf(safe), 99_500_000);
+        assertEq(usdg.balanceOf(address(target)), 7e6);
+        _assertSweepCleared(target);
+    }
+
+    function test_SubthresholdBurnsDoNotMoveOnePercentThreshold() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 10_100);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 timer = target.armedAt();
+        for (uint256 i; i < 3; ++i) {
+            (PriceNote memory note, bytes memory sig) =
+                _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+            target.buyAndBurn(100, note, sig);
+            assertEq(target.armedBalance(), 10_100);
+            assertEq(target.armedRemaining(), 10_100 - (i + 1) * 100);
+            assertEq(target.armedAt(), timer);
+        }
+        (PriceNote memory exact, bytes memory exactSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(101, exact, exactSig);
+        _assertSweepCleared(target);
+    }
+
+    function test_ExhaustingRemainderBelowOnePercentDisarmsAndClearsFlag() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 10_100);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 timer = target.armedAt();
+        for (uint256 i; i < 100; ++i) {
+            (PriceNote memory note, bytes memory sig) =
+                _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+            target.buyAndBurn(100, note, sig);
+            assertEq(target.armedBalance(), 10_100);
+            assertEq(target.armedAt(), timer);
+        }
+        assertEq(target.armedRemaining(), 100);
+        oracle.setPriceSigner(address(0));
+        target.flagSignerChange();
+        oracle.setPriceSigner(signer);
+        usdg.mint(address(target), 1e6);
+        (PriceNote memory last, bytes memory lastSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(100, last, lastSig);
+        _assertSweepCleared(target);
+        assertEq(usdg.balanceOf(address(target)), 1e6);
+    }
+
+    function test_LiquidityChangeCannotMoveDisarmThreshold() public {
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), 100e6);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 timer = target.armedAt();
+        oracle.setLiquidityUsdgE6(100_000 * 200);
+        (PriceNote memory small, bytes memory smallSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(100_000, small, smallSig);
+        assertEq(target.armedAt(), timer);
+        oracle.setLiquidityUsdgE6(DEFAULT_LIQUIDITY_USDG_E6);
+        (PriceNote memory exact, bytes memory exactSig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        target.buyAndBurn(1e6, exact, exactSig);
+        _assertSweepCleared(target);
+    }
+
+    function test_FlaggedSignerToggleBackCannotSweep() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint64 timer = burner.armedAt();
+        oracle.setPriceSigner(address(0));
+        vm.prank(makeAddr("permissionless-watcher"));
+        burner.flagSignerChange();
+        assertTrue(burner.armedSignerChanged());
+        oracle.setPriceSigner(signer);
+        burner.flagSignerChange();
+        assertTrue(burner.armedSignerChanged());
+        vm.warp(uint256(timer) + 90 days);
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+        assertEq(burner.armedAt(), timer);
+        assertEq(burner.armedSigner(), signer);
+        assertEq(usdg.balanceOf(safe), 0);
+    }
+
+    function test_UnflaggedToggleBackResidualStillSweeps() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint64 timer = burner.armedAt();
+        uint256 snapshot = burner.armedRemaining();
+        oracle.setPriceSigner(address(0));
+        vm.warp(uint256(timer) + 90 days);
+        oracle.setPriceSigner(signer);
+        vm.prank(safe);
+        burner.sweepStuck();
+        assertEq(usdg.balanceOf(safe), snapshot);
+        _assertSweepCleared(burner);
+    }
+
+    function test_LiveZeroOrRotatedSignerCannotSweep() public {
+        vm.prank(safe);
+        burner.armSweep();
+        vm.warp(uint256(burner.armedAt()) + 90 days);
+        oracle.setPriceSigner(address(0));
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+        oracle.setPriceSigner(vm.addr(OTHER_SIGNER_PK));
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+    }
+
+    function test_FlagWithUnchangedSignerCannotGriefSweep() public {
+        burner.flagSignerChange();
+        assertFalse(burner.armedSignerChanged());
+        vm.prank(safe);
+        burner.armSweep();
+        assertEq(burner.armedSigner(), signer);
+        burner.flagSignerChange();
+        assertFalse(burner.armedSignerChanged());
+        vm.warp(uint256(burner.armedAt()) + 90 days);
+        vm.prank(safe);
+        burner.sweepStuck();
+        assertGt(usdg.balanceOf(safe), 0);
+        _assertSweepCleared(burner);
+    }
+
+    function test_RearmRequiresFlagAndNonzeroSigner_RestartsAllSnapshots() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint64 timer = burner.armedAt();
+        oracle.setPriceSigner(vm.addr(OTHER_SIGNER_PK));
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.AlreadyArmed.selector);
+        burner.armSweep();
+        burner.flagSignerChange();
+        vm.expectRevert(OakBurner.OnlySafe.selector);
+        burner.armSweep();
+        oracle.setPriceSigner(address(0));
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.InvalidAddress.selector);
+        burner.armSweep();
+        oracle.setPriceSigner(vm.addr(OTHER_SIGNER_PK));
+        usdg.mint(address(burner), 77);
+        vm.warp(uint256(timer) + 20 days);
+        vm.prank(safe);
+        burner.armSweep();
+        assertEq(burner.armedAt(), block.timestamp);
+        assertEq(burner.armedBalance(), usdg.balanceOf(address(burner)));
+        assertEq(burner.armedRemaining(), burner.armedBalance());
+        assertEq(burner.armedSigner(), vm.addr(OTHER_SIGNER_PK));
+        assertFalse(burner.armedSignerChanged());
+        vm.warp(uint256(timer) + 90 days);
+        vm.prank(safe);
+        vm.expectPartialRevert(OakBurner.SweepNotReady.selector);
+        burner.sweepStuck();
+        vm.warp(uint256(timer) + 110 days);
+        vm.prank(safe);
+        burner.sweepStuck();
+        _assertSweepCleared(burner);
+    }
+
+    function test_ArmWithZeroSignerRejected() public {
+        oracle.setPriceSigner(address(0));
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.InvalidAddress.selector);
+        burner.armSweep();
+        _assertSweepCleared(burner);
+    }
+
+    function test_ArmAndLastBurnTimestampsShareSlotWithoutCorruption() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint64 timer = burner.armedAt();
+        vm.warp(block.timestamp + 1 days);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        burner.buyAndBurn(1e6, note, sig);
+        // ReentrancyGuard occupies slot 0; noteUsed occupies slot 1; both uint64s occupy slot 2.
+        uint256 packed = uint256(vm.load(address(burner), bytes32(uint256(2))));
+        assertEq(uint64(packed), timer);
+        assertEq(uint64(packed >> 64), block.timestamp);
+        assertEq(burner.armedAt(), timer);
+        vm.warp(uint256(timer) + 90 days);
+        vm.prank(safe);
+        burner.sweepStuck();
+        packed = uint256(vm.load(address(burner), bytes32(uint256(2))));
+        assertEq(uint64(packed), 0);
+        assertEq(uint64(packed >> 64), uint64(timer + 1 days));
+        assertEq(burner.lastBurnAt(), uint64(timer + 1 days));
+    }
+
+    function test_RouterAllowanceResetAfterPartialSpend() public {
+        // Emulate a router spending less than the approved input, to ensure the explicit reset matters.
+        MockSwapRouter02 v3 = MockSwapRouter02(burner.SWAP_ROUTER_02());
+        v3.setSpendBps(9_000);
+        (PriceNote memory note, bytes memory sig) = _signedNote(DEFAULT_OAK_PER_ETH, address(this));
+        burner.buyAndBurn(100e6, note, sig);
+        assertEq(usdg.allowance(address(burner), address(v3)), 0);
+    }
+
+    function testFuzz_ConstructorRequiresExactly18Decimals(uint8 decimals_) public {
+        if (decimals_ == 18) {
+            assertEq(_newBurner(decimals_).oakDecimals(), 18);
+        } else {
+            vm.expectRevert(abi.encodeWithSelector(OakBurner.InvalidOakDecimals.selector, decimals_));
+            _newBurner(decimals_);
+        }
+    }
+
+    function testFuzz_PartialBurnSequencePreservesSnapshotAndExcludesDeposits(
+        uint64 armedSeed,
+        uint64 depositSeed,
+        uint64 burnSeed,
+        uint8 countSeed
+    ) public {
+        uint256 snapshot = bound(uint256(armedSeed), 10_000, 1_000e6);
+        uint256 deposit = bound(uint256(depositSeed), 1, 1_000e6);
+        uint256 threshold = (snapshot + 99) / 100;
+        uint256 spend = bound(uint256(burnSeed), 1, threshold - 1);
+        uint256 count = bound(uint256(countSeed), 1, 12);
+        OakBurner target = _newBurner(18);
+        usdg.mint(address(target), snapshot);
+        vm.prank(safe);
+        target.armSweep();
+        uint64 timer = target.armedAt();
+        usdg.mint(address(target), deposit);
+        for (uint256 i; i < count; ++i) {
+            (PriceNote memory note, bytes memory sig) =
+                _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+            target.buyAndBurn(spend, note, sig);
+            assertEq(target.armedAt(), timer);
+            assertEq(target.armedBalance(), snapshot);
+            assertEq(target.armedRemaining(), snapshot - spend * (i + 1));
+        }
+        vm.warp(uint256(timer) + 90 days);
+        vm.prank(safe);
+        target.sweepStuck();
+        assertEq(usdg.balanceOf(safe), snapshot - spend * count);
+        assertEq(usdg.balanceOf(address(target)), deposit);
+        _assertSweepCleared(target);
+    }
+
+    function test_DocumentedSweepLifecycleMatchesPublicInterface() public {
+        OakBurner target = _newBurner(18);
+        IOakBurner api = IOakBurner(address(target));
+        usdg.mint(address(target), 100e6);
+        vm.prank(safe);
+        api.armSweep();
+        assertEq(api.armedBalance(), 100e6);
+        assertEq(api.armedRemaining(), 100e6);
+        assertEq(api.armedSigner(), signer);
+        assertFalse(api.armedSignerChanged());
+        (PriceNote memory note, bytes memory sig) =
+            _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
+        api.buyAndBurn(500_000, note, sig);
+        assertTrue(api.noteUsed(note.wallet, note.nonce));
+        assertEq(api.armedBalance(), 100e6);
+        assertEq(api.armedRemaining(), 99_500_000);
+        assertEq(api.lastBurnAt(), block.timestamp);
+        api.flagSignerChange();
+        assertFalse(api.armedSignerChanged());
+        usdg.mint(address(target), 1e6);
+        vm.warp(uint256(api.armedAt()) + 90 days);
+        vm.prank(safe);
+        api.sweepStuck();
+        assertEq(usdg.balanceOf(safe), 99_500_000);
+        assertEq(usdg.balanceOf(address(target)), 1e6);
+        _assertSweepCleared(target);
+    }
+
+    function _assertSweepCleared(OakBurner target) internal view {
+        assertEq(target.armedAt(), 0);
+        assertEq(target.armedBalance(), 0);
+        assertEq(target.armedRemaining(), 0);
+        assertEq(target.armedSigner(), address(0));
+        assertFalse(target.armedSignerChanged());
+    }
+
     function _installRouteMocks() internal {
         MockWeth wethImplementation = new MockWeth();
         MockSwapRouter02 v3Implementation = new MockSwapRouter02();
@@ -954,7 +1337,7 @@ contract OakBurnerTest is OakBurnerAssertions {
         vm.etch(PONS_HOOK, address(feePolicyImplementation).code);
         vm.etch(PONS_FACTORY, address(launchRecordsImplementation).code);
         vm.deal(0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73, 10_000 ether);
-        MockSwapRouter02(0xCaf681a66D020601342297493863E78C959E5cb2).setAmountOut(DEFAULT_V3_OUT);
+        MockSwapRouter02(0xCaf681a66D020601342297493863E78C959E5cb2).setOracle(oracle);
         MockUniversalRouter(payable(0x204FAca1764B154221e35c0d20aBb3c525710498)).setAmountOut(DEFAULT_OAK_OUT);
         MockPonsHook(PONS_HOOK).setHookFeeBps(100);
         MockPonsHook(PONS_HOOK).setLaunch(_poolId(address(oak)), 100, true);

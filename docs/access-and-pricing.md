@@ -33,8 +33,16 @@ Holding $OAK has no access perks. Oak uses 25% of its income to buy back and bur
 
 1. At least once a month, the operator converts 25% of that period's swap, bridge, send, Morpho bundle, Clanker LP reward share, and partner referral fee income to USDG.
 2. The operator transfers that USDG to `OakBurner` (`0x0704AE41934EE9b71A85cBd308786CfE503108f4`) on Robinhood Chain first.
-3. The operator wallet fetches a caller-bound `for: "burner"` price note from the hosted service (`OakOracle` verifies that `note.wallet == msg.sender`, that the note is within 300 seconds, and that the signed `$OAK`-per-ETH rate is within the 50% oracle guard band, while `OakBurner` enforces its tighter 10% live-spot check and output floor).
-4. The operator calls `buyAndBurn(usdgIn, note, sig)` on `OakBurner` in chunks of at most `oracle.liquidityUsdgE6() / 200` (`0.5%` of live pool USDG liquidity per call), swapping USDG -> WETH -> `$OAK` and sending the bought `$OAK` to `0x000000000000000000000000000000000000dEaD`.
+3. Burns depend on price notes from Oak's server. The operator wallet fetches a caller-bound `for: "burner"` price note from the hosted service (`OakOracle` verifies that `note.wallet == msg.sender`, that the note is within 300 seconds, and that the signed `$OAK`-per-ETH rate is within the 50% oracle guard band, while `OakBurner` enforces its tighter 10% live-spot check and output floor).
+4. The operator calls `buyAndBurn(usdgIn, note, sig)` on `OakBurner` in chunks of at most `oracle.liquidityUsdgE6() / 200` (`0.5%` of live pool USDG liquidity per call), swapping USDG -> WETH -> `$OAK` and calling `oak.burn()` on the bought `$OAK`, lowering `totalSupply`.
 5. Public burn announcements state `"we burned"` and link the on-chain `OakBurner` transactions.
+
+Since the Oak 0.3.10 server release (2026-11-16), burner notes are issued only to the operator wallet. There is no permissionless fallback if the server withholds notes or is unavailable. The owner address (`safe`) controls the price signer on `OakOracle` and can pause all note-based actions, such as burns, by setting it to zero.
+
+The revised burner source is not deployed yet. It limits each call to the lower of 0.5% of live pool USDG liquidity and 250 USDG, requires the first leg to deliver at least 99.5% of the WETH implied by the 30-minute ETH/USD average, and re-derives the OAK floor from the WETH actually received using the higher of the note price and live spot. OAK must have 18 decimals. Tokens other than USDG sent to `OakBurner` cannot be recovered.
+
+The revised source gives a sweep 90 days of notice. Only a burn of at least 1% of the armed balance, rounded up, or one that uses up the armed remainder disarms it. A sweep pays at most the part of the armed balance not yet burned, bounded by the current USDG balance, and is void if the price signer changes after arming; anyone can flag that change.
+
+Sending OAK to `0x000000000000000000000000000000000000dEaD` leaves `totalSupply` unchanged.
 
 See [security](security.md) for the exact on-chain oracle and burner checks. The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed on Robinhood Chain and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
