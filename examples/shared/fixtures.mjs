@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 import { ADDRESSES, ROUTE_EXECUTORS } from '@oakagentkit/core/addresses';
 import { formatAmount } from '@oakagentkit/core/amounts';
+import { ECOSYSTEM_TOKENS } from '@oakagentkit/core/tokens';
 import { OAK_SWAP_FEE, oakSwapFeeAmount } from '@oakagentkit/core/oak-fee';
 import { buildSwapFromQuote, normalizeQuote, computeMinAmountOut, encodeKyberSwapData, encodeVeloraSwapData, formatVenueFeeDisclosure, veloraCalldataMinimum } from '@oakagentkit/core/swap';
 import { connect, disabled, publicAddress } from './client.mjs';
@@ -120,13 +121,25 @@ export async function fixtureConnection({ overrides = {}, calls = [], responses 
     },
     fixtureOptions: {
       now, wormhole: { payerMode: 'off' }, wormholeFetch: async () => Response.json({}),
-      // FOBO escrow is read locally, including order zero and a stable block check.
+      // Partner balances and FOBO escrow are read locally; HOOKR deliberately fails.
       moduleClientFor: chainId => {
         if (chainId !== 4663) throw new Error('Unexpected fixture chain.');
         const methods = {
           getChainId: async () => 4663,
           getBlock: async () => ({ number: 123n, hash: `0x${'1'.repeat(64)}` }),
           readContract: async args => {
+            if (args.functionName === 'aggregate3') return args.args[0].map(({ target }) => {
+              const token = ECOSYSTEM_TOKENS.find(token => token.address.toLowerCase() === target.toLowerCase());
+              if (!token) throw new Error(`Unexpected fixture balance token: ${target}`);
+              return token.symbol === 'HOOKR' ? { success: false, returnData: '0x' }
+                : { success: true, returnData: `0x${'0'.repeat(64)}` };
+            });
+            if (args.functionName === 'balanceOf') {
+              const token = ECOSYSTEM_TOKENS.find(token => token.address.toLowerCase() === args.address.toLowerCase());
+              if (!token) throw new Error(`Unexpected fixture balance token: ${args.address}`);
+              if (token.symbol === 'HOOKR') throw new Error('Fixture HOOKR balance unavailable');
+              return 0n;
+            }
             if (args.functionName === 'orderCount') return 0n;
             if (args.functionName === 'getOrder' && args.args[0] === 0n)
               return { owner: publicAddress, remaining: 0n, kind: 0 };

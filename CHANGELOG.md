@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.14 — 2026-11-18
+
+- Priors starter lines are available through Oak, with the bond, invite and consent explained before each approval. Borrowing and bond release show the USDG coming back to your wallet.
+- Hookr supports a first sell with the approvals it needs, and confirmations show readable token names, amounts and trading rules.
+- Hookr explains pool-specific identity and score requirements, and launch previews leave time for their approval steps.
+- Hookr buys go through after you take time to review them, keeping the minimum you approved, and the swap is checked before its approval is sent.
+- Balances show $ZENI and other partner tokens directly, and newly received tokens appear sooner.
+- Sends work with smaller ETH balances and explain when a smart wallet can forward the funds it receives.
+- Official stock-token labels stay readable, and the guides explain which reads use Oak's server and which use your own RPC.
+- Previews and confirmations make fewer network calls.
+- Approval reviews focus their warnings on text that comes from tokens and other projects.
+- Claimable rewards say which programs they cover, and where to check Hookr and FOBO claims.
+- A mistyped action ID gets a clear next step: ask for a fresh summary, then approve it.
+- Server: deployment settings are checked against the published addresses, and public activity figures refresh regularly.
+
 ## 0.3.12 — 2026-11-17 (published)
 
 - [Fixed] Borro deposits go through while the vault is earning interest.

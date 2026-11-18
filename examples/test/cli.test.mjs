@@ -30,6 +30,12 @@ for (const [directory, expected] of [
       assert.match(result.stdout, /Expires: .*Z/);
       assert.doesNotMatch(result.stdout, /execution requested after yes/);
     }
+    if (directory === '03-portfolio-agent') {
+      const resultData = JSON.parse(result.stdout.slice(result.stdout.indexOf('{')));
+      const unavailable = resultData.balances.find(item => item.token.symbol === 'HOOKR');
+      assert.equal(unavailable.amount, 'unavailable');
+      assert.equal(unavailable.humanAmount, 'unavailable');
+    }
     if (expected) assert.match(result.stdout, expected);
     else {
       const output = /^(\d+) tools \(names and JSON input schemas\):\n([\s\S]+)$/m.exec(result.stdout);

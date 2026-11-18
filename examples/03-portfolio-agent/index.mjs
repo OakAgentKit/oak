@@ -18,7 +18,8 @@ export async function portfolio(client) {
   }
   for (const program of positionStatus.notIndexed) warnings.add(`${program}: not indexed`);
   return {
-    balances: balances.map(item => ({ ...item, humanAmount: formatAmount(item.amount, item.token.decimals) })),
+    balances: balances.map(item => ({ ...item, humanAmount: item.amount === 'unavailable'
+      ? 'unavailable' : formatAmount(item.amount, item.token.decimals) })),
     positions, warnings: [...warnings],
     coverage: { incomplete: positionStatus.incomplete, notIndexed: positionStatus.notIndexed, programs: positionStatus.programs },
     ...(balanceStatus.summary ? { balanceSummary: balanceStatus.summary } : {}),

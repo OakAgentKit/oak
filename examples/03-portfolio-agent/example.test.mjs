@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { ECOSYSTEM_TOKENS } from '@oakagentkit/core/tokens';
 import { fixtureConnection } from '../shared/fixtures.mjs';
 import { portfolio } from './index.mjs';
-test('balances and cross-project positions use two hosted reads plus local FOBO escrow reads', async () => {
+test('balances and cross-project positions use two hosted reads plus local partner balance and FOBO escrow reads', async () => {
   const calls = [], rpcCalls = [], signingCalls = [];
   const connection = await fixtureConnection({ calls, rpcCalls, signingCalls });
   try {
@@ -16,8 +17,12 @@ test('balances and cross-project positions use two hosted reads plus local FOBO 
     assert.deepEqual(result.coverage.incomplete, []);
     assert.deepEqual(result.coverage.notIndexed, []);
     assert.deepEqual(result.coverage.programs.at(-1), { program: 'fobo', status: 'complete' });
-    assert.deepEqual(rpcCalls.map(call => call.name), ['getChainId', 'getBlock', 'readContract', 'readContract', 'getBlock']);
-    assert.deepEqual(rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName), ['orderCount', 'getOrder']);
+    assert.deepEqual(rpcCalls.map(call => call.name), ['getChainId', 'getBlock', 'readContract', 'readContract', 'readContract', 'getBlock']);
+    assert.deepEqual(rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName), ['orderCount', 'getOrder', 'aggregate3']);
+    const partnerRead = rpcCalls.find(call => call.args[0]?.functionName === 'aggregate3');
+    assert.deepEqual(partnerRead.args[0].args[0].map(call => call.target), ECOSYSTEM_TOKENS.map(token => token.address));
+    assert.deepEqual(result.balances.map(item => [item.token.symbol, item.amount, item.humanAmount]),
+      [['USDG', '25000000', '25'], ['HOOKR', 'unavailable', 'unavailable']]);
     assert.deepEqual(signingCalls, []);
   } finally { await connection.close(); }
 });
@@ -44,7 +49,14 @@ test('coverage gaps without error rows remain visible', async () => {
 });
 
 test('structured balances preserve the empty-wallet summary without inventing setup state', async () => {
-  const connection = await fixtureConnection({ overrides: { balances: () => [] } });
+  const connection = await fixtureConnection({ overrides: { balances: () => [] }, rpcOverrides: {
+    readContract: async args => {
+      if (args.functionName === 'aggregate3') return args.args[0].map(() => ({ success: true, returnData: `0x${'0'.repeat(64)}` }));
+      if (args.functionName === 'orderCount') return 0n;
+      if (args.functionName === 'getOrder') return { owner: '0x1111111111111111111111111111111111111111', remaining: 0n, kind: 0 };
+      throw new Error('Unexpected empty-wallet fixture read');
+    },
+  } });
   try {
     const result = await portfolio(connection.client);
     assert.deepEqual(result.balances, []);
@@ -88,11 +100,14 @@ test('local FOBO nonzero escrow is retained separately from wallet balances', as
   } finally { await connection.close(); }
 });
 
-test('legacy array text and new structured items retain token metadata and exact amounts', async () => {
+test('legacy array text and structured items render unavailable balances and retain exact numeric amounts', async () => {
   const item = { token: { address: '0x2222222222222222222222222222222222222222', symbol: 'USDG', decimals: 6, chainId: 4663 }, amount: '9007199254740993000001' };
+  const unavailable = { token: { ...item.token, symbol: 'HOOKR', decimals: 18 }, amount: 'unavailable',
+    note: 'Balance read failed; retry later.', usdEstimate: null, estimateReason: 'Balance unavailable.' };
+  const zero = { ...item, amount: '0' };
   for (const structured of [false, true]) {
     const client = { callTool: async ({ name }) => {
-      const data = name === 'balances' ? [item] : { positions: [], incomplete: [], notIndexed: [], programs: [] };
+      const data = name === 'balances' ? [item, unavailable, zero] : { positions: [], incomplete: [], notIndexed: [], programs: [] };
       return { content: [{ type: 'text', text: JSON.stringify(data) }],
         ...(structured ? { structuredContent: name === 'balances' ? { items: data, summary: 'Balance summary', nextStep: 'Ask about setup' } : data } : {}) };
     } };
@@ -100,6 +115,8 @@ test('legacy array text and new structured items retain token metadata and exact
     assert.deepEqual(result.balances[0].token, item.token);
     assert.equal(result.balances[0].amount, item.amount);
     assert.equal(result.balances[0].humanAmount, '9007199254740993.000001');
+    assert.deepEqual(result.balances[1], { ...unavailable, humanAmount: 'unavailable' });
+    assert.equal(result.balances[2].humanAmount, '0');
     if (structured) {
       assert.equal(result.balanceSummary, 'Balance summary');
       assert.equal(result.nextStep, 'Ask about setup');
