@@ -52,7 +52,6 @@ for (const [label, overrides, pattern] of [
   ['wrong pair', { quote: args => ({ ...quoteFixture({ ...args, provider }), from: '0x4444444444444444444444444444444444444444' }) }, /does not match/],
   ['unverified token', { find_token: () => ({ matches: [], unverified: [], warnings: [] }) }, /unambiguous verified/],
   ['simulation failure', { preview: () => { throw new Error('Simulation failed'); } }, /unavailable|failed/i],
-  ['comparison unavailable', { uniswap_pools: () => { throw new Error('Fixture discovery unavailable'); } }, /could not be checked against another venue/],
   ['comparison wrong pair', { uniswap_quote: () => ({ quote: {
     input: { token: weth, amount: '10000000' }, output: { token: usdg, amount: '1000000' },
     minAmountOut: '990000', expiresAt: String(Math.floor(Date.now() / 1000) + 60),
@@ -69,6 +68,34 @@ for (const [label, overrides, pattern] of [
       assert.ok(toolCalls.every(call => call.name !== 'oak_execute'));
       assert.deepEqual(senderCalls, [], 'invalid routes and failed simulations never reach the sender');
       assert.deepEqual(signingCalls, []);
+    } finally { await connection.close(); }
+  });
+}
+for (const confirmed of [false, true]) {
+  test(`${provider} unavailable comparison shows its notice and respects answer ${confirmed}`, async () => {
+    const shown = [], toolCalls = [], senderCalls = [], signingCalls = [];
+    const connection = await fixtureConnection({ toolCalls, senderCalls, signingCalls, overrides: {
+      quote: args => quoteFixture({ ...args, provider }),
+      uniswap_pools: () => { throw new Error('Fixture discovery unavailable'); },
+    } });
+    try {
+      const result = await previewSwap(connection.client, {}, {
+        show: text => shown.push(text),
+        confirm: prepared => {
+          assert.ok(shown.some(text => text.includes('Oak could not compare this price with a second venue.')),
+            'the comparison notice is displayed before confirmation');
+          assert.ok(shown.includes(prepared.summary));
+          assert.deepEqual(senderCalls.map(call => call.name), ['prepareAction']);
+          assert.ok(toolCalls.every(call => call.name !== 'oak_execute'));
+          assert.deepEqual(signingCalls, []);
+          return confirmed;
+        },
+      });
+      assert.equal(result.status, confirmed ? 'not_submitted' : 'stopped');
+      assert.deepEqual(senderCalls.map(call => call.name), ['prepareAction', ...(confirmed ? ['executeAction'] : [])]);
+      assert.equal(toolCalls.filter(call => call.name === 'oak_execute').length, confirmed ? 1 : 0);
+      if (confirmed) assert.deepEqual(toolCalls.at(-1).arguments, { actionId: result.prepared.actionId });
+      assert.deepEqual(signingCalls, [], 'the fixture never signs or broadcasts');
     } finally { await connection.close(); }
   });
 }

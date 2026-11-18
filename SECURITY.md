@@ -17,9 +17,9 @@ safe harbor in [docs/security.md](docs/security.md#1-reporting-a-vulnerability),
 
 | Version | Supported |
 | --- | --- |
-| 0.3.11 (2026-11-17) | Yes |
-| 0.2.x | Upgrade to 0.3.11 for current fixes |
-| 0.1.x | Upgrade to 0.3.11 for current fixes |
+| 0.3.12 (2026-11-17) | Yes |
+| 0.2.x | Upgrade to 0.3.12 for current fixes |
+| 0.1.x | Upgrade to 0.3.12 for current fixes |
 | Earlier versions | Fixes ship in the latest release; please upgrade |
 
 The [security policy](docs/security.md) also covers local custody, confirmation and transaction checks,
