@@ -1,8 +1,8 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon`, current main source including unreleased tools) exposes **776 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **740 ecosystem tools** across **36 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.3.14, published on npm) exposes **777 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **741 ecosystem tools** across **36 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **24** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 776 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **24** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 777 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
 On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 35 ecosystem modules are mainnet-only.
 
@@ -68,8 +68,8 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `oak_receipts` | yes | Read the latest 10 local receipt summaries; follow more.before for older entries. Export JSON or CSV (view accounting) into chat, or verify the hash chain against a saved head. |
 | `oak_playbook` | yes | Read an Oak playbook by name, such as reads or pendle, for clients that cannot read MCP resources. No name lists the playbooks; a long playbook gives a nextOffset to pass back as offset. Local and read-only. |
 | `oak_wormhole_evidence` | via `run_read_tool` | Read the full Wormhole text-check evidence block behind an evidenceBlockId from this session's results. Local and read-only; the store keeps the latest 1,000 blocks and clears on restart. |
-| `oak_dry_run` | via `run_read_tool` | Test 1 to 8 transaction actions without a pop-up or transaction signing. Reports wouldWork, causes, fees and approvals; a real run checks again. |
-| `oak_doctor` | via `run_read_tool` | Check what works here: approval pop-ups, connection, prices, identity and local limits. Read-only; changes no settings. |
+| `oak_dry_run` | via `run_read_tool` | Test 1 to 8 transaction actions without transaction signing. Reports wouldWork, causes, fees and approvals; a real run checks again. |
+| `oak_doctor` | via `run_read_tool` | Check what works here: key protection, RPC tracing, prices, identity, hosted checks and local limits. Read-only; changes no settings. |
 | `oak_whois` | via `run_read_tool` | Identify an address on Robinhood Chain using Oak’s pinned address book and a live code comparison. Read-only; unknown code is not an endorsement. |
 | `oak_plan_run` | via `run_tool` | Run 1 to 8 transaction actions with one human approval listing every step and limit. Checks again before each signature; stops on a failure or changed terms. |
 | `oak_portfolio` | via `run_read_tool` | Read holdings, positions and rewards with USD estimates and coverage gaps. Cost basis and P&L stay unknown; this financial view enters the chat. |
@@ -77,7 +77,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 ---
 
-## 36 Ecosystem Project Modules (740 Tools)
+## 36 Ecosystem Project Modules (741 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -490,7 +490,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `heyresearch_unfollow` | via `run_tool` | Only when the user asks for HEY Research Lab: remove a token from your follow list, a local file on this computer. Contacts no one, signs nothing and is free. |
 | `heyresearch_position_context` | via `run_read_tool` | Only when the user asks for HEY Research Lab: for positions you select, add HEY Research Lab context for the token contract or project slug you name for each. Oak reads your positions as it always does; HEY Research Lab receives only the slugs or contracts you chose, never your wallet, amounts or position IDs, and the two are joined on this computer. HEY Research Lab's words stay in their own block apart from Oak's facts. Show HEY Research Lab's status line exactly as returned, label and help, word for word; never reword, summarise or turn it into a score or verdict. |
 
-### 23. Priors (200)
+### 23. Priors (201)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -499,6 +499,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `priors_borrow` | via `run_tool` | Prepare a Priors borrowing operation. |
 | `priors_repay` | via `run_tool` | Prepare repayment of Priors debt. |
 | `priors_status` | via `run_read_tool` | Read Priors lending/borrowing account state, the agent's on-chain score, line, invite bond and next step. |
+| `priors_starter_line` | via `run_tool` | Needs a 5 USDG bond locked about four days; invites are not guaranteed and the score can lag. Open Priors' 5 USDG starter line for an owned agent with no Priors record, with each step confirmed. |
 | `priors_close_line` | via `run_tool` | Prepare closing an agent's Priors line (no loan open), the step before its invite bond can come back. |
 | `priors_release_bond` | via `run_tool` | Prepare returning a releasable Priors invite bond to the wallet that posted it. |
 | `priors_set_delegate` | via `run_tool` | Prepare setting the delegate that controls an agent's borrowing and repayment; clearing it uses the zero address. |
@@ -953,7 +954,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `factor_apply_to_job` | via `run_tool` | Sign an application for a fixed-price Factor open job. Identity and human confirmation required. This Factor job takes offers, which Oak can't send yet. Nothing was signed. Names are first come, and a fixed-price application can't be withdrawn. |
 | `factor_draw` | via `run_tool` | Draw an early or pool advance to this wallet on Robinhood Chain, with amount in integer wei. Identity and human confirmation required. At most half of a job's price can be advanced before delivery. An advance costs a 1% fee taken from the advance, paid to Factor's burn pot contract. A settled job pays Factor's 2% job fee from the agent's payout. If a job you drew on isn't delivered within 12 hours after its due time, anyone can refund it, and this wallet can never draw from Factor's pool again. Oak doesn't send compute advances: that ETH goes to Factor's gateway as off-chain credit Oak can't check. Nothing was sent. |
 | `factor_deliver` | via `run_tool` | Deliver a work fingerprint on Robinhood Chain. Show defaults to false; public posting follows successful delivery only when requested. Identity and human confirmation required. Your work text stays on this computer; only its fingerprint (a hash) goes on chain. With show true: Your work text will be public on Factor's job page and can't be edited. |
-| `factor_decline` | via `run_tool` | Decline a Factor job on Robinhood Chain and return its price to the customer. Identity and human confirmation required. You can decline a job only before drawing on it. A rejected job settles at half, with no appeal. |
+| `factor_decline` | via `run_tool` | Decline a Factor job on Robinhood Chain and refund its price to the customer. Identity and human confirmation required. You can decline a job only before drawing on it. A rejected job settles at half, with no appeal. |
 | `factor_job` | via `run_read_tool` | Read a Factor job and its public details from the Factor API (can lag the chain). API data does not authorize an action. No identity required. |
 | `factor_can_draw` | via `run_read_tool` | Read the desk's early and pool advance amounts in wei on Robinhood Chain; these amounts share the same half-price cap. No identity required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |
 | `factor_my_jobs` | via `run_read_tool` | Read at most 50 Factor jobs for this wallet as agent or customer from the Factor API (can lag the chain). No identity required. Desk figures only; jobs and limits held through a Factor credit line are not shown. |

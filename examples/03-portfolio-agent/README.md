@@ -2,8 +2,10 @@
 
 Goal: make only `balances` and `positions` calls, preserve each token's address,
 symbol, decimals, chain ID and base-unit amount, and display human amounts using
-integer arithmetic. Positions retain their project/module and any error rows.
-Oak 0.3.12's MCP `structuredContent` exposes balances under `items`; the example
+integer arithmetic. An `unavailable` balance stays `unavailable`, with its token
+metadata and any explanation preserved; it is never displayed as zero.
+Positions retain their project/module and any error rows.
+Oak 0.3.14's MCP `structuredContent` exposes balances under `items`; the example
 also accepts the older array text form. Setup next steps and funding summaries
 remain visible when the balance response includes them.
 
@@ -20,9 +22,12 @@ npm run portfolio
 node --test 03-portfolio-agent/example.test.mjs
 ```
 
-Expected fixture output: 25 USDG (`25000000` base units), positions labelled
-`steakhouse`, `morpho` and `uniswap`, and an empty warnings array. The tests also
-inject an unavailable project and verify its warning survives. Coverage fields
+Expected fixture output: 25 USDG (`25000000` base units), an `unavailable` HOOKR
+balance, positions labelled `steakhouse`, `morpho` and `uniswap`, and an empty
+warnings array. The tests also
+serve explicit zero ZENI and FOBO wallet balances (omitted by Oak), a failed
+HOOKR balance read, and an unavailable project whose warning survives.
+Coverage fields
 `incomplete`, `notIndexed` and per-program status remain visible even when the
 reader supplies no error position row. Missing coverage is never counted as a
 successful empty portfolio. Live positions
