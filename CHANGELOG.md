@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.12 — 2026-11-17 (published)
+
+- [Fixed] Borro deposits go through while the vault is earning interest.
+- [Fixed] Sending to a smart-wallet account (EIP-7702) no longer asks for a contract override.
+- [Fixed] Stock buys spend less time checking approval history, and plans keep their progress between tries.
+- [Added] Tokyo Futuro adds the $ZENI report job loop: sign in, find a job, take it with an exact bond approval, deliver a report, and collect the payout.
+- [Added] Reward claims show a warning when the estimated gas costs more than the reward.
+- [Changed] Messages explain pending transactions, spending limits, service delays and refused plans more clearly; confirmations show readable token amounts.
+- [Changed] Swaps between verified tokens can show a quote without a second venue price, with a note explaining that Oak could not compare it. Conflicting or malformed quotes are still refused.
+- [Security] The server gives first-time wallets a fairer share of requests and checks its nonce log through one validated file handle.
+- [Removed] The unused server receipt index and its settings have been removed.
+- [Security] Gloam ships pinned npm dependencies, including updated ws and underscore versions.
+
 ## 0.3.11 — 2026-11-17 (published)
 
 - [Fixed] Stock buys are faster, with fewer repeated checks and quicker receipt updates.

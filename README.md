@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-Oak connects your AI agent to **35 projects on Robinhood Chain** through one
+Oak connects your AI agent to **36 projects on Robinhood Chain** through one
 local MCP server. Your agent can check balances, compare swap routes, manage
 vault and lending positions, bridge assets, and use project tools from the same
 connection. MCP is the standard that lets an AI app call external tools.
@@ -15,7 +15,7 @@ Oak is independent and is not affiliated with Robinhood.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Version 0.3.11 is published on npm** for `@oakagentkit/core` and
+**Version 0.3.12 is published on npm** for `@oakagentkit/core` and
 `@oakagentkit/addon`, plus the optional `@oakagentkit/gloam` engine. See the [changelog](CHANGELOG.md) for the fixes in this release.
 Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
 
@@ -33,7 +33,7 @@ npm install -g @oakagentkit/addon
 oak --version
 ```
 
-Version 0.3.11 is available.
+Version 0.3.12 is available.
 Run `oak --version` to check your installed version.
 
 ## Connect your agent
@@ -61,7 +61,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.3.11 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.3.12 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -90,9 +90,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuMTEiLCJtY3AiXX0%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.11%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjMuMTIiLCJtY3AiXX0%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.3.12%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.3.11 package through `npx`.
+These shortcuts run the pinned 0.3.12 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -123,6 +123,7 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 | Use AI models, web search and page reading | Raeto |
 | Find paid work and deliver it | Factor |
 | Read workflow checkpoints, recovery history and Upoch Scores | Upoch |
+| Take paid report jobs in `$ZENI`, deliver reports and collect payouts | Tokyo Futuro |
 | Browse, launch and trade coins; manage limit orders and claims | FOBO |
 | Use vaults and claim rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl, Chop |
 | Supply collateral, lend, borrow and repay | Morpho Blue, Priors, LayerBank, Borro |
@@ -134,10 +135,10 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 `earn_options` compares LayerBank and Pendle through a read-only helper.
 It is excluded from the project count.
 
-The mainnet add-on module manifest has 730 tools: 714 shared hosted tools and 16 local FOBO tools. The server has 715 tools including the server-only `oak_keyed_read` transport. The add-on has 36 module factories and 35 projects, excluding the read-only `earn_options` helper; the server has 35 factories and 34 projects because FOBO runs locally.
+The mainnet add-on module manifest has 736 tools: 720 shared hosted tools and 16 local FOBO tools. The server has 721 tools including the server-only `oak_keyed_read` transport. The add-on has 37 module factories and 36 projects, excluding the read-only `earn_options` helper; the server has 36 factories and 35 projects because FOBO runs locally.
 
-The catalog has **770 mainnet tools** and **47 testnet tools**. Your agent sees
-23 core tools on mainnet, or 17 on testnet, in `tools/list`, plus installed recipes. It can find and
+The catalog has **776 mainnet tools** and **47 testnet tools**. Your agent sees
+24 core tools on mainnet, or 18 on testnet, in `tools/list`, plus installed recipes. It can find and
 run the rest through `find_tool`, `run_read_tool`, and `run_tool`.
 The [tool reference](docs/mcp-tools-reference.md) lists every tool and its inputs.
 The [project guide](docs/robinhood-chain-projects.md) explains each integration.
@@ -165,6 +166,10 @@ Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak 
 ### Upoch
 
 `upoch_agent` and `upoch_explorer` are mainnet-only reads. Read workflow roles, checkpoints, recovery history and on-chain Upoch Scores; browse a bounded ranked workflow list. Upoch is a project Oak reads from. The Upoch Score measures recovery policy and checkpoint activity from on-chain facts; it does not rate trading performance or safety.
+
+### Tokyo Futuro
+
+Oak integrates with Tokyo Futuro. Tokyo Futuro's own team runs its product and contracts; Oak didn't build them and doesn't run them. `tokyofuturo_jobs`, `tokyofuturo_my_jobs`, `tokyofuturo_take_job`, `tokyofuturo_deliver_job` and `tokyofuturo_collect` handle paid report jobs in `$ZENI` (`0x6354a37799e96ed6CCaeCfFbE1c100FA7F30cec8`, 18 decimals) on `JobBoardV2` (`0x77D33320f782Be4D84c7931F102D99228Beff5C4`) on Robinhood Chain (`4663`). Sign-in, vouchers and report uploads run locally on your computer; Oak's server never receives your Tokyo Futuro bearer token or report text.
 
 ## Access and fees
 
@@ -240,7 +245,7 @@ The [offline examples](examples/README.md) run with fixture data.
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.3.11 -p @oakagentkit/gloam@0.3.11 oak mcp
+npx -y -p @oakagentkit/addon@0.3.12 -p @oakagentkit/gloam@0.3.12 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

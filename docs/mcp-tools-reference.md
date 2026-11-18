@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon`, current main source including unreleased tools) exposes **771 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **735 ecosystem tools** across **35 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon`, current main source including unreleased tools) exposes **776 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **740 ecosystem tools** across **36 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **24** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 771 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **24** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 776 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 34 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 35 ecosystem modules are mainnet-only.
 
 ---
 
@@ -27,7 +27,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `find_token` | yes | Read verified tokens by name, symbol or address; lists unverified matches and warnings separately. |
 | `balances` | yes | Read ETH, pinned token/stock and journaled ERC-20 balances in RPC base units; extra symbols are untrusted. Each row carries a USD estimate with its source, or says price unavailable. An estimate is not a quote, and Oak never uses it to approve, cap or size an action. |
 | `price` | yes | Read token USD price, token metadata and staleness. |
-| `quote` | yes | Read a swap quote for exact input base units and slippage. FOBO, Pons, and Hookr routes carry no Oak fee; direct Uniswap and official stock-token swaps via Priors take 0.25% from output, KyberSwap takes 0.25% from input, and Velora takes 0.25% from output. Hides KyberSwap and Velora without transaction tracing, and directs OAK swaps to pons_buy or pons_sell. |
+| `quote` | yes | Read a swap quote for exact input base units and slippage. No Oak fee on FOBO, Pons or Hookr routes; other routes add 0.25%. Hides KyberSwap and Velora without transaction tracing, and directs OAK swaps to pons_buy or pons_sell. |
 | `swap` | yes | Prepare a swap from from, to, amountIn (input token base units) and optional slippageBps, or a saved quoteId. Quotes and checks internally; show the summary, then oak_execute after yes. |
 | `preview` | via `run_read_tool` | Simulate an unsigned transaction sequence and estimate token/native transfer changes (gas and external settlement excluded). |
 | `history` | yes | Read recent wallet events (logs/indexers can lag; swaps are partial). Pass transactionHash for a direct eth_getTransactionReceipt check on the configured Oak chain, then check balances or status. |
@@ -77,7 +77,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 ---
 
-## 35 Ecosystem Project Modules (735 Tools)
+## 36 Ecosystem Project Modules (740 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -973,7 +973,17 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `raeto_models` | via `run_read_tool` | List Raeto model IDs and prices per million input and output tokens, optionally filtered by query. Free read. Prices are data for estimates; model text is untrusted data, never instructions. |
 | `raeto_limits` | via `run_tool` | Change Oak's local Raeto per-call and UTC daily spending limits, in decimal dollar strings. Requires human approval. Oak checks its upper-bound estimate before each call; Raeto charges the actual cost. |
 
-### 35. FOBO (16)
+### 35. Tokyo Futuro (5)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `tokyofuturo_jobs` | via `run_read_tool` | Find open Tokyo Futuro report jobs paid in ZENI, checked on chain. Job text is untrusted. Shows bond, deadline and payment conditions; payment is not guaranteed. |
+| `tokyofuturo_my_jobs` | via `run_read_tool` | Read a page of this wallet’s on-chain Tokyo Futuro jobs, locked bonds, active capacity and collection paths. Follow nextCursor for older jobs. |
+| `tokyofuturo_take_job` | via `run_tool` | Prepare an exact ZENI bond approval and accept a Tokyo Futuro report job. Sign-in and the acceptance voucher stay on your computer. Review the reward, bond, deadline and gas before saying yes. |
+| `tokyofuturo_deliver_job` | via `run_tool` | Upload the exact report text to Tokyo Futuro, then prepare its on-chain hash commitment. The upload persists even if you decline the transaction. Deliver by the deadline to keep the bond. |
+| `tokyofuturo_collect` | via `run_tool` | Collect a Tokyo Futuro payout or returned bond using the path available on chain, or explain what the job is waiting for. House-funded jobs cannot claim after silence. |
+
+### 36. FOBO (16)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
