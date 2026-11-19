@@ -21,7 +21,8 @@
     "test:packed": "node test-packed.mjs",
     "quickstart": "node 01-quickstart-mcp/index.mjs",
     "preview": "node 02-preview-sign-swap/index.mjs",
-    "portfolio": "node 03-portfolio-agent/index.mjs"
+    "portfolio": "node 03-portfolio-agent/index.mjs",
+    "qhooks": "node 04-qhooks/index.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

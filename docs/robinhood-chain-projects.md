@@ -106,3 +106,11 @@ Any Robinhood Chain (`4663`) project can ship opt-in declarative JSON recipes (`
 ## FOBO
 
 FOBO is an official Oak partner. Browse and search launches, read token details, current taxes and fees, holdings, rankings, claims, limit orders, supported payment currencies and transaction status. Prepare buys, sells, launches, limit orders, cancellations and creator, referral or vesting claims; Oak asks in chat before anything is signed. All 16 FOBO tools run locally through FOBO's MCP. FOBO's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+
+## QHooks public integration example
+
+The [QHooks example adapter](../examples/04-qhooks/) reads launches, exact-address token markets, token-based quotes, stored QProof evidence and the hook catalog on Robinhood Chain (`4663`) through `https://qhooks.com/mcp`. It also returns unsigned trade plans for the public Oak account and QHooks browser launch-review links, mapping an explicit/configured referrer or the signing wallet. Missing, stale and `not_checked` evidence stays explicit. QProof does not guarantee token safety or sellability.
+
+This example is preparation-only (`executionSupported: false`), introduced by this contribution; it does not add a native module to the published 0.3.10 catalog or change the 35-module count above. Native execution requires Oak-maintained pinned module guards and the normal `oak_prepare` summary, yes/no confirmation and `oak_execute` checks. It must never route arbitrary QHooks bytes through generic send. The launch link still uses QHooks' browser review and key flow. Both systems keep signing local to the signing wallet; this adapter never holds keys or sends a transaction.
+
+The example also supplies four opt-in, data-only `oak-recipe/v1` fee-configuration reads for live QOtcEscrow/QAgreements contracts. Recipes are labelled **as-is, not reviewed by Oak**. [Module boundary and maintainer checklist](../examples/04-qhooks/NATIVE-INTEGRATION.md).

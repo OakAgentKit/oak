@@ -1,10 +1,11 @@
 # Oak examples (MIT)
 
-Three small Node.js 22 examples using only exported npm package APIs:
+Node.js 22 examples using only exported npm package APIs:
 
 - [01-quickstart-mcp](01-quickstart-mcp/): connect an MCP client to the add-on and list names and schemas.
 - [02-preview-sign-swap](02-preview-sign-swap/): prepare a swap, read the plain summary, answer yes or no, then execute the exact action ID after yes.
 - [03-portfolio-agent](03-portfolio-agent/): read balances and positions across projects.
+- [04-qhooks](04-qhooks/): QHooks public reads and unsigned-plan adapter with offline fixtures; native Oak signing is not registered by this example.
 
 ## Install and test packed packages
 
