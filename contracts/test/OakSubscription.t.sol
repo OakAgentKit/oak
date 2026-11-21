@@ -188,6 +188,11 @@ contract ToggleRevertingOracle is IOakOracle {
         return _priceSigner;
     }
 
+    function priceSignerVersion() external view returns (uint256) {
+        _requireReadable();
+        return 0;
+    }
+
     function setPriceSigner(address signer) external {
         _requireReadable();
         _priceSigner = signer;

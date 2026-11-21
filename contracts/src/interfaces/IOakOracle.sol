@@ -17,8 +17,10 @@ interface IOakOracle {
     function liquidityUsdgE6() external view returns (uint256);
     function supplyNet() external view returns (uint256);
     function priceSigner() external view returns (address);
+    /// @notice Number of successful setPriceSigner calls since construction, including zero and same-address sets.
+    function priceSignerVersion() external view returns (uint256);
     /// @notice The owner address (`safe`) may set zero to pause all note-based actions, such as burns.
-    /// @dev Setting a nonzero signer restores note verification.
+    /// @dev Setting a nonzero signer restores note verification. Every successful call increments priceSignerVersion.
     function setPriceSigner(address signer) external;
 
     event PriceSignerSet(address signer);

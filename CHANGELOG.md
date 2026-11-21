@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 — 2026-11-21
+
+- Move a pool position with `move_pool`: exit, swap and re-enter with one yes.
+- Pay up to 8 people with `pay_many`, with every payment listed in the summary and each able to use its own token.
+- Use StonkBrokers Smart LP vaults on Robinhood Chain: read vaults and holdings, deposit with the withdrawal warning shown first, and withdraw. StonkBrokers' own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- Plans can hold 8 steps and 16 transactions, with every transaction, recipient and amount in one summary and a short overview on top.
+- Swaps use two transactions: an exact approval, then the swap with a signed permit.
+- Later plan steps can spend what earlier steps produce. After a move, Oak reports what remains in your wallet; after a stopped plan, one cleanup cancels every permission the plan opened.
+- Every tool shows what it costs or explains that it is not available through Oak yet. Orbio staking, Relay legacy vault withdrawals and HoodLock featured listings remain available through each project's own app.
+
 ## 0.3.14 — 2026-11-18
 
 - Priors starter lines are available through Oak, with the bond, invite and consent explained before each approval. Borrowing and bond release show the USDG coming back to your wallet.

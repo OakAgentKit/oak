@@ -98,6 +98,8 @@ contract OakOracle is IOakOracle {
 
     address public priceSigner;
     bool public readyLatched;
+    /// @inheritdoc IOakOracle
+    uint256 public override priceSignerVersion;
 
     error OnlySafe();
     error InvalidAddress();
@@ -252,10 +254,12 @@ contract OakOracle is IOakOracle {
     }
 
     /// @notice Set the price signer; zero intentionally pauses every note-based action.
-    /// @dev The owner address (`safe`) may restore a nonzero signer to resume note-based actions such as burns.
+    /// @dev Every successful call advances priceSignerVersion, including zero and same-address sets.
+    ///      The owner address (`safe`) may restore a nonzero signer to resume note-based actions such as burns.
     function setPriceSigner(address signer) external {
         if (msg.sender != safe) revert OnlySafe();
         priceSigner = signer;
+        ++priceSignerVersion;
         emit PriceSignerSet(signer);
     }
 

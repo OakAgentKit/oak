@@ -72,6 +72,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "armedSignerVersion",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
