@@ -14,6 +14,7 @@ contract MockOracle is IOakOracle {
     uint256 private _liquidityUsdgE6;
     uint256 private _supplyNet;
     address private _priceSigner;
+    uint256 public override priceSignerVersion;
     mapping(address source => bool unreadable) public sourceUnreadable;
 
     constructor(address ethUsdSource_, address spotSource_) {
@@ -75,6 +76,7 @@ contract MockOracle is IOakOracle {
 
     function setPriceSigner(address signer) external {
         _priceSigner = signer;
+        ++priceSignerVersion;
         emit PriceSignerSet(signer);
     }
 

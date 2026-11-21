@@ -1,10 +1,10 @@
 # What is Oak?
 
-Oak gives your AI agent one connection to explore and use 36 configured projects on Robinhood Chain.
+Oak gives your AI agent one connection to explore and use 37 configured projects on Robinhood Chain.
 You can ask it to check balances, look up project information or prepare an action,
 without connecting each project separately.
 
-![An illustration of Oak connecting its 36 configured Robinhood Chain project integrations](../assets/oak-world.webp)
+![An illustration of Oak connecting its 37 configured Robinhood Chain project integrations](../assets/oak-world.webp)
 
 The illustration represents those configured integrations, not every project on the chain.
 
@@ -12,13 +12,13 @@ The illustration represents those configured integrations, not every project on 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 777 mainnet tools in version 0.3.14 with consistent inputs
+If you build agents, the same connection gives you 789 mainnet tools in version 0.4.0 with consistent inputs
 and one local wallet. You can build your own agent workflows; every action still needs approval in chat.
-Version 0.3.14 shows your agent a short list of everyday tools; it finds and runs
+Version 0.4.0 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
-for the [36 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
+for the [37 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
 research, names and agent identities. Pons token launches are one example.
 
 ## Your first five minutes
@@ -30,7 +30,7 @@ research, names and agent identities. Pons token launches are one example.
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
    Send a little ETH for network fees when you want on-chain actions.
 
-**Release status:** Oak 0.3.14 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
+**Release status:** Oak 0.4.0 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
 $OAK has graduated on Pons. Reads need no identity; actions need a
 verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
 wallet address, network, and ERC-8004 identity status. See [access and pricing](access-and-pricing.md).

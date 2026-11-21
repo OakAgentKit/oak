@@ -105,6 +105,8 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
     address public override armedSigner;
     /// @inheritdoc IOakBurner
     bool public override armedSignerChanged;
+    /// @inheritdoc IOakBurner
+    uint256 public override armedSignerVersion;
 
     error InvalidAddress();
     error InvalidOakDecimals(uint8 decimals);
@@ -207,6 +209,7 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         armedRemaining = 0;
         armedSigner = address(0);
         armedSignerChanged = false;
+        armedSignerVersion = 0;
     }
 
     /// @inheritdoc IOakBurner
@@ -220,20 +223,27 @@ contract OakBurner is IOakBurner, ReentrancyGuard {
         armedBalance = balance;
         armedRemaining = balance;
         armedSigner = signer;
+        armedSignerVersion = oracle.priceSignerVersion();
         armedSignerChanged = false;
         emit SweepArmed(armedAt, balance);
     }
 
     /// @inheritdoc IOakBurner
     function flagSignerChange() external {
-        if (armedAt != 0 && oracle.priceSigner() != armedSigner) armedSignerChanged = true;
+        if (armedAt != 0 && (oracle.priceSigner() != armedSigner || oracle.priceSignerVersion() != armedSignerVersion))
+        {
+            armedSignerChanged = true;
+        }
     }
 
     /// @inheritdoc IOakBurner
     function sweepStuck() external nonReentrant onlySafe {
         uint64 armedAt_ = armedAt;
         if (armedAt_ == 0) revert NotArmed();
-        if (armedSignerChanged || oracle.priceSigner() != armedSigner) revert SignerChangedSinceArm();
+        if (
+            armedSignerChanged || oracle.priceSigner() != armedSigner
+                || oracle.priceSignerVersion() != armedSignerVersion
+        ) revert SignerChangedSinceArm();
         uint256 readyAt = uint256(armedAt_) + SWEEP_DELAY;
         if (block.timestamp < readyAt) revert SweepNotReady(readyAt);
 

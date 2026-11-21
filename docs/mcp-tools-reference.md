@@ -1,10 +1,10 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.3.14, published on npm) exposes **777 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **24 local lifecycle tools**, and **741 ecosystem tools** across **36 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.4.0, published on npm) exposes **789 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **28 local lifecycle tools**, and **749 ecosystem tools** across **37 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **24** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 777 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **28** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 789 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
-On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 24 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio` and `oak_claimable`). Swap routes and the other 35 ecosystem modules are mainnet-only.
+On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 28 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio`, `oak_claimable`, `collect_earnings`, `park_cash`, `move_pool` and `pay_many`). Swap routes and the other 36 ecosystem modules are mainnet-only.
 
 ---
 
@@ -46,7 +46,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 ---
 
-## Local Lifecycle Tools (24)
+## Local Lifecycle Tools (28)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
@@ -68,16 +68,20 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `oak_receipts` | yes | Read the latest 10 local receipt summaries; follow more.before for older entries. Export JSON or CSV (view accounting) into chat, or verify the hash chain against a saved head. |
 | `oak_playbook` | yes | Read an Oak playbook by name, such as reads or pendle, for clients that cannot read MCP resources. No name lists the playbooks; a long playbook gives a nextOffset to pass back as offset. Local and read-only. |
 | `oak_wormhole_evidence` | via `run_read_tool` | Read the full Wormhole text-check evidence block behind an evidenceBlockId from this session's results. Local and read-only; the store keeps the latest 1,000 blocks and clears on restart. |
-| `oak_dry_run` | via `run_read_tool` | Test 1 to 8 transaction actions without transaction signing. Reports wouldWork, causes, fees and approvals; a real run checks again. |
+| `oak_dry_run` | via `run_read_tool` | Test 1 to 8 actions with at most 16 transactions without signing. Reports wouldWork, causes, fees and approvals; a real run checks again. |
 | `oak_doctor` | via `run_read_tool` | Check what works here: key protection, RPC tracing, prices, identity, hosted checks and local limits. Read-only; changes no settings. |
 | `oak_whois` | via `run_read_tool` | Identify an address on Robinhood Chain using Oak’s pinned address book and a live code comparison. Read-only; unknown code is not an endorsement. |
-| `oak_plan_run` | via `run_tool` | Run 1 to 8 transaction actions with one human approval listing every step and limit. Checks again before each signature; stops on a failure or changed terms. |
+| `oak_plan_run` | via `run_tool` | Run 1 to 8 actions with at most 16 transactions under one human approval listing every transaction and limit. Checks again before each signature; stops on a failure or changed terms. |
 | `oak_portfolio` | via `run_read_tool` | Read holdings, positions and rewards with USD estimates and coverage gaps. Cost basis and P&L stay unknown; this financial view enters the chat. |
 | `oak_claimable` | via `run_read_tool` | Read claimable rewards, prices and unreadable programs. Lists ordered claim steps for oak_plan_run; prepares or sends no transactions. |
+| `collect_earnings` | yes | Prepare one plan that claims every pending reward worth more than its gas, and names each claim skipped and why. Show the summary; oak_execute after yes. |
+| `park_cash` | yes | Prepare one plan to park spare USDG in a savings spot or take it back. Skips any spot with no penalty-free exit now and says why. Show the summary; oak_execute after yes. |
+| `move_pool` | yes | Prepare one pool exit, its swaps and a new v4 entry as one plan. A 1% price limit is the default, at most 5%; one optional reason stamp. Show the summary; oak_execute after yes. |
+| `pay_many` | yes | Prepare up to eight payments as one plan; each may override the default token. Lists every recipient, token and amount, with lookalike warnings. Show the summary; oak_execute after yes. |
 
 ---
 
-## 36 Ecosystem Project Modules (741 Tools)
+## 37 Ecosystem Project Modules (749 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -318,7 +322,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `orbio_tx_status` | via `run_read_tool` | Read the status of an Orbio-related transaction on Robinhood Chain or Ethereum. |
 | `orbio_catalog` | via `run_read_tool` | Browse the Orbio catalog of models, tools or infrastructure with optional search and output-modality filters. |
 | `orbio_staking_status` | via `run_read_tool` | Read your ORBIO staking balance, pending rewards and staking parameters. |
-| `orbio_stake` | via `run_tool` | Prepare staking ORBIO. |
+| `orbio_stake` | via `run_tool` | Blocked: Orbio staking is not available through Oak yet because Oak cannot read the staking fee and show its cost. Use Orbio's own app. |
 | `orbio_unstake` | via `run_tool` | Prepare unstaking ORBIO. |
 | `orbio_claim_staking` | via `run_tool` | Prepare claiming ORBIO staking rewards. |
 | `orbio_agent_status` | via `run_read_tool` | Read Orbio agent launches, analytics or price charts, for one agent or the agents you own. |
@@ -359,7 +363,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `hoodlock_admin` | via `run_tool` | Prepare an allow-listed HoodLock administrator action, usable only by the contract admin. |
 | `hoodlock_public` | via `run_read_tool` | Read public HoodLock data such as LP locks, airdrop lists, featured tiers, buyback status and referral availability. |
 | `hoodlock_buyback` | via `run_tool` | Prepare the pinned HoodLock buyback vault execute call, with no caller-supplied amount, recipient or calldata. |
-| `hoodlock_feature_buy` | via `run_tool` | Buy a HoodLock featured listing with an exact quoted ETH payment and a separate publication claim; human confirmation required. |
+| `hoodlock_feature_buy` | via `run_tool` | Blocked: HoodLock featured-listing purchases are not available through Oak yet. Nothing was paid. Use the HoodLock website. |
 | `hoodlock_feature_claim` | via `run_tool` | Reconcile an already-paid HoodLock featured listing without paying again; human confirmation required. |
 | `hoodlock_referral_register` | via `run_tool` | Register a HoodLock referral code through a local wallet message and ephemeral session; human confirmation required. |
 
@@ -410,7 +414,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `relay_recovery_balances` | via `run_read_tool` | Read this wallet’s credited Relay recovery balances; this does not attest deposits. |
 | `relay_withdrawal_status` | via `run_read_tool` | Read a Relay programmatic withdrawal job status; verify its chain receipt separately. |
 | `relay_vault_status` | via `run_read_tool` | Read legacy Relay vault shares and exit liquidity; needs OAK_RPC_URL_1 or OAK_RPC_URL_42161 for that chain. New deposits are unsupported. |
-| `relay_vault_withdraw` | via `run_tool` | Preview a legacy Relay vault exit to this wallet on Ethereum or Arbitrum, in WETH or native ETH. |
+| `relay_vault_withdraw` | via `run_tool` | Blocked: Relay legacy vault withdrawals are not available through Oak yet because Oak cannot verify the vault withdrawal fees and minimum receipt. Use Relay's withdrawal app. |
 
 ### 19. Lighter (1)
 
@@ -723,7 +727,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |
-| `uniswap_add` | via `run_tool` | State oak.lpWarning first before preparing any liquidity addition. Prepare Uniswap liquidity addition for version v3 or v4. A v4 deposit takes several approvals in a row; if the price moves meanwhile, Oak re-sizes the deposit inside the limits already approved. On a v4 deposit, slippageBps is extra room for price movement (default 0.5%, at most 5%). |
+| `uniswap_add` | via `run_tool` | State oak.lpWarning first before preparing any liquidity addition. Prepare Uniswap liquidity addition for version v3 or v4. For a new v4 mint, slippageBps limits price movement (default 1%, at most 5%). The summary shows the most of each token the step can use. Inside that limit Oak may shrink liquidity to at least 90% of the amount shown, keeping the same pool, ticks, recipient, deadline and token caps. Beyond either limit Oak stops. Swaps in the same plan use the same price limit. |
 | `uniswap_collect` | via `run_tool` | Prepare Uniswap v3/v4 position fee collection. |
 | `uniswap_remove` | via `run_tool` | Prepare Uniswap v3/v4 liquidity removal. |
 | `uniswap_list_positions` | via `run_read_tool` | Read Uniswap v3/v4 liquidity positions. |
@@ -984,7 +988,20 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `tokyofuturo_deliver_job` | via `run_tool` | Upload the exact report text to Tokyo Futuro, then prepare its on-chain hash commitment. The upload persists even if you decline the transaction. Deliver by the deadline to keep the bond. |
 | `tokyofuturo_collect` | via `run_tool` | Collect a Tokyo Futuro payout or returned bond using the path available on chain, or explain what the job is waiting for. House-funded jobs cannot claim after silence. |
 
-### 36. FOBO (16)
+### 36. StonkBrokers (8)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `stonkbrokers_vaults` | via `run_read_tool` | Read StonkBrokers Smart LP vaults, pool tokens, fees, pause and withdrawal-block switch status. |
+| `stonkbrokers_vault` | via `run_read_tool` | Read one listed current StonkBrokers Smart LP vault and its administrative state. |
+| `stonkbrokers_holdings` | via `run_read_tool` | Read this wallet’s StonkBrokers shares and an estimated full in-kind withdrawal. |
+| `stonkbrokers_pair_tokens` | via `run_read_tool` | Read StonkBrokers pair tokens, v4 pool IDs, tokens and fee tiers. |
+| `stonkbrokers_zap_deposit` | via `run_tool` | Prepare a one-token StonkBrokers Smart LP deposit with exact approval and simulated minimum shares. |
+| `stonkbrokers_deposit` | via `run_tool` | Prepare a two-token StonkBrokers Smart LP deposit with exact approvals and simulated minimum shares. |
+| `stonkbrokers_deposit_single` | via `run_tool` | Prepare a base-token-only StonkBrokers ASK vault deposit with simulated minimum shares. |
+| `stonkbrokers_withdraw` | via `run_tool` | Prepare a partial or full StonkBrokers in-kind withdrawal with minimums from a simulation of the exit. |
+
+### 37. FOBO (16)
 
 | Tool | In `tools/list` | One-line public description |
 | :--- | :--- | :--- |

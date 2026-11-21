@@ -65,6 +65,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "priceSignerVersion",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",

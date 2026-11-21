@@ -10,11 +10,11 @@ interface IOakBurner {
     ///      A successful burn disarms at ceil(armedBalance / 100), or on consuming armedRemaining;
     ///      smaller burns reduce only armedRemaining. The note/spot tolerance remains 10%.
     function buyAndBurn(uint256 usdgIn, PriceNote calldata n, bytes calldata sig) external;
-    /// @notice Snapshot the current balance and nonzero price signer for a 90-day sweep timer (safe only).
+    /// @notice Snapshot the balance, nonzero price signer and signer version for a 90-day sweep timer (safe only).
     /// @dev Re-arming an active timer requires a previously flagged signer change and restarts the delay.
     function armSweep() external;
     /// @notice After 90 days, transfer min(current USDG balance, armedRemaining) to the safe.
-    /// @dev Requires the original signer and no flagged change; clears all arming state on completion.
+    /// @dev Requires the original signer, the original signer version and no flagged change; clears all arming state.
     function sweepStuck() external;
     function noteUsed(address wallet, bytes32 nonce) external view returns (bool);
     function armedAt() external view returns (uint64);
@@ -24,10 +24,12 @@ interface IOakBurner {
     function armedRemaining() external view returns (uint256);
     /// @notice Price signer captured at arming, cleared on disarm or sweep.
     function armedSigner() external view returns (address);
-    /// @notice Sticky record that someone observed a different signer while armed.
+    /// @notice Oracle signer version captured at arming, cleared on disarm or sweep.
+    function armedSignerVersion() external view returns (uint256);
+    /// @notice Sticky record that someone observed a different signer or signer version while armed.
     function armedSignerChanged() external view returns (bool);
-    /// @notice Anyone may flag a live signer mismatch. An unchanged signer or unarmed sweep is a no-op.
-    /// @dev A toggle-back without a flag is not detected; a watcher must call during the mismatch.
+    /// @notice Anyone may flag a signer or version mismatch, including after a toggle-back, to enable re-arming.
+    /// @dev An unarmed sweep or matching signer and version is a no-op. Sweeping detects version changes without a flag.
     function flagSignerChange() external;
     function lastBurnAt() external view returns (uint64);
     function oakDecimals() external view returns (uint8);

@@ -756,6 +756,8 @@ contract OakBurnerTest is OakBurnerAssertions {
         vm.prank(safe);
         target.armSweep();
         uint256 armed = block.timestamp;
+        uint256 version = oracle.priceSignerVersion();
+        assertEq(target.armedSignerVersion(), version);
 
         vm.warp(armed + 90 days - 1);
         vm.prank(safe);
@@ -763,11 +765,13 @@ contract OakBurnerTest is OakBurnerAssertions {
         target.sweepStuck();
 
         vm.warp(armed + 90 days);
+        assertEq(oracle.priceSignerVersion(), version);
         vm.prank(safe);
         target.sweepStuck();
         assertEq(usdg.balanceOf(safe), 100);
         assertEq(target.armedAt(), 0);
         assertEq(target.armedBalance(), 0);
+        assertEq(target.armedSignerVersion(), 0);
     }
 
     function test_LastBurnAtTracksOnlySuccessfulBurns() public {
@@ -1131,14 +1135,78 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(usdg.balanceOf(safe), 0);
     }
 
-    function test_UnflaggedToggleBackResidualStillSweeps() public {
+    function test_UnflaggedToggleBackCannotSweep() public {
         vm.prank(safe);
         burner.armSweep();
         uint64 timer = burner.armedAt();
         uint256 snapshot = burner.armedRemaining();
+        uint256 version = burner.armedSignerVersion();
         oracle.setPriceSigner(address(0));
         vm.warp(uint256(timer) + 90 days);
         oracle.setPriceSigner(signer);
+        assertEq(oracle.priceSigner(), burner.armedSigner());
+        assertEq(oracle.priceSignerVersion(), version + 2);
+        assertFalse(burner.armedSignerChanged());
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+        assertEq(usdg.balanceOf(safe), 0);
+        assertEq(usdg.balanceOf(address(burner)), snapshot);
+        assertEq(burner.armedAt(), timer);
+        assertEq(burner.armedSignerVersion(), version);
+    }
+
+    function test_SameAddressSignerSetCannotSweepWithoutFlag() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint256 version = burner.armedSignerVersion();
+        oracle.setPriceSigner(signer);
+        assertEq(oracle.priceSignerVersion(), version + 1);
+        assertFalse(burner.armedSignerChanged());
+        vm.warp(uint256(burner.armedAt()) + 90 days);
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+        assertEq(usdg.balanceOf(safe), 0);
+    }
+
+    function testFuzz_SignerSetSequenceCannotHideBehindOriginalAddress(address[4] memory signers) public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint256 version = burner.armedSignerVersion();
+        uint256 snapshot = burner.armedRemaining();
+        for (uint256 i; i < signers.length; ++i) {
+            oracle.setPriceSigner(signers[i]);
+        }
+        oracle.setPriceSigner(signer);
+        assertEq(oracle.priceSignerVersion(), version + signers.length + 1);
+        assertFalse(burner.armedSignerChanged());
+        vm.warp(uint256(burner.armedAt()) + 90 days);
+        vm.prank(safe);
+        vm.expectRevert(OakBurner.SignerChangedSinceArm.selector);
+        burner.sweepStuck();
+        assertEq(usdg.balanceOf(safe), 0);
+        assertEq(usdg.balanceOf(address(burner)), snapshot);
+    }
+
+    function test_FlagAfterToggleBackEnablesFreshFullDelay() public {
+        vm.prank(safe);
+        burner.armSweep();
+        uint64 timer = burner.armedAt();
+        oracle.setPriceSigner(address(0));
+        vm.warp(uint256(timer) + 90 days);
+        oracle.setPriceSigner(signer);
+        burner.flagSignerChange();
+        assertTrue(burner.armedSignerChanged());
+        vm.prank(safe);
+        burner.armSweep();
+        assertEq(burner.armedSignerVersion(), oracle.priceSignerVersion());
+        assertFalse(burner.armedSignerChanged());
+        vm.prank(safe);
+        vm.expectPartialRevert(OakBurner.SweepNotReady.selector);
+        burner.sweepStuck();
+        vm.warp(uint256(timer) + 180 days);
+        uint256 snapshot = burner.armedRemaining();
         vm.prank(safe);
         burner.sweepStuck();
         assertEq(usdg.balanceOf(safe), snapshot);
@@ -1198,6 +1266,7 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(burner.armedBalance(), usdg.balanceOf(address(burner)));
         assertEq(burner.armedRemaining(), burner.armedBalance());
         assertEq(burner.armedSigner(), vm.addr(OTHER_SIGNER_PK));
+        assertEq(burner.armedSignerVersion(), oracle.priceSignerVersion());
         assertFalse(burner.armedSignerChanged());
         vm.warp(uint256(timer) + 90 days);
         vm.prank(safe);
@@ -1298,6 +1367,7 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(api.armedBalance(), 100e6);
         assertEq(api.armedRemaining(), 100e6);
         assertEq(api.armedSigner(), signer);
+        assertEq(api.armedSignerVersion(), oracle.priceSignerVersion());
         assertFalse(api.armedSignerChanged());
         (PriceNote memory note, bytes memory sig) =
             _signedNoteFor(target, DEFAULT_OAK_PER_ETH, address(this), SIGNER_PK);
@@ -1322,6 +1392,7 @@ contract OakBurnerTest is OakBurnerAssertions {
         assertEq(target.armedBalance(), 0);
         assertEq(target.armedRemaining(), 0);
         assertEq(target.armedSigner(), address(0));
+        assertEq(target.armedSignerVersion(), 0);
         assertFalse(target.armedSignerChanged());
     }
 

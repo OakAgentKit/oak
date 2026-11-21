@@ -714,6 +714,28 @@ contract OakOracleTest is Test {
         );
     }
 
+    function test_PriceSignerVersionCountsEverySetIncludingSameSignerAndZero() public {
+        IOakOracle api = IOakOracle(address(oracle));
+        address original = api.priceSigner();
+        assertEq(api.priceSignerVersion(), 0);
+        address[5] memory signers = [original, address(0), address(0), vm.addr(NEXT_SIGNER_KEY), original];
+        for (uint256 i; i < signers.length; ++i) {
+            vm.prank(SAFE);
+            api.setPriceSigner(signers[i]);
+            assertEq(api.priceSigner(), signers[i]);
+            assertEq(api.priceSignerVersion(), i + 1);
+        }
+    }
+
+    function testFuzz_EverySignerSetAdvancesVersion(address[6] memory signers) public {
+        for (uint256 i; i < signers.length; ++i) {
+            vm.prank(SAFE);
+            oracle.setPriceSigner(signers[i]);
+            assertEq(oracle.priceSigner(), signers[i]);
+            assertEq(oracle.priceSignerVersion(), i + 1);
+        }
+    }
+
     function test_LiquidityUnitsBothPhases() public {
         factory.setPhase(0);
         curve.setRealQuoteReserve(98_000_000_000_000_000);
@@ -748,7 +770,7 @@ contract OakOracleTest is Test {
         assertEq(oak.balanceOf(DEAD), 2_000e18);
     }
 
-    function test_OnlySignerIsMutable_NoOwnerNoOtherSetter() public {
+    function test_SetSignerOnlyMutatesSignerAndVersion_NoOwnerNoOtherSetter() public {
         assertEq(address(uint160(uint256(vm.load(address(oracle), bytes32(0))))), vm.addr(SIGNER_KEY));
         for (uint256 i = 1; i < 8; ++i) {
             assertEq(vm.load(address(oracle), bytes32(i)), bytes32(0));
@@ -772,7 +794,9 @@ contract OakOracleTest is Test {
         assertEq(oracle.poolManager(), originalManager);
         assertEq(oracle.ethUsdgPool(), originalEthPool);
         assertEq(oracle.poolId(), originalPoolId);
-        for (uint256 i = 1; i < 8; ++i) {
+        assertEq(oracle.priceSignerVersion(), 1);
+        assertEq(vm.load(address(oracle), bytes32(uint256(1))), bytes32(uint256(1)));
+        for (uint256 i = 2; i < 8; ++i) {
             assertEq(vm.load(address(oracle), bytes32(i)), bytes32(0));
         }
     }
@@ -796,10 +820,12 @@ contract OakOracleTest is Test {
     function testFuzz_OnlySafeCanSetSigner(address caller, address nextSigner) public {
         vm.assume(caller != SAFE);
         address beforeSigner = oracle.priceSigner();
+        uint256 beforeVersion = oracle.priceSignerVersion();
         vm.expectRevert(OakOracle.OnlySafe.selector);
         vm.prank(caller);
         oracle.setPriceSigner(nextSigner);
         assertEq(oracle.priceSigner(), beforeSigner);
+        assertEq(oracle.priceSignerVersion(), beforeVersion);
     }
 
     function testFuzz_TickMathMonotonicAcrossValidRange(int24 rawTick) public pure {
