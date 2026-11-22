@@ -12,7 +12,7 @@ if (!core || !addon || process.versions.node.split('.')[0] !== '22') {
 const archives = [core, addon].map(path => realpathSync(resolve(path)));
 const work = mkdtempSync(join(root, '.packed-'));
 for (const entry of readdirSync(root)) {
-  if (/^(01-|02-|03-|shared$|test$|package.json$|test-packed.mjs$|README.md$|eval-design.md$|LICENSE$|\.gitignore$)/.test(entry)) {
+  if (/^(01-|02-|03-|04-|shared$|test$|package.json$|test-packed.mjs$|README.md$|eval-design.md$|LICENSE$|\.gitignore$)/.test(entry)) {
     cpSync(join(root, entry), join(work, entry), { recursive: true });
   }
 }

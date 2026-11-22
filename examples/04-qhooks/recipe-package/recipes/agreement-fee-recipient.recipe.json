@@ -1,0 +1,22 @@
+{
+  "schema": "oak-recipe/v1",
+  "project": "qhooks",
+  "name": "agreement-fee-recipient",
+  "description": "Read QAgreements fee recipient. As-is, not reviewed by Oak.",
+  "chainId": 4663,
+  "contract": "0x9B6E579dD876c364bf232D2958d7CC45937809bf",
+  "function": {
+    "type": "function",
+    "name": "feeRecipient",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ]
+  },
+  "inputs": [],
+  "kind": "read"
+}
