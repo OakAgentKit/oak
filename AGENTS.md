@@ -11,6 +11,12 @@ It points to the documents that hold each rule; those documents are authoritativ
 - **Custody and confirmation:** [Security, custody and authority](docs/security.md) is the custody rulebook. Never ask for keys or recovery words, never read wallet or key files, and never run `oak init` or `oak export` on the owner's behalf.
 - **Access and fees:** [Access and pricing](docs/access-and-pricing.md) explains no-subscription access, ERC-8004 identity setup, the optional daily spending limit in USD, and Oak's swap, bridge, send, Morpho bundle, optional Clanker LP reward share, and partner referral fees; get the owner's yes in chat before identity registration or any transaction.
 
+## Playbook-supported projects
+
+- **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
+
+Version 0.4.1 bundles 53 playbooks; playbook support adds no tool-backed project to the 37-project catalog.
+
 ## Working in this repository
 
 - Contributor workflow, checks and review expectations: [CONTRIBUTING.md](CONTRIBUTING.md).

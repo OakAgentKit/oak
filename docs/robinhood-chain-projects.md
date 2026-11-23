@@ -1,6 +1,6 @@
 # Robinhood Chain Ecosystem Projects (37 Configured Modules)
 
-Oak Agent Kit (`@oakagentkit/addon` 0.4.0, published on npm) provides normalized MCP modules for **37 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
+Oak Agent Kit (`@oakagentkit/addon` 0.4.1, published on npm) provides normalized MCP modules for **37 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
 
 The project count includes local FOBO and excludes the read-only `earn_options` helper.
 
@@ -109,3 +109,9 @@ Any Robinhood Chain (`4663`) project can ship opt-in declarative JSON recipes (`
 ## FOBO
 
 FOBO is an official Oak partner. Browse and search launches, read token details, current taxes and fees, holdings, rankings, claims, limit orders, supported payment currencies and transaction status. Prepare buys, sells, launches, limit orders, cancellations and creator, referral or vesting claims; Oak asks in chat before anything is signed. All 16 FOBO tools run locally through FOBO's MCP. FOBO's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+
+## Playbook-supported projects
+
+**Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
+
+Oak 0.4.1 bundles **53 playbooks**. Autonomo is supported through its guide and is separate from the **37 tool-backed projects** above; the catalog remains **789 callable / 28 listed / 761 reachable by name**.

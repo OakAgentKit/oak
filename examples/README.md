@@ -9,18 +9,18 @@ Three small Node.js 22 examples using only exported npm package APIs:
 ## Install and test packed packages
 
 Prerequisites: Node.js **22.12+ / 22.x**, npm, and the two release `.tgz` files.
-The examples target core and add-on **0.4.0**. Use
+The examples target core and add-on **0.4.1**. Use
 matching release archives for checks; no private repository source is needed.
 From this directory, one command installs both tarballs into a fresh local
 sandbox and runs every offline test:
 
 ```sh
-npm run test:packed -- /path/to/oakagentkit-core-0.4.0.tgz /path/to/oakagentkit-addon-0.4.0.tgz
+npm run test:packed -- /path/to/oakagentkit-core-0.4.1.tgz /path/to/oakagentkit-addon-0.4.1.tgz
 ```
 
 These archives must be a matching reviewed release pair. The packed test installs
 the archives explicitly with `--package-lock=false`; it does not rely on the
-checked-in lockfile or workspace links. This is the supported 0.4.0 check here.
+checked-in lockfile or workspace links. This is the supported 0.4.1 check here.
 
 It prints the installed sandbox path. `cd` there and run `npm run quickstart`,
 `npm run preview`, or `npm run portfolio`. Each defaults to labelled fixture
@@ -57,7 +57,7 @@ The examples are mainnet-only (`4663`); testnet has no swap routes or portfolio
 coverage across projects. Results depend on configured project readers;
 module error rows and incomplete or unindexed coverage remain visible.
 
-## Approval flow in 0.4.0
+## Approval flow in 0.4.1
 
 1. Call `oak_prepare {name: "swap", arguments: {quoteId}}` (or the listed `swap`
    action tool). This builds and simulates without signing.
@@ -95,8 +95,8 @@ Version 0.1.2 historically listed 102 CLI tools and 100 through the read-only ex
 
 ## Direct installation from npm
 
-The manifest targets **0.4.0** packages. At delivery, the lockfile is refreshed
-to the matching **0.4.0** archives and their qualified integrity values.
+The manifest targets **0.4.1** packages. At delivery, the lockfile is refreshed
+to the matching **0.4.1** archives and their qualified integrity values.
 Use the matching packed-package check above to check the pending release.
 The lockfile pins the public npm registry archives and their published integrity
 values. With Node.js 22.12+ / 22.x, run:

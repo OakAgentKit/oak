@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.1 — 2026-11-23
+
+- Add an Autonomo playbook for getting USDG, setting up an on-chain identity and topping up the separate wallet Autonomo's tools pay from, with approval for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. The guide adds no module or tools.
+- Make first run give one funding or identity step at a time. Improve funding and playbook discovery, and show token amounts and chain names in bridge quotes.
+- Put plain amounts, dollar values, minimum received, fees, permissions and complete risk warnings first in action summaries. Keep technical details below; agents relay the plain summary verbatim.
+- Check outside text without flagging Oak's own summaries, and clarify empty positions and new-wallet history notices.
+- Exclude sales back to USDG or ETH from the daily spending limit. Continue counting buys and sends, and explain the remaining limit and reset time before building.
+- Make receipts describe what arrived, hide old approval history by default and report progress during long calls. Explain changes of swap venue.
+- Include official ANT stock data with four verified pools on Robinhood Chain, and TTEQ data with unavailable values labelled when no pool exists.
+- Batch chain reads for swaps and sends to reduce network round trips.
+- Preserve approved minimums during pool moves, tolerate unreadable unrelated tokens during permission cleanup, and show successful skill results correctly.
+- Recognize USDG taken back from LayerBank, shorten StonkBrokers vault pages and use locally rebuilt deposit minimums. Keep complete lending and partner warnings in plan summaries.
+- Show the actual minimum for Beefy concentrated-liquidity swaps. Route deposits through Beefy's swap router using the wallet's exact approval, consumed in full; refuse unsupported steps before signing.
+- Distinguish a Borro network outage from a setup change. Explain network-fee spikes and changed fee limits plainly, confirming nothing was sent or signed and giving the next step.
+
 ## 0.4.0 — 2026-11-21
 
 - Move a pool position with `move_pool`: exit, swap and re-enter with one yes.
