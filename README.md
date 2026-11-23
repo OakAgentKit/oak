@@ -15,7 +15,7 @@ Oak is independent and is not affiliated with Robinhood.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Version 0.4.0 is published on npm** for `@oakagentkit/core` and
+**Version 0.4.1 is published on npm** for `@oakagentkit/core` and
 `@oakagentkit/addon`, plus the optional `@oakagentkit/gloam` engine. See the [changelog](CHANGELOG.md) for the fixes in this release.
 Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
 
@@ -33,7 +33,7 @@ npm install -g @oakagentkit/addon
 oak --version
 ```
 
-Version 0.4.0 is available.
+Version 0.4.1 is available.
 Run `oak --version` to check your installed version.
 
 ## Connect your agent
@@ -61,7 +61,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.4.0 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.4.1 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -90,9 +90,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuMCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.0%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuMSIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.1%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.4.0 package through `npx`.
+These shortcuts run the pinned 0.4.1 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -121,6 +121,7 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 | Swap, trade, launch tokens and manage liquidity | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4) |
 | Pay privately | Gloam (optional local engine) |
 | Use AI models, web search and page reading | Raeto |
+| Fund an agent payment wallet using existing tools | Autonomo (playbook only; see below) |
 | Find paid work and deliver it | Factor |
 | Read workflow checkpoints, recovery history and Upoch Scores | Upoch |
 | Take paid report jobs in `$ZENI`, deliver reports and collect payouts | Tokyo Futuro |
@@ -170,6 +171,12 @@ Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak 
 ### Tokyo Futuro
 
 Oak integrates with Tokyo Futuro. Tokyo Futuro's own team runs its product and contracts; Oak didn't build them and doesn't run them. `tokyofuturo_jobs`, `tokyofuturo_my_jobs`, `tokyofuturo_take_job`, `tokyofuturo_deliver_job` and `tokyofuturo_collect` handle paid report jobs in `$ZENI` (`0x6354a37799e96ed6CCaeCfFbE1c100FA7F30cec8`, 18 decimals) on `JobBoardV2` (`0x77D33320f782Be4D84c7931F102D99228Beff5C4`) on Robinhood Chain (`4663`). Sign-in, vouchers and report uploads run locally on your computer; Oak's server never receives your Tokyo Futuro bearer token or report text.
+
+### Playbook-supported projects
+
+**Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
+
+Version 0.4.1 bundles **53 playbooks**. The **37 tool-backed projects** and **789 callable tools / 28 listed / 761 reachable by name** are unchanged.
 
 ## Access and fees
 
@@ -245,7 +252,7 @@ The [offline examples](examples/README.md) run with fixture data.
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.4.0 -p @oakagentkit/gloam@0.4.0 oak mcp
+npx -y -p @oakagentkit/addon@0.4.1 -p @oakagentkit/gloam@0.4.1 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

@@ -17,8 +17,12 @@ test('balances and cross-project positions use two hosted reads plus local partn
     assert.deepEqual(result.coverage.incomplete, []);
     assert.deepEqual(result.coverage.notIndexed, []);
     assert.deepEqual(result.coverage.programs.at(-1), { program: 'fobo', status: 'complete' });
-    assert.deepEqual(rpcCalls.map(call => call.name), ['getChainId', 'getBlock', 'readContract', 'readContract', 'readContract', 'getBlock']);
-    assert.deepEqual(rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName), ['orderCount', 'getOrder', 'aggregate3']);
+    assert.equal(rpcCalls[0]?.name, 'getChainId');
+    assert.deepEqual(rpcCalls.map(call => call.name).sort(), ['getBlock', 'getBlock', 'getChainId', 'readContract', 'readContract', 'readContract']);
+    const contractReads = rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName);
+    assert.deepEqual([...contractReads].sort(), ['aggregate3', 'getOrder', 'orderCount']);
+    // FOBO derives the getOrder IDs from orderCount; partner aggregate3 is independent.
+    assert(contractReads.indexOf('orderCount') < contractReads.indexOf('getOrder'));
     const partnerRead = rpcCalls.find(call => call.args[0]?.functionName === 'aggregate3');
     assert.deepEqual(partnerRead.args[0].args[0].map(call => call.target), ECOSYSTEM_TOKENS.map(token => token.address));
     assert.deepEqual(result.balances.map(item => [item.token.symbol, item.amount, item.humanAmount]),

@@ -23,4 +23,10 @@ Start with [What is Oak?](what-is-oak.md): a plain-English introduction and your
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): release history.
 
-Core and add-on 0.4.0 are published on npm; Oak has no subscription, reads are free, and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
+Core and add-on 0.4.1 are published on npm; Oak has no subscription, reads are free, and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
+
+## Playbook-supported projects
+
+**Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
+
+Version 0.4.1 bundles 53 playbooks. The 37 tool-backed projects and callable catalog are unchanged.

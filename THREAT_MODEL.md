@@ -25,7 +25,7 @@ The owner address can arm a sweep with 90 days of notice. Only a burn spending a
 
 ## Ecosystem assets and trust boundaries
 
-Oak connects to **35 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
+Oak connects to **37 ecosystem projects** on Robinhood Chain (`4663`). `earn_options` is a read-only comparison helper and is excluded from that count. The ecosystem modules other than ERC-8004 are mainnet-only.
 
 | Asset | What is at stake |
 | --- | --- |
