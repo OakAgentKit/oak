@@ -8,7 +8,7 @@ The [live deployment record](../contracts/deployments/README.md) lists the contr
 
 ## Identity and chat confirmation
 
-- **Read tools:** `find_token`, `balances`, `price`, `quote`, `preview`, `history`, `positions`, `account`, and module reads work without an ERC-8004 identity.
+- **Read tools:** `find_token`, `balances`, `price`, `quote`, `preview`, `history`, `positions`, `account`, and other project reads work without an ERC-8004 identity. Roots Report requires a registered Oak agent.
 - **ERC-8004 identity setup (`oak setup` / `oak_setup`):** Public identity registration (`oak setup register`) mints an ERC-8004 NFT on chain, publishes the profile plus the mandatory `oak.registrar = oak` marker, and costs ETH network fees. Linking an existing identity (`oak setup link <agentId>`) is gasless; an external owner signs the link challenge in their own terminal. Unlinking (`oak identity unlink`) is also gasless.
 - **Yes-or-no confirmation in chat:** Every action runs in two steps. First, the agent calls a listed common action tool (`swap`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`) or `oak_prepare` with `{"name": "<tool>", "arguments": {...}}`, which builds and simulates the transaction via `eth_simulateV1` without signing, giving a six-part summary (what leaves the wallet, what comes back, the destination contract, the exact approval, the estimated network fee, and the USD value) plus a single-use `actionId` and UTC expiry. The agent shows that summary in chat and asks for a yes or no. When you say yes, the agent calls `oak_execute` with `{"actionId": "<the exact actionId>"}`, which re-simulates immediately before signing, checks that terms have not worsened and checks your optional daily spending limit in USD, and signs locally.
 - **Optional daily spending limit in USD (`oak_spending_limit`):** On first run, the agent asks once in chat whether you want a daily spending limit in USD. Skipping leaves no limit. You can set, change, or clear the daily spending limit anytime in chat via `oak_spending_limit`.
@@ -46,3 +46,9 @@ The revised source gives a sweep 90 days of notice. Only a burn of at least 1% o
 Sending OAK to `0x000000000000000000000000000000000000dEaD` leaves `totalSupply` unchanged.
 
 See [security](security.md) for the exact on-chain oracle and burner checks. The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed on Robinhood Chain and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
+
+**Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
+
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+
+For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.

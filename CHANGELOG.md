@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2 — 2026-11-24
+
+- Roots Report: ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and the early buyers, wallets linked to each other, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
+- Acorn Audits: your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+- Asking your agent to launch a coin now offers FOBO first.
+- The site has a new Acorn Audits page and fits in 12 pages: About now includes Press and Roadmap, and How it works includes Security.
+
 ## 0.4.1 — 2026-11-23
 
 - Add an Autonomo playbook for getting USDG, setting up an on-chain identity and topping up the separate wallet Autonomo's tools pay from, with approval for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. The guide adds no module or tools.
