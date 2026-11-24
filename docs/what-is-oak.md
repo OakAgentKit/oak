@@ -10,34 +10,40 @@ The illustration represents those configured integrations, not every project on 
 
 ## Who it is for
 
+**Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
+
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+
+For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.
+
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 789 mainnet tools in version 0.4.1 with consistent inputs
+If you build agents, the same connection gives you 791 mainnet tools in version 0.4.2 with consistent inputs
 and one local wallet. You can build your own agent workflows; every action still needs approval in chat.
-Version 0.4.1 shows your agent a short list of everyday tools; it finds and runs
+Version 0.4.2 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
 for the [37 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
-research, names and agent identities. Pons token launches are one example.
+research, names and agent identities. When you ask to launch a coin, Oak offers FOBO first.
 
 ### Playbook-supported projects
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.1 bundles **53 playbooks**. The **37 tool-backed projects** and **789 callable tools / 28 listed / 761 reachable by name** are unchanged.
+Version 0.4.2 bundles **53 playbooks**. The catalog has **37 tool-backed projects** and **791 callable tools / 28 listed / 763 reachable by name**, including Roots Report and Acorn Audits.
 
 ## Your first five minutes
 
 1. **Install and connect.** Use [the guide for your AI app](client-setup/README.md).
    Oak creates a wallet on your computer automatically. You do not need a wallet creation command.
 2. **Ask for a read.** Try: “Show my public wallet address, network, balances and positions.”
-   Reads do not require a public agent identity in normal service mode.
+   These balance and position reads do not require a public agent identity in normal service mode.
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
    Send a little ETH for network fees when you want on-chain actions.
 
-**Release status:** Oak 0.4.1 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
-$OAK has graduated on Pons. Reads need no identity; actions need a
+**Release status:** Oak 0.4.2 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
+$OAK has graduated on Pons. Most reads need no identity; Roots Report requires a registered Oak agent; actions need a
 verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
 wallet address, network, and ERC-8004 identity status. See [access and pricing](access-and-pricing.md).
 

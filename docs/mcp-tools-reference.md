@@ -1,8 +1,8 @@
 # MCP Tools Reference
 
-Oak Agent Kit (`@oakagentkit/addon` 0.4.1, published on npm) exposes **789 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **28 local lifecycle tools**, and **749 ecosystem tools** across **37 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
+Oak Agent Kit (`@oakagentkit/addon` 0.4.2, published on npm) exposes **791 MCP tools** on **Robinhood Chain mainnet** (`4663`, `0x1237`) before installed recipes: **9 basic tools**, **3 finder tools**, **28 local lifecycle tools**, and **751 ecosystem tools** across **37 configured projects**, plus dynamic `<project>.<name>` tools for any declarative `oak-recipe/v1` recipes you install.
 
-`tools/list` stays short. It shows the **28** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 789 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
+`tools/list` stays short. It shows the **28** core tools marked *yes* below (the everyday reads, `swap` and `send`, the three finders `find_tool`, `run_read_tool` and `run_tool`, `oak_playbook`, and the receipt and allowance-cleanup safety tools) plus installed recipes. Every other tool is reachable by name: `find_tool` searches all 791 by what you want to do, then `run_read_tool` calls a read and `run_tool` calls an action with its arguments, through the same code path as a direct call, so the access gate, local guard, preview, exact approvals and human confirmation are unchanged and reads stay free. `run_read_tool` refuses an action, so a hidden read keeps its read-only hint.
 
 On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 active tools**, **18** listed in `tools/list`: the 9 basic tools, `find_tool`, `run_read_tool` and `run_tool`, the 19 ERC-8004 identity tools, and the 28 local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`, `oak_prepare`, `oak_execute`, `oak_spending_limit`, `oak_confirmation`, `oak_cleanup_allowances`, `oak_allowances`, `oak_approval_census_status`, `oak_receipts`, `oak_playbook`, `oak_wormhole_evidence`, `oak_dry_run`, `oak_doctor`, `oak_whois`, `oak_plan_run`, `oak_portfolio`, `oak_claimable`, `collect_earnings`, `park_cash`, `move_pool` and `pay_many`). Swap routes and the other 36 ecosystem modules are mainnet-only.
 
@@ -12,7 +12,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 - **Decimal base-unit strings:** Every token amount in tool inputs and outputs is a decimal base-unit string (for example, `"9000000"` for `9 USDG` with 6 decimals; `"1000000000000000000"` for `1 ETH` or `1 OAK` with 18 decimals). Never pass floating-point numbers.
 - **Token metadata:** Tool outputs identify the EIP-55 checksummed token `address` (`0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee` for native ETH), `symbol`, `decimals`, and `chainId` (`4663` or `46630`).
-- **Reads vs. actions:** Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Read tools work without an ERC-8004 identity. Action tools require a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) and your yes in chat before execution. Gloam claim needs no identity but still requires chat confirmation. A fresh wallet may also run `relay_bridge_in` to itself for ETH or USDG on Robinhood Chain (no swap) before it has an identity, so funds on another chain can reach it; that bridge still previews, passes the local guard and asks for confirmation. `find_tool` reports each tool as read or action by this same rule.
+- **Reads vs. actions:** Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Most read tools work without an ERC-8004 identity. Roots Report requires a registered Oak agent. Action tools require a verified ERC-8004 identity on `IdentityRegistry` (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) and your yes in chat before execution. Gloam claim needs no identity but still requires chat confirmation. A fresh wallet may also run `relay_bridge_in` to itself for ETH or USDG on Robinhood Chain (no swap) before it has an identity, so funds on another chain can reach it; that bridge still previews, passes the local guard and asks for confirmation. `find_tool` reports each tool as read or action by this same rule.
 - **Hosted access and budgets:** Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Reads work for anyone. Actions are prepared and summarised, then executed only after the person says yes in chat through `oak_execute`. Hosted extras run under daily budgets. Call `account` to see setup status.
 - **Hosted preview vs. local simulations:** Transaction builders run a hosted `preview` (`eth_simulateV1` with `traceTransfers: true`). The bridge may reuse an identical same-block hosted preview for up to 12 seconds, but this does not remove the sender's local ordered simulation, exact-transaction simulation, or fresh post-confirmation simulation. Transfer changes are estimates, exclude gas, and cannot prove inclusion, sellability, or external settlement.
 - **Finite approvals:** Swaps approve the quoted input. Bounded-price flows may approve a finite capped maximum and request cleanup afterward. Unlimited grants are refused, but Oak makes no unconditional promise that every successful flow leaves zero residual allowance.
@@ -81,7 +81,7 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 
 ---
 
-## 37 Ecosystem Project Modules (749 Tools)
+## 37 Ecosystem Project Modules (751 Tools)
 
 ### 1. KyberSwap (2)
 
@@ -816,6 +816,18 @@ On **Robinhood Chain Testnet** (`46630`, `0xb626`), the bridge exposes **47 acti
 | `hookr_position_add` | via `run_tool` | State oak.lpWarning first. Prepare adding liquidity to a Hookr position with spending caps. |
 | `hookr_position_collect` | via `run_tool` | Prepare collecting fees from a Hookr position. |
 | `hookr_position_remove` | via `run_tool` | Prepare removing liquidity from a Hookr position with minimum amounts. |
+
+### Helper: Roots Report (1)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `roots_report` | via `run_read_tool` | Free check of a coin before buying: early buyers, who funded the creator and their other launches, linked holders, and the basics. Facts, not advice. |
+
+### Helper: Acorn Audits (1)
+
+| Tool | In `tools/list` | One-line public description |
+| :--- | :--- | :--- |
+| `acorn_request` | via `run_read_tool` | Build a Sapling Review or Heartwood Audit request to send to Oak Agent Kit by email or X. |
 
 ### 27. Meridian (18)
 
