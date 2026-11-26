@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-Oak connects your AI agent to **37 projects on Robinhood Chain** through one
+**Oak MCP for Robinhood Chain.** Oak connects your AI agent to **38 projects on Robinhood Chain** through one
 local MCP server. Your agent can check balances, compare swap routes, manage
 vault and lending positions, bridge assets, and use project tools from the same
 connection. MCP is the standard that lets an AI app call external tools.
@@ -10,13 +10,14 @@ connection. MCP is the standard that lets an AI app call external tools.
 Oak creates a wallet on your computer. The hosted service supplies quotes,
 prices and unsigned transactions; the add-on checks, signs and sends locally.
 Before signing, the agent prepares a summary and asks for a yes or no in chat.
-Oak is independent and is not affiliated with Robinhood.
+Oak is independent and is not affiliated with Robinhood Chain or its operator.
 
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Version 0.4.2 is published on npm** for `@oakagentkit/core` and
+**Version 0.4.3 is published on npm** for `@oakagentkit/core` and
 `@oakagentkit/addon`, plus the optional `@oakagentkit/gloam` engine. See the [changelog](CHANGELOG.md) for the fixes in this release.
+This release adds Texel outputs, FOBO agent-only coins and Hookr agent revenue tokens. It also adds Sapling order steps for automated Acorn scans from $49, a smoother first run, update notices, exits from pool positions outside their price range and faster reads.
 Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
 
 [Website](https://oakagentkit.org) · [Setup guides](docs/client-setup/README.md) ·
@@ -33,7 +34,7 @@ npm install -g @oakagentkit/addon
 oak --version
 ```
 
-Version 0.4.2 is available.
+Version 0.4.3 is available.
 Run `oak --version` to check your installed version.
 
 ## Connect your agent
@@ -61,7 +62,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.4.2 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.4.3 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -90,9 +91,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuMiIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.2%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuMyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.3%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.4.2 package through `npx`.
+These shortcuts run the pinned 0.4.3 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -118,7 +119,9 @@ their own terminal. [Setup and access](docs/client-setup/README.md)
 
 **Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
 
-**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). These are automated scans, never a person’s review. Include the target and optional chain; Oak gives the Sapling Review confirmation and USDG payment instructions. Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+
+**Texel:** Texel is an official Oak partner. Texel's own team runs its product and contracts; Oak didn't build them and doesn't run them. An agent makes images, videos, voiceovers and 3D on Texel's GPUs on Robinhood Chain, sees the exact USDG price first, and pays only after a yes. Prompts, source images and signed payments go straight from this computer to Texel. Find `texel_models`, prepare `texel_output`, then read `texel_output_status`.
 
 For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.
 
@@ -132,6 +135,7 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 | Read workflow checkpoints, recovery history and Upoch Scores | Upoch |
 | Take paid report jobs in `$ZENI`, deliver reports and collect payouts | Tokyo Futuro |
 | Launch a coin (offered first), browse and trade coins; manage limit orders and claims | FOBO |
+| Make images, videos, voiceovers and 3D; see the price before paying | Texel |
 | Use vaults and claim rewards | Steakhouse, Spark, NetNet, Longbow, Grove, Beefy, Merkl, Chop |
 | Supply collateral, lend, borrow and repay | Morpho Blue, Priors, LayerBank, Borro |
 | Buy, sell and redeem principal tokens | Pendle |
@@ -142,9 +146,9 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 `earn_options` compares LayerBank and Pendle through a read-only helper.
 It is excluded from the project count.
 
-The mainnet add-on module manifest has 746 tools: 730 shared hosted tools and 16 local FOBO tools. The server has 731 tools including the server-only `oak_keyed_read` transport. The add-on has 40 module factories and 37 projects, excluding Oak’s own `earn`, `roots` and `acorn` helpers; the server has 39 factories and 36 projects because FOBO runs locally.
+The mainnet add-on module manifest has 750 tools: 731 shared hosted tools, 16 local FOBO tools and 3 local Texel tools. The server has 732 tools including the server-only `oak_keyed_read` transport. The add-on has 41 module factories and 38 projects, excluding Oak’s own comparison, Roots Report and Acorn Audits helpers; the server has 39 factories and 36 projects because FOBO and Texel run locally.
 
-The catalog has **791 mainnet tools** and **47 testnet tools**. On mainnet, 28 tools are listed and **763 more are reachable by name**. Your agent sees
+The catalog has **795 mainnet tools** and **47 testnet tools**. On mainnet, 28 tools are listed and **767 more are reachable by name**. Your agent sees
 28 core tools on mainnet, or 18 on testnet, in `tools/list`, plus installed recipes. It can find and
 run the rest through `find_tool`, `run_read_tool`, and `run_tool`.
 The [tool reference](docs/mcp-tools-reference.md) lists every tool and its inputs.
@@ -182,7 +186,7 @@ Oak integrates with Tokyo Futuro. Tokyo Futuro's own team runs its product and c
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.2 bundles **53 playbooks**. The catalog has **37 tool-backed projects** and **791 callable tools / 28 listed / 763 reachable by name**, including Roots Report and Acorn Audits.
+Version 0.4.3 bundles **54 playbooks**. The catalog has **38 tool-backed projects** and **795 callable tools / 28 listed / 767 reachable by name**, including Roots Report and Acorn Audits.
 
 ## Access and fees
 
@@ -258,7 +262,7 @@ The [offline examples](examples/README.md) run with fixture data.
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.4.2 -p @oakagentkit/gloam@0.4.2 oak mcp
+npx -y -p @oakagentkit/addon@0.4.3 -p @oakagentkit/gloam@0.4.3 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.

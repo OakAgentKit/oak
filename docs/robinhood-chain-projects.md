@@ -1,12 +1,12 @@
-# Robinhood Chain Ecosystem Projects (37 Configured Modules)
+# Robinhood Chain Ecosystem Projects (38 Configured Modules)
 
-Oak Agent Kit (`@oakagentkit/addon` 0.4.2, published on npm) provides normalized MCP modules for **37 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
+Oak Agent Kit (`@oakagentkit/addon` 0.4.3, published on npm) provides normalized MCP modules for **38 configured ecosystem projects** on **Robinhood Chain mainnet** (chain ID `4663`, `0x1237`).
 
-The project count includes local FOBO and excludes the read-only `earn_options` helper.
+The project count includes local FOBO and excludes Oak’s own comparison, Roots Report and Acorn Audits helpers.
 
-Instead of configuring 37 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, and Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks (unused ETH is refunded in the same transaction). Local transaction checks and yes-or-no confirmation in chat (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) precede signing. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes; hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). Oak earns a 0.25% fee on swaps (direct Uniswap, official stock-token swaps via Priors, KyberSwap, and Velora; FOBO, Pons, and Hookr carry 0 bps), bridges (Relay), plain sends (added on top; exempt under 400 base units or to/from the Oak treasury), and Morpho bundle loan amounts (0 on collateral-only steps and ordinary Morpho actions), plus an optional 10% Clanker LP reward share (off unless chosen) and partner referral fees (`hood.ag` registrations at 5% and resales at 4% with matching buyer discounts, zero on treasury self-referral; Borro Bookrunners 10% of the Borro vault interest fee on tagged deposits — 100% of that share to Oak for the first 12 months, then 50%, paid monthly in USDG). Projects keep their own protocol fees.
+Instead of configuring 38 separate SDKs or wallets, your agent uses one local wallet (`~/.oak/wallet.enc`), uniform `<module>_<verb>` tool names, decimal base-unit string amounts, finite token approvals (never unlimited), and pre-sign `eth_simulateV1` transaction previews. Swaps approve their quoted input, and Uniswap v4 liquidity adds allow up to 0.5% headroom (rounded up to the next base unit) within caller caps to tolerate small price ticks (unused ETH is refunded in the same transaction). Local transaction checks and yes-or-no confirmation in chat (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) precede signing. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes; hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). Oak takes a 0.25% fee on swaps (direct Uniswap, official stock-token swaps via Priors, KyberSwap, and Velora; FOBO, Pons, and Hookr carry 0 bps), bridges (Relay), plain sends (added on top; exempt under 400 base units or to/from the Oak treasury), and Morpho bundle loan amounts (0 on collateral-only steps and ordinary Morpho actions), plus an optional 10% Clanker LP reward share (off unless chosen) and partner referral fees (`hood.ag` registrations at 5% and resales at 4% with matching buyer discounts, zero on treasury self-referral; Borro Bookrunners 10% of the Borro vault interest fee on tagged deposits — 100% of that share to Oak for the first 12 months, then 50%, paid monthly in USDG). Projects keep their own protocol fees.
 
-> **Network scope:** All 37 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_spending_limit` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
+> **Network scope:** All 38 ecosystem modules below operate on Robinhood Chain mainnet (`4663`). Testnet (`46630`) exposes the basic tools, `find_tool` and `run_tool`, the ERC-8004 identity tools and the local lifecycle tools (`oak_setup`, `oak_identity_unlink`, `oak_spending_limit` and `send`); the [tool reference](mcp-tools-reference.md) gives the exact count.
 
 > **Tool list:** The Tools column names every tool each project registers. The [tool reference](mcp-tools-reference.md) gives each tool's one-line description and marks which ones `tools/list` shows. An agent finds any tool that is not listed with `find_tool` and runs it with `run_tool`.
 
@@ -18,7 +18,7 @@ Instead of configuring 37 separate SDKs or wallets, your agent uses one local wa
 
 **Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
 
-**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). These are automated scans, never a person’s review. Include the target and optional chain; Oak gives the Sapling Review confirmation and USDG payment instructions. Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
 
 For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.
 
@@ -120,4 +120,16 @@ FOBO is an official Oak partner. Browse and search launches, read token details,
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Oak 0.4.2 bundles **53 playbooks**. Autonomo is supported through its guide and is separate from the **37 tool-backed projects** above; the catalog remains **791 callable / 28 listed / 763 reachable by name**.
+Oak 0.4.3 bundles **54 playbooks**. Autonomo is supported through its guide and is separate from the **38 tool-backed projects** above; the catalog remains **795 callable / 28 listed / 767 reachable by name**.
+
+## Texel: images, videos, voiceovers and 3D
+
+Texel is an official Oak partner. Texel's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+
+| Project | Tools | Capabilities & Protocol Notes |
+| :--- | :--- | :--- |
+| **Texel** | `texel_models`, `texel_output`, `texel_output_status` | Make images, videos, voiceovers and 3D on Texel’s GPUs on Robinhood Chain. See the exact USDG price and failed-output credit terms, then pay only after a yes. Prompts, source images and signed payments go directly from this computer to Texel; Oak’s server receives none of them. Read the finished output and save its file locally. |
+
+FOBO agent-only coins can be launched and bought by registered Oak agents; holders can sell back without an agent identity. Quotes show the local wallet, snipe windows and warnings. Buys and sells work with a daily spending limit; agent-only limit orders are refused.
+
+Hookr agent revenue tokens turn an agent’s income into a token in three separately confirmed steps: door, mint and link. Each step needs a yes; these steps create no market.

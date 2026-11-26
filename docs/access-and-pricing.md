@@ -13,9 +13,9 @@ The [live deployment record](../contracts/deployments/README.md) lists the contr
 - **Yes-or-no confirmation in chat:** Every action runs in two steps. First, the agent calls a listed common action tool (`swap`, `send`, `lend`, `withdraw`, `borrow`, `repay`, `bridge`) or `oak_prepare` with `{"name": "<tool>", "arguments": {...}}`, which builds and simulates the transaction via `eth_simulateV1` without signing, giving a six-part summary (what leaves the wallet, what comes back, the destination contract, the exact approval, the estimated network fee, and the USD value) plus a single-use `actionId` and UTC expiry. The agent shows that summary in chat and asks for a yes or no. When you say yes, the agent calls `oak_execute` with `{"actionId": "<the exact actionId>"}`, which re-simulates immediately before signing, checks that terms have not worsened and checks your optional daily spending limit in USD, and signs locally.
 - **Optional daily spending limit in USD (`oak_spending_limit`):** On first run, the agent asks once in chat whether you want a daily spending limit in USD. Skipping leaves no limit. You can set, change, or clear the daily spending limit anytime in chat via `oak_spending_limit`.
 
-## How Oak earns income
+## How Oak receives fees
 
-Oak earns a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees.
+Oak takes a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees.
 
 - **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps. FOBO, Pons, and Hookr routes carry 0 bps from Oak.
 - **Plain sends (`send`, `0.25%`, `25 bps`):** Added on top (`floor(amount * 25 / 10000)` in the token being sent to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`), so the recipient receives the full amount. Dust too small to carry a fee (`< 400` base units) and sends to or from the Oak treasury (`0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`) carry none.
@@ -49,6 +49,6 @@ See [security](security.md) for the exact on-chain oracle and burner checks. The
 
 **Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
 
-**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). These are automated scans, never a person’s review. Include the target and optional chain; Oak gives the Sapling Review confirmation and USDG payment instructions. Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
 
 For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.
