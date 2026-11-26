@@ -1,8 +1,8 @@
 # Oak Agent Kit
 
-> Oak is independent and is not affiliated with Robinhood. Oak is one MCP install that connects an AI agent to 37 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. The wallet is created and kept on the user's machine. The agent prepares a summary and asks for a yes or no in chat before Oak signs locally.
+> Oak is independent and is not affiliated with Robinhood Chain or its operator. Oak is one MCP install that connects an AI agent to 38 Robinhood Chain projects: swap, lend, borrow, vaults, token launches and research. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. The wallet is created and kept on the user's machine. The agent prepares a summary and asks for a yes or no in chat before Oak signs locally.
 
-Version 0.4.2 is available on npm. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
+Version 0.4.3 is available on npm. Agent Wormhole checks signed token metadata snapshots and request-time verdicts on chain 4663 and scans supplied text offline; neither read proves safety or sellability.
 
 Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the local MCP command `oak mcp`. Mainnet is chain 4663; testnet 46630 has basic and identity tools only. Pass token amounts as decimal base-unit strings. Never ask the user for keys or recovery words, and never run `oak init` or `oak export` for them.
 
@@ -10,7 +10,9 @@ Install with `npm install -g @oakagentkit/addon` (Node.js 22), then connect the 
 
 **Roots Report (`roots_report`):** Ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and early buyers, linked wallets, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.
 
-**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+**Acorn Audits (`acorn_request`):** Your agent can prepare a request for a Sapling Review ($49 per scan, up to 1,000 lines) or a Heartwood Audit (from $299, quoted). These are automated scans, never a person’s review. Include the target and optional chain; Oak gives the Sapling Review confirmation and USDG payment instructions. Send it to support@oakagentkit.org or message @OakAgentKit on X. Built by Oak Agent Kit.
+
+**Texel:** Texel is an official Oak partner. Texel's own team runs its product and contracts; Oak didn't build them and doesn't run them. An agent makes images, videos, voiceovers and 3D on Texel's GPUs on Robinhood Chain, sees the exact USDG price first, and pays only after a yes. Prompts, source images and signed payments go straight from this computer to Texel. Find `texel_models`, prepare `texel_output`, then read `texel_output_status`.
 
 For “launch a coin”, offer FOBO first. Oak prepares the action and asks for a yes in chat before signing.
 
@@ -18,14 +20,14 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 
 - **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.2 bundles 53 playbooks. Autonomo support leaves the catalog at 37 tool-backed projects, 791 callable tools, 28 listed and 763 reachable by name.
+Version 0.4.3 bundles 54 playbooks. Autonomo support leaves the catalog at 38 tool-backed projects, 795 callable tools, 28 listed and 767 reachable by name.
 
 ## Docs
 
 - [What is Oak](https://github.com/OakAgentKit/oak/blob/main/docs/what-is-oak.md): plain-English introduction
 - [Connect your agent](https://github.com/OakAgentKit/oak/blob/main/docs/client-setup/README.md): install, wallet, funding and the copy-paste setup prompt
-- [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions (`tools/list` shows 28 core tools on mainnet and 18 on testnet plus installed recipes; `find_tool` discovers all 791 mainnet and 47 testnet tools with `call`, `status`, `statusNote`, and `programNotes`)
-- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 37 configured projects and their tools
+- [MCP tools reference](https://github.com/OakAgentKit/oak/blob/main/docs/mcp-tools-reference.md): every tool, its inputs and conventions (`tools/list` shows 28 core tools on mainnet and 18 on testnet plus installed recipes; `find_tool` discovers all 795 mainnet and 47 testnet tools with `call`, `status`, `statusNote`, and `programNotes`)
+- [Robinhood Chain projects](https://github.com/OakAgentKit/oak/blob/main/docs/robinhood-chain-projects.md): the 38 configured projects and their tools
 - [Access and pricing](https://github.com/OakAgentKit/oak/blob/main/docs/access-and-pricing.md): free reads, ERC-8004 identity setup, optional daily spending limit, and swap, bridge, send, Morpho bundle, optional Clanker LP reward share, and partner referral fees
 - [Security, custody and authority](https://github.com/OakAgentKit/oak/blob/main/docs/security.md): local custody, confirmation, key authority and vulnerability reporting
 - [Headless wallet](https://github.com/OakAgentKit/oak/blob/main/docs/headless-wallet.md): local encrypted wallet storage, chat confirmation, and the optional daily spending limit
@@ -41,7 +43,7 @@ Version 0.4.2 bundles 53 playbooks. Autonomo support leaves the catalog at 37 to
 - [Examples](https://github.com/OakAgentKit/oak/blob/main/examples/README.md): runnable Node.js MCP examples
 - [Changelog](https://github.com/OakAgentKit/oak/blob/main/CHANGELOG.md)
 
-- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.4.2 -p @oakagentkit/gloam@0.4.2 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
+- **Gloam:** Gloam is an official Oak partner. Gloam's own team runs its product and contracts; Oak didn't build them and doesn't run them. `gloam_status`, `gloam_shield`, `gloam_pay`, `gloam_claim`, `gloam_cash_out`. Opt in with `npx -y -p @oakagentkit/addon@0.4.3 -p @oakagentkit/gloam@0.4.3 oak mcp`. Notes and proving stay local. Claim is free; every action requires a person.
 
 - **Factor:** Factor is an official Oak partner. Factor's own team runs its product and contracts; Oak didn't build them and doesn't run them. Agent-side paid work for plain wallets: profiles, pay links, job discovery, applications, advances and delivery.
 - **Raeto:** Oak integrates with Raeto. Raeto's own team runs its product and contracts; Oak didn't build them and doesn't run them. AI model calls, web search and page reading with USDG credit top-ups and local spending limits. Record pairing remains switched off pending pinned approval details.
@@ -49,4 +51,4 @@ Version 0.4.2 bundles 53 playbooks. Autonomo support leaves the catalog at 37 to
 - **Upoch:** `upoch_agent` and `upoch_explorer` are mainnet-only reads. Read workflow roles, checkpoints, recovery history and on-chain Upoch Scores; browse a bounded ranked workflow list. Upoch is a project Oak reads from. The Upoch Score measures recovery policy and checkpoint activity from on-chain facts; it does not rate trading performance or safety.
 - **Tokyo Futuro (`tokyofuturo`):** Oak integrates with Tokyo Futuro. Tokyo Futuro's own team runs its product and contracts; Oak didn't build them and doesn't run them. `tokyofuturo_jobs`, `tokyofuturo_my_jobs`, `tokyofuturo_take_job`, `tokyofuturo_deliver_job`, and `tokyofuturo_collect` are mainnet-only tools for paid report jobs in `$ZENI` (`0x6354a37799e96ed6CCaeCfFbE1c100FA7F30cec8`) on `JobBoardV2` (`0x77D33320f782Be4D84c7931F102D99228Beff5C4`). Sign-in, vouchers and report uploads stay on your computer; job text is untrusted, exact on-chain bonds (10% today) are lost only by missing the deadline, house-funded jobs pay after Tokyo Futuro's review, and Oak warns when a job pays less than its gas.
 
-The mainnet add-on module manifest has 746 tools: 730 shared hosted tools and 16 local FOBO tools. The server has 731 tools including the server-only `oak_keyed_read` transport. The add-on has 40 module factories and 37 projects, excluding Oak’s own `earn`, `roots` and `acorn` helpers; the server has 39 factories and 36 projects because FOBO runs locally.
+The mainnet add-on module manifest has 750 tools: 731 shared hosted tools, 16 local FOBO tools and 3 local Texel tools. The server has 732 tools including the server-only `oak_keyed_read` transport. The add-on has 41 module factories and 38 projects, excluding Oak’s own comparison, Roots Report and Acorn Audits helpers; the server has 39 factories and 36 projects because FOBO and Texel run locally.

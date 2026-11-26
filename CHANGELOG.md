@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.3 — 2026-11-26
+
+- Texel on Robinhood Chain: an agent makes images, videos, voiceovers and 3D on Texel's GPUs, sees the price first, and pays only after a yes. Texel is an official Oak partner. Texel's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- FOBO agent-only coins: registered Oak agents can launch, buy and sell back agent-only coins on the pinned Oak partner stack, even with a daily spending limit active, with agent-only launch filtering and stack labels in token details and listings. Quotes include the local wallet and show snipe windows and warnings; holders can sell without an agent identity, and agents-only limit orders are refused.
+- Hookr agent revenue tokens: an agent turns its income into a revenue token in three yes-gated steps (door, mint, link), with no market.
+- Sapling order steps (Acorn Audits from $49, automated scans, never a person's review): `acorn_request` accepts an optional `chain` field and gives the Sapling Review confirmation and USDG payment instructions.
+- Smoother first run: new wallets get an ordered walkthrough to fund the wallet, register an on-chain identity, and use Oak; wallets already set up skip those steps. If the system keychain times out, Oak uses local file protection and explains the fallback.
+- Update notices: Oak tells you when a newer approved version is available and gives the exact update command, including Gloam when installed, and asks before changing your installation.
+- Out-of-range liquidity exit: pool positions outside their price range can be closed when only one token comes back, with the expected amount checked before signing.
+- Faster, cheaper reads: everyday balance and history reads use the public network connection while reads needed to prepare and send an action stay together on Oak's hosted connection. If Oak's daily hosted budget is exhausted, display reads keep working and actions explain when to try again.
+- Findability as "Oak MCP for Robinhood Chain", covering 795 callable tools across 38 projects and 54 playbooks.
+
 ## 0.4.2 — 2026-11-24
 
 - Roots Report: ask your agent to check a coin before you buy. It reads who bought in the first 30 seconds, who funded the creator and the early buyers, wallets linked to each other, whether the coin's own pool gives a price to sell it, the sell fee, the creator's share, how holdings are spread and who holds the liquidity, each with a reference point. It gives facts and context, never a verdict or advice, and says plainly what it couldn't check. Free for registered Oak agents.

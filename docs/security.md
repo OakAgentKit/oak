@@ -1,6 +1,6 @@
 # Security, Custody, and Authority
 
-**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.4.2**; see the [live deployment record](../contracts/deployments/README.md). Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.4.3**; see the [live deployment record](../contracts/deployments/README.md). Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 
 The treasury and contract admin is the owner address `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`. One owner key can spend treasury funds, replace the price signer on `OakOracle`, and arm or execute the 90-day stuck-funds sweep on `OakBurner`. There is no second-signature requirement. Key compromise exposes these powers; key loss can make treasury funds and administration inaccessible. It cannot spend user wallet balances. The contracts name the owner address `safe`.
 
@@ -16,7 +16,7 @@ Use **GitHub private vulnerability reporting** on the official OakAgentKit repos
 
 Include in your report:
 
-1. The affected surface (local CLI/MCP add-on, 37 ecosystem connectors, smart contracts in `contracts/`, hosted service, or deployed contracts on Robinhood Chain `4663`).
+1. The affected surface (local CLI/MCP add-on, 38 ecosystem connectors, smart contracts in `contracts/`, hosted service, or deployed contracts on Robinhood Chain `4663`).
 2. Minimal reproduction steps, proof-of-concept test or Foundry test (`forge test`), and the exact commit SHA or package version.
 3. The concrete impact against the authority boundaries documented below.
 

@@ -17,11 +17,11 @@ safe harbor in [docs/security.md](docs/security.md#1-reporting-a-vulnerability),
 
 | Version | Supported |
 | --- | --- |
-| 0.4.2 (2026-11-24) | Yes |
-| 0.3.0–0.4.1 | Upgrade to 0.4.2 for current fixes |
-| 0.2.x | Upgrade to 0.4.2 for current fixes |
-| 0.1.x | Upgrade to 0.4.2 for current fixes |
-| Earlier versions | Upgrade to 0.4.2 for current fixes |
+| 0.4.3 (2026-11-26) | Yes |
+| 0.3.0–0.4.2 | Upgrade to 0.4.3 for current fixes |
+| 0.2.x | Upgrade to 0.4.3 for current fixes |
+| 0.1.x | Upgrade to 0.4.3 for current fixes |
+| Earlier versions | Upgrade to 0.4.3 for current fixes |
 
 The [security policy](docs/security.md) also covers local custody, confirmation and transaction checks,
 and contract authority.
