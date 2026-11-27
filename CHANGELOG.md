@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.4 — 2026-11-27
+
+- UP on Robinhood Chain: swap, add and remove liquidity, stake in UP's gauges and claim `UP` rewards on both of UP's pool kinds (classic pairs and concentrated pools). No Oak fee on UP, and UP quotes join the generic `quote` comparison. UP's own team runs its product and contracts; Oak didn't build them and doesn't run them.
+- Bitget Wallet swap quotes: `quote` and `swap` also compare Bitget Wallet's routes, with no Oak fee. Bitget Wallet's key stays on Oak's server; your computer checks the route and the approval against Oak's pins and signs. A UP or Bitget Wallet quote that expires between your yes and the signature is refused before anything is signed, and Oak asks for a fresh quote.
+- HoodLock after a FOBO launch: when you launch a coin with an initial buy, Oak offers to lock or vest those coins with HoodLock, each with its own yes.
+- Hookr alliance pools: two agents can open a Hookr pool for an existing coin and add on the same range, with an optional 50/50 split of the creator's cut.
+- Hookr buybacks: claim creator credit, buy the same coin and send it to the burn address, each step with its own yes. If the buy fails after the claim, nothing is sent to the burn address and the claimed funds stay in your wallet. Coins sent to the burn address stay in total supply.
+- Hookr revenue tokens can open a market: chosen before the door, the mint seeds a Hookr pool with part of the supply in the same transaction, locked for at least 50,400 parent-chain blocks (about a week; a permanent lock needs your explicit consent). A mint takes up to 4 recipients with a market and 1 without, and Oak checks both limits before the first step.
+- Roots Report reads the cash in FOBO and graduated Pons pools, and shows the launching agent's Hookr record.
+- The daily spending limit counts the network fee actually paid once a transaction's receipt is in, instead of the reserved maximum. A transaction whose outcome is unknown keeps the maximum counted.
+- Clearer first run: right after registration `account` explains the short wait, a slow funding check still answers in plain words, a line says when money has arrived, and receipts name the dollars sent and the Oak fee.
+- NetNet exits: when the vault cannot pay a full exit right away, Oak takes out what it can pay now and says the rest waits.
+- Fewer hosted checks: text in fields Oak has pinned is no longer sent for the hosted safety check, and identical checks are sent once. A pinned name on an address Oak has not pinned is still checked.
+- One swap fee for every add-on: direct Uniswap swaps and official stock-token swaps now carry Oak's 0.25% fee whichever add-on version asks. Add-ons older than 0.4.3 used to get these swaps without the fee; they now pay it like everyone else and must be upgraded to swap.
+- 804 callable tools across 39 projects and 54 playbooks.
+- Hookr revenue-token syncs, which need about 14 million gas, now go through for verified Hookr tokens. Every other call keeps the 10 million gas ceiling.
+- Texel: no prompt text reaches Texel before your yes, and results show the payment transaction.
+- OakBurner and OakOracle are retired. Oak now burns `$OAK` by hand: it buys `$OAK` and sends it to the dead address, and each burn is a public transaction, listed with its receipt in the token docs. Oak's server no longer signs burner price notes.
+- Retired confirmation and subscription code, for anyone importing the packages directly: the add-on subpaths `@oakagentkit/addon/approval-code`, `@oakagentkit/addon/notify`, `@oakagentkit/addon/system-dialog`, `@oakagentkit/addon/terminal-confirm` and `@oakagentkit/addon/subscribe`; `createCodeConfirmation` from `@oakagentkit/addon/confirm`, `confirmModeLine` from `@oakagentkit/addon/instructions`, the `terminalConfirmation` runtime option from `@oakagentkit/addon/cli`, and `RECEIPT_ACTORS_BEFORE_AP3`, `RECEIPT_DOWNGRADE_NOTE` and `SYSTEM_DIALOG_DOWNGRADE_NOTE` from `@oakagentkit/addon/receipts`; the core subpath `@oakagentkit/core/modules/netnet/blackjack-hashes`; `recipientAuthority`, `feeMode` and `supplyNetRule` from `@oakagentkit/core/addresses`; and `createChopGuard` from `@oakagentkit/core/modules/chop/guard` (call `rebuildChopAction(request, wallet, deps)` directly). Chat approval and existing receipt logs work as before.
+
 ## 0.4.3 — 2026-11-26
 
 - Texel on Robinhood Chain: an agent makes images, videos, voiceovers and 3D on Texel's GPUs, sees the price first, and pays only after a yes. Texel is an official Oak partner. Texel's own team runs its product and contracts; Oak didn't build them and doesn't run them.

@@ -36,7 +36,7 @@ forge test --offline
 
 Contract contribution rules:
 
-1. **Shared rounding vectors:** `OakPricing.sol` must pass all shared entry-curve, holder-count, 5% sign-up burn, and 25/75 payment-split vectors in `contracts/test/vectors.json`.
+1. **Shared test vectors:** `forge test` must keep passing, including the shared vectors in `contracts/test/vectors.json`. `OakSubscription` and its `OakPricing` library are retired (Oak has no subscription) and stay only as the record of the deployed contracts; do not build on them.
 2. **Fork testing hygiene:** When running local Anvil forks of Robinhood Chain (`4663`) or Testnet (`46630`), start Anvil with `--accounts 0` and verify fresh test wallets have `eth_getCode == 0x` and nonce `0` (Anvil default accounts carry inherited EIP-7702 delegation code on both networks).
 3. **Authority disclosures:** Any contract change must keep the authority table in [`docs/security.md`](docs/security.md) accurate.
 

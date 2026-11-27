@@ -1,7 +1,7 @@
 {
   "name": "oak",
-  "version": "0.4.3",
-  "description": "Oak MCP for Robinhood Chain: connect a local Oak wallet and tools for 38 Robinhood Chain projects. Requires Node.js >=22.12.0.",
+  "version": "0.4.4",
+  "description": "Oak MCP for Robinhood Chain: connect a local Oak wallet and tools for 39 Robinhood Chain projects. Requires Node.js >=22.12.0.",
   "author": {
     "name": "Oak Agent Kit"
   },

@@ -14,7 +14,7 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 
 - [Connect your AI app](client-setup/README.md): install Oak, create the wallet automatically, and choose a client.
 - [Examples](../examples/README.md): three runnable examples with offline fixtures by default.
-- [38 configured projects](robinhood-chain-projects.md): capabilities grouped by use.
+- [39 configured projects](robinhood-chain-projects.md): capabilities grouped by use.
 - [Tool reference](mcp-tools-reference.md): names, inputs, network scope and which tools `tools/list` shows. Find any other tool with `find_tool` and run it with `run_tool`.
 
 ## Understand access and custody
@@ -31,10 +31,10 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 - [Contributing](../CONTRIBUTING.md): docs, examples, contracts and declarative recipes.
 - [Changelog](../CHANGELOG.md): release history.
 
-Core and add-on 0.4.3 are published on npm; Oak has no subscription, reads are free, and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
+Core and add-on 0.4.4 are published on npm; Oak has no subscription, reads are free, and hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action). See the [live deployments and team vesting lock](../contracts/deployments/README.md).
 
 ## Playbook-supported projects
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.3 bundles 54 playbooks. The catalog has 38 tool-backed projects and 795 callable tools / 28 listed / 767 reachable by name, including Roots Report and Acorn Audits.
+Version 0.4.4 bundles 54 playbooks. The catalog has 39 tool-backed projects and 804 callable tools / 28 listed / 776 reachable by name, including Roots Report and Acorn Audits.

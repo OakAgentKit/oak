@@ -6,14 +6,16 @@ The [mainnet deployment record](4663.json) contains addresses and transaction ha
 The [testnet record](46630.json) remains a placeholder; it is not mainnet configuration.
 Verify chain ID, contract code and current state before use.
 
-The deployed contracts were built from the reviewed source. The oracle and burner source changes described in [Unreleased](../../CHANGELOG.md#unreleased) are not deployed yet. The npm/server 0.3.10 release does not deploy these contract fixes. The [contract invariants](../../docs/INVARIANTS.md) describe the revised source; the addresses and receipts below remain historical deployment records.
+The deployed contracts were built from the reviewed source. On 27 November 2026 Oak retired the oracle and burner instead of deploying the source changes described in [Unreleased](../../CHANGELOG.md#unreleased): they were built to burn subscription income, which Oak no longer takes. Both stay on chain at the addresses below, and the retired burner still holds 5.33 USDG from early subscriptions. The [contract invariants](../../docs/INVARIANTS.md) describe the revised source, which was never deployed; the addresses and receipts below remain historical deployment records.
+
+`OakSubscription` is retired too: Oak has had no subscription since version 0.3.0 and no longer uses the contract, which stays on chain at the address below. `OakPricing` is a library compiled into `OakSubscription` and `OakBurner`, with no address of its own; it is retired with them.
 
 | Contract | Address | Deployment transaction |
 | --- | --- | --- |
 | OAK token | `0x6511c233790Ec10f7d673c64DC82C3F941D57828` | `0xa4523ace3b9001ea9caad3158cb6e3b4b5537f8c76f01974885f218752a2be58` |
-| OakOracle | `0x9d3Ae2a760B6266F8A92240a59e5006D1AADBD30` | `0x54ed60ff36f1b83e6f6a0f41e6dbd2e0915d79a0af4bc510cfb291918d9f31b1` |
-| OakBurner | `0x0704AE41934EE9b71A85cBd308786CfE503108f4` | `0xec83b462a4baffdb7c64940f9e2edaff3edaa9c5ab9493a4ecc020140e81da06` |
-| OakSubscription | `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8` | `0xfc356ad47cdce9a9961d53f1d37a384c9553ab4fe60591d7e2d30df3f08a96d7` |
+| OakOracle (retired 2026-11-27) | `0x9d3Ae2a760B6266F8A92240a59e5006D1AADBD30` | `0x54ed60ff36f1b83e6f6a0f41e6dbd2e0915d79a0af4bc510cfb291918d9f31b1` |
+| OakBurner (retired 2026-11-27) | `0x0704AE41934EE9b71A85cBd308786CfE503108f4` | `0xec83b462a4baffdb7c64940f9e2edaff3edaa9c5ab9493a4ecc020140e81da06` |
+| OakSubscription (retired; unused since Oak 0.3.0) | `0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8` | `0xfc356ad47cdce9a9961d53f1d37a384c9553ab4fe60591d7e2d30df3f08a96d7` |
 | OakTeamVesting | `0xbDB50e1aB95516D4f1CfCbB8eE704dc1e65f9b91` | `0x4efe37182a53179f21452960a438fe7fd59b4c6d05220efb50589be3fdbed1eb` |
 
 The Pons curve is `0x47C76144294B009C12b8BC7C1D40CD8d65Dd486e`.
@@ -39,11 +41,11 @@ See the [vesting tests](../test/OakTeamVesting.t.sol) and [custody disclosures](
 
 ## Current access
 
-The published core and add-on packages are **0.4.3**. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
+The published core and add-on packages are **0.4.4**. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
 Most reads need no identity; Roots Report requires a registered Oak agent; actions require a verified ERC-8004 identity, except the
 free `gloam_claim` action. Every action requires a yes in chat before signing.
 The legacy `OakSubscription` (v2) billing contract (`0x5e0d93D4bad53388839Ac5A53dB716b70d8606A8`) remains deployed and is unused (`0xF1C5d40997e1151B125a41e822C4278b153c4610` has no code on chain: never deployed or not at that address).
 Oak takes a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees.
-25% of Oak's income buys back and burns `$OAK`; holding `$OAK` has no access perks.
+25% of Oak's income buys back and burns `$OAK`, by hand: Oak buys `$OAK` and sends it to the dead address; holding `$OAK` has no access perks.
 The treasury/admin is `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`.
 There is no second-signature requirement. See [access and pricing](../../docs/access-and-pricing.md).

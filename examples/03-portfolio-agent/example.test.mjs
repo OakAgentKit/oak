@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import { ECOSYSTEM_TOKENS } from '@oakagentkit/core/tokens';
 import { fixtureConnection } from '../shared/fixtures.mjs';
 import { portfolio } from './index.mjs';
+// This fixture has no UP contract reader; 0.4.4 preserves that gap as unknown holdings.
+const upUnavailable = 'UP positions could not be read; missing holdings are unknown.';
 test('balances and cross-project positions use two hosted reads plus local partner balance and FOBO escrow reads', async () => {
   const calls = [], rpcCalls = [], signingCalls = [];
   const connection = await fixtureConnection({ calls, rpcCalls, signingCalls });
@@ -13,12 +15,14 @@ test('balances and cross-project positions use two hosted reads plus local partn
     assert.equal(result.balances[0].amount, '25000000');
     assert.equal(result.balances[0].humanAmount, '25');
     assert.deepEqual(result.positions.map(item => item.module), ['steakhouse', 'morpho', 'uniswap']);
-    assert.deepEqual(result.warnings, []);
-    assert.deepEqual(result.coverage.incomplete, []);
+    assert.deepEqual(result.warnings, [upUnavailable]);
+    assert.deepEqual(result.coverage.incomplete, ['up']);
     assert.deepEqual(result.coverage.notIndexed, []);
     assert.deepEqual(result.coverage.programs.at(-1), { program: 'fobo', status: 'complete' });
+    assert.deepEqual(result.coverage.programs.find(item => item.program === 'up'),
+      { program: 'up', status: 'incomplete', reason: upUnavailable });
     assert.equal(rpcCalls[0]?.name, 'getChainId');
-    assert.deepEqual(rpcCalls.map(call => call.name).sort(), ['getBlock', 'getBlock', 'getChainId', 'readContract', 'readContract', 'readContract']);
+    assert.deepEqual(rpcCalls.map(call => call.name).sort(), ['getBlock', 'getBlock', 'getChainId', 'getChainId', 'readContract', 'readContract', 'readContract']);
     const contractReads = rpcCalls.filter(call => call.name === 'readContract').map(call => call.args[0].functionName);
     assert.deepEqual([...contractReads].sort(), ['aggregate3', 'getOrder', 'orderCount']);
     // FOBO derives the getOrder IDs from orderCount; partner aggregate3 is independent.
@@ -35,7 +39,7 @@ test('partial module failures remain visible, not zero balances', async () => {
     programs: [{ program: 'morpho', status: 'incomplete', reason: 'morpho: unavailable' }], positions: [
     { module: 'morpho', id: 'error', chainId: 4663, assets: [], description: 'morpho: unavailable' },
   ] }) } });
-  try { assert.deepEqual((await portfolio(connection.client)).warnings, ['morpho: unavailable']); }
+  try { assert.deepEqual((await portfolio(connection.client)).warnings, ['morpho: unavailable', upUnavailable]); }
   finally { await connection.close(); }
 });
 
@@ -47,7 +51,7 @@ test('coverage gaps without error rows remain visible', async () => {
   try {
     const result = await portfolio(connection.client);
     assert.deepEqual(result.positions, []);
-    assert.deepEqual(result.warnings, ['morpho: reader unavailable', 'steakhouse: incomplete', 'uniswap: not indexed']);
+    assert.deepEqual(result.warnings, ['morpho: reader unavailable', upUnavailable, 'steakhouse: incomplete', 'uniswap: not indexed']);
     assert.deepEqual(result.coverage.notIndexed, ['uniswap']);
   } finally { await connection.close(); }
 });
@@ -77,7 +81,7 @@ test('local FOBO escrow outage remains incomplete instead of being reported as z
   } });
   try {
     const result = await portfolio(connection.client);
-    assert.deepEqual(result.coverage.incomplete, ['fobo']);
+    assert.deepEqual(result.coverage.incomplete, ['up', 'fobo']);
     assert.equal(result.coverage.programs.at(-1).status, 'incomplete');
     assert.match(result.warnings.join('\n'), /FOBO escrow could not be read/);
     assert.deepEqual(signingCalls, []);
@@ -100,7 +104,7 @@ test('local FOBO nonzero escrow is retained separately from wallet balances', as
     assert.equal(result.positions.at(-1).module, 'fobo');
     assert.equal(result.positions.at(-1).assets[0].amount, '42');
     assert.equal(result.balances[0].amount, '25000000');
-    assert.deepEqual(result.coverage.incomplete, []);
+    assert.deepEqual(result.coverage.incomplete, ['up']);
   } finally { await connection.close(); }
 });
 

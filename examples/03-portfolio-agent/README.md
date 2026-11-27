@@ -5,7 +5,7 @@ symbol, decimals, chain ID and base-unit amount, and display human amounts using
 integer arithmetic. An `unavailable` balance stays `unavailable`, with its token
 metadata and any explanation preserved; it is never displayed as zero.
 Positions retain their project/module and any error rows.
-Oak 0.4.3's MCP `structuredContent` exposes balances under `items`; the example
+Oak 0.4.4's MCP `structuredContent` exposes balances under `items`; the example
 also accepts the older array text form. Setup next steps and funding summaries
 remain visible when the balance response includes them.
 
