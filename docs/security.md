@@ -1,6 +1,6 @@
 # Security, Custody, and Authority
 
-**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.4.3**; see the [live deployment record](../contracts/deployments/README.md). Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
+**Release scope:** Yes-or-no chat confirmation (preparing with a listed action tool or `oak_prepare`, then calling `oak_execute` with `{"actionId": "<actionId>"}` after a yes) and local transaction guards apply in **0.4.4**; see the [live deployment record](../contracts/deployments/README.md). Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Hosted actions require a verified ERC-8004 identity (except the free `gloam_claim` action).
 
 The treasury and contract admin is the owner address `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`. One owner key can spend treasury funds, replace the price signer on `OakOracle`, and arm or execute the 90-day stuck-funds sweep on `OakBurner`. There is no second-signature requirement. Key compromise exposes these powers; key loss can make treasury funds and administration inaccessible. It cannot spend user wallet balances. The contracts name the owner address `safe`.
 
@@ -45,7 +45,7 @@ A partial Uniswap or Pons spend can leave a bounded allowance: the unspent part 
 `0f17b65aa61edee384d5129b7ea080f22905faa0`, under MIT. Oak retains only the
 tick-to-sqrt-price function, renames it, uses a plain custom error, and removes the
 unused reverse conversion, spacing helpers, constants, and imports; the calculation
-and its constants include Roots Report and Acorn Audits. A GPL-2.0-or-later, test-only snapshot of Uniswap
+and its constants are unchanged. A GPL-2.0-or-later, test-only snapshot of Uniswap
 v3-core at commit `5ea68a77cb541c6b3812df783be71ba8c081e25f` remains solely as a
 differential oracle and is never deployed.
 

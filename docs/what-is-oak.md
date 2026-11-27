@@ -1,10 +1,10 @@
 # What is Oak?
 
-Oak gives your AI agent one connection to explore and use 38 configured projects on Robinhood Chain.
+Oak gives your AI agent one connection to explore and use 39 configured projects on Robinhood Chain.
 You can ask it to check balances, look up project information or prepare an action,
 without connecting each project separately.
 
-![An illustration of Oak connecting its 38 configured Robinhood Chain project integrations](../assets/oak-world.webp)
+![An illustration of Oak connecting its 39 configured Robinhood Chain project integrations](../assets/oak-world.webp)
 
 The illustration represents those configured integrations, not every project on the chain.
 
@@ -20,20 +20,20 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 
 If you use an AI app, Oak lets that app work with blockchain tools through a local
 connection called MCP — an agent tool connection. You still decide which actions to approve.
-If you build agents, the same connection gives you 795 mainnet tools in version 0.4.3 with consistent inputs
+If you build agents, the same connection gives you 804 mainnet tools in version 0.4.4 with consistent inputs
 and one local wallet. You can build your own agent workflows; every action still needs approval in chat.
-Version 0.4.3 shows your agent a short list of everyday tools; it finds and runs
+Version 0.4.4 shows your agent a short list of everyday tools; it finds and runs
 any other tool with `find_tool` and `run_tool`.
 
 The tree's roots connect the village in our artwork. Oak plays that connecting role
-for the [38 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
+for the [39 configured projects](robinhood-chain-projects.md), including swaps, vaults, bridging,
 research, names and agent identities. When you ask to launch a coin, Oak offers FOBO first.
 
 ### Playbook-supported projects
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.3 bundles **54 playbooks**. The catalog has **38 tool-backed projects** and **795 callable tools / 28 listed / 767 reachable by name**, including Roots Report and Acorn Audits.
+Version 0.4.4 bundles **54 playbooks**. The catalog has **39 tool-backed projects** and **804 callable tools / 28 listed / 776 reachable by name**, including Roots Report and Acorn Audits.
 
 ## Your first five minutes
 
@@ -44,7 +44,7 @@ Version 0.4.3 bundles **54 playbooks**. The catalog has **38 tool-backed project
 3. **Learn before funding.** Check the network and address. Explore the [offline examples](../examples/README.md).
    Send a little ETH for network fees when you want on-chain actions.
 
-**Release status:** Oak 0.4.3 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
+**Release status:** Oak 0.4.4 is available on npm. Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes.
 $OAK has graduated on Pons. Most reads need no identity; Roots Report requires a registered Oak agent; actions need a
 verified ERC-8004 identity (except the free `gloam_claim` action). Call `account` to check your
 wallet address, network, and ERC-8004 identity status. See [access and pricing](access-and-pricing.md).
@@ -79,7 +79,7 @@ Your agent must explain these steps and get your yes in chat first.
 
 Oak takes a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees:
 
-- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps (FOBO, Pons, and Hookr routes carry 0 bps from Oak).
+- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps (FOBO, Pons, Hookr, UP and Bitget Wallet routes carry 0 bps from Oak).
 - **Plain sends (`send`, `0.25%`, `25 bps`):** Added on top (`floor(amount * 25 / 10000)` in the token being sent to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`), so the recipient receives the full amount. Dust too small to carry a fee (`< 400` base units) and sends to or from the Oak treasury (`0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`) carry none.
 - **Morpho bundles (`morpho_bundle`, `0.25%`, `25 bps`):** Charged on the loan amount across `supply`, `withdraw`, `supplyCollateralAndBorrow`, `repayAndWithdrawCollateral`, and `migrateBorrowPosition` to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf` (deducted on supply, withdraw, and borrow; added on top on repay and migrate). Collateral-only steps and ordinary `morpho_supply`, `morpho_withdraw`, `morpho_borrow`, `morpho_repay`, `morpho_supply_collateral`, and `morpho_withdraw_collateral` carry none.
 - **Clanker launches (`clanker_launch`):** An opt-in choice (`oakRewardShare: true`) to share 10% (`1000 bps`) of future distributable LP creator rewards with Oak; off unless the person chooses it.

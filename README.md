@@ -2,7 +2,7 @@
 
 # Oak Agent Kit
 
-**Oak MCP for Robinhood Chain.** Oak connects your AI agent to **38 projects on Robinhood Chain** through one
+**Oak MCP for Robinhood Chain.** Oak connects your AI agent to **39 projects on Robinhood Chain** through one
 local MCP server. Your agent can check balances, compare swap routes, manage
 vault and lending positions, bridge assets, and use project tools from the same
 connection. MCP is the standard that lets an AI app call external tools.
@@ -15,9 +15,9 @@ Oak is independent and is not affiliated with Robinhood Chain or its operator.
 [![npm](https://img.shields.io/npm/v/@oakagentkit/addon?label=%40oakagentkit%2Faddon&color=062F27)](https://www.npmjs.com/package/@oakagentkit/addon)
 [![License: MIT](https://img.shields.io/badge/license-MIT-062F27)](LICENSE)
 
-**Version 0.4.3 is published on npm** for `@oakagentkit/core` and
+**Version 0.4.4 is published on npm** for `@oakagentkit/core` and
 `@oakagentkit/addon`, plus the optional `@oakagentkit/gloam` engine. See the [changelog](CHANGELOG.md) for the fixes in this release.
-This release adds Texel outputs, FOBO agent-only coins and Hookr agent revenue tokens. It also adds Sapling order steps for automated Acorn scans from $49, a smoother first run, update notices, exits from pool positions outside their price range and faster reads.
+This release adds UP swaps and liquidity tools, a Bitget Wallet swap route with no Oak fee, and Hookr buyback and burn actions. It also improves swap checks, recovery after interrupted transactions, tool discovery and local privacy checks.
 Oak has no subscription; reads are free, and some actions carry an Oak fee, always shown before you say yes. Mainnet uses the [deployed contracts](contracts/deployments/README.md).
 
 [Website](https://oakagentkit.org) · [Setup guides](docs/client-setup/README.md) ·
@@ -34,7 +34,7 @@ npm install -g @oakagentkit/addon
 oak --version
 ```
 
-Version 0.4.3 is available.
+Version 0.4.4 is available.
 Run `oak --version` to check your installed version.
 
 ## Connect your agent
@@ -62,7 +62,7 @@ Alternatively, use the [Claude Code plugin](docs/client-setup/claude-code.md):
 /plugin install oak@oak-agent-kit
 ```
 
-The plugin runs `npx -y @oakagentkit/addon@0.4.3 mcp`; it does not need a global
+The plugin runs `npx -y @oakagentkit/addon@0.4.4 mcp`; it does not need a global
 Oak install. Restart Claude Code and check `/mcp` for `plugin:oak:oak`.
 
 ### Codex
@@ -91,9 +91,9 @@ configuration in `.cursor/mcp.json`:
 }
 ```
 
-[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuMyIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.3%2522%252C%2522mcp%2522%255D%257D)
+[Add to Cursor](https://cursor.com/install-mcp?name=oak&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBvYWthZ2VudGtpdC9hZGRvbkAwLjQuNCIsIm1jcCJdfQ%3D%3D) · [Install in VS Code](https://vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522oak%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522-y%2522%252C%2522%2540oakagentkit%252Faddon%25400.4.4%2522%252C%2522mcp%2522%255D%257D)
 
-These shortcuts run the pinned 0.4.3 package through `npx`.
+These shortcuts run the pinned 0.4.4 package through `npx`.
 [Cursor guide](docs/client-setup/cursor.md) ·
 [Claude Desktop](docs/client-setup/claude-desktop.md) ·
 [Other clients](docs/client-setup/generic-mcp.md)
@@ -127,7 +127,7 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 
 | Task | Projects on Robinhood Chain mainnet |
 | --- | --- |
-| Swap, trade and manage liquidity | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4) |
+| Swap, trade and manage liquidity | KyberSwap, Velora, Pons, pools.trade, Clanker, Hookr, TickerSpring, Uniswap liquidity (v3/v4), UP |
 | Pay privately | Gloam (optional local engine) |
 | Use AI models, web search and page reading | Raeto |
 | Fund an agent payment wallet using existing tools | Autonomo (playbook only; see below) |
@@ -146,9 +146,9 @@ For “launch a coin”, offer FOBO first. Oak prepares the action and asks for 
 `earn_options` compares LayerBank and Pendle through a read-only helper.
 It is excluded from the project count.
 
-The mainnet add-on module manifest has 750 tools: 731 shared hosted tools, 16 local FOBO tools and 3 local Texel tools. The server has 732 tools including the server-only `oak_keyed_read` transport. The add-on has 41 module factories and 38 projects, excluding Oak’s own comparison, Roots Report and Acorn Audits helpers; the server has 39 factories and 36 projects because FOBO and Texel run locally.
+The mainnet add-on module manifest has 759 tools: 733 shared hosted tools, 16 local FOBO tools, 3 local Texel tools and 7 local UP tools. The server has 734 tools including the server-only `oak_keyed_read` transport. The add-on has 42 module factories and 39 projects, excluding Oak’s own comparison, Roots Report and Acorn Audits helpers; the server has 39 factories and 36 projects because FOBO, Texel and UP run locally. Bitget Wallet swap quotes join the generic `quote` and `swap` comparison with no Oak fee; Bitget Wallet has no tools of its own, so it is not counted as a project.
 
-The catalog has **795 mainnet tools** and **47 testnet tools**. On mainnet, 28 tools are listed and **767 more are reachable by name**. Your agent sees
+The catalog has **804 mainnet tools** and **47 testnet tools**. On mainnet, 28 tools are listed and **776 more are reachable by name**. Your agent sees
 28 core tools on mainnet, or 18 on testnet, in `tools/list`, plus installed recipes. It can find and
 run the rest through `find_tool`, `run_read_tool`, and `run_tool`.
 The [tool reference](docs/mcp-tools-reference.md) lists every tool and its inputs.
@@ -186,7 +186,7 @@ Oak integrates with Tokyo Futuro. Tokyo Futuro's own team runs its product and c
 
 **Autonomo:** Oak gets an agent the USDG dollars it pays with, an on-chain identity, and small top-ups of the separate wallet Autonomo's own tools pay from, with a yes for each action. Autonomo's own team runs it; Oak didn't build it and doesn't run it. Read `oak_playbook {"name":"autonomo"}` (MCP resource `oak://agent-playbooks/autonomo.md`). This playbook uses existing funding, identity and send tools; it adds no module or tools. Never export or share the Oak wallet key for Autonomo.
 
-Version 0.4.3 bundles **54 playbooks**. The catalog has **38 tool-backed projects** and **795 callable tools / 28 listed / 767 reachable by name**, including Roots Report and Acorn Audits.
+Version 0.4.4 bundles **54 playbooks**. The catalog has **39 tool-backed projects** and **804 callable tools / 28 listed / 776 reachable by name**, including Roots Report and Acorn Audits.
 
 ## Access and fees
 
@@ -196,7 +196,7 @@ Call `account` to check your wallet address, network, and ERC-8004 identity stat
 
 Oak takes a 0.25% fee on swaps, bridges, sends, and Morpho bundles, plus an optional 10% Clanker LP reward share and partner referral fees:
 
-- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps (FOBO, Pons, and Hookr routes carry 0 bps from Oak).
+- **Swaps and bridges (`0.25%`, `25 bps`):** Charged on direct Uniswap swaps (taken from the output), official stock-token swaps via `priors_stock_quote` and `priors_stock_swap` (taken from the output), KyberSwap swaps (taken from the input), Velora swaps (taken from the output), and Relay bridges and swaps (FOBO, Pons, Hookr, UP and Bitget Wallet routes carry 0 bps from Oak).
 - **Plain sends (`send`, `0.25%`, `25 bps`):** Added on top (`floor(amount * 25 / 10000)` in the token being sent to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`), so the recipient receives the full amount. Dust too small to carry a fee (`< 400` base units) and sends to or from the Oak treasury (`0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf`) carry none.
 - **Morpho bundles (`morpho_bundle`, `0.25%`, `25 bps`):** Charged on the loan amount across `supply`, `withdraw`, `supplyCollateralAndBorrow`, `repayAndWithdrawCollateral`, and `migrateBorrowPosition` to `0x856bb126188bDB5e425D3ac9D59E9ffBD12e6ECf` (deducted on supply, withdraw, and borrow; added on top on repay and migrate). Collateral-only steps and ordinary `morpho_supply`, `morpho_withdraw`, `morpho_borrow`, `morpho_repay`, `morpho_supply_collateral`, and `morpho_withdraw_collateral` carry none.
 - **Clanker launches (`clanker_launch`):** An opt-in choice (`oakRewardShare: true`) to share 10% (`1000 bps`) of future distributable LP creator rewards with Oak; off unless the person chooses it.
@@ -208,9 +208,9 @@ ETH gas and project fees are separate.
 25% of Oak's income buys back and burns `$OAK`. Holding `$OAK` has no access perks. Oak uses 25% of its income to buy back and burn `$OAK`. [Full access and fee details](docs/access-and-pricing.md) ·
 [Website pricing](https://oakagentkit.org/pricing.html)
 
-`OakBurner` calls `oak.burn()` on bought OAK, lowering `totalSupply`. Burns depend on price notes from Oak's server. Since the Oak 0.3.10 server release (2026-11-16), burner notes are issued only to the operator wallet, with no permissionless fallback. The owner address can pause all note-based actions, such as burns, by setting the price signer on `OakOracle` to zero. Tokens other than USDG sent to `OakBurner` cannot be recovered.
+Oak burns by hand, at least once a month: it buys `$OAK` in ordinary swaps and sends it to the dead address (`0x000000000000000000000000000000000000dEaD`), where nobody can ever move it. A transfer to the dead address leaves `totalSupply` unchanged. Each burn is a public transaction. `OakBurner` and `OakOracle` were retired on 27 November 2026 and stay on chain: they were built to burn subscription income, which Oak no longer takes. `OakBurner` still holds 5.33 USDG from early subscriptions, and Oak's server no longer signs price notes. Tokens other than USDG sent to `OakBurner` cannot be recovered.
 
-The [revised contract rules](docs/INVARIANTS.md) describe source changes that are not deployed yet; the [deployment record](contracts/deployments/README.md) distinguishes the deployed contracts built from the reviewed source.
+The [revised contract rules](docs/INVARIANTS.md) describe source changes that were never deployed (the contracts were retired instead); the [deployment record](contracts/deployments/README.md) distinguishes the deployed contracts built from the reviewed source.
 
 <a id="before-anything-signs"></a>
 
@@ -233,7 +233,7 @@ Gas is separate. Your computer, RPC and external projects remain trust
 boundaries. There is no completed third-party audit.
 
 One owner key controls treasury funds and contract administration, including
-the price signer on `OakOracle`. There is no second-signature requirement. Compromise exposes those
+the price signer on the retired `OakOracle`. There is no second-signature requirement. Compromise exposes those
 powers; loss can make funds and administration inaccessible. It cannot spend
 user wallet balances. [Authority details](docs/security.md#4-keys-and-authority-matrix)
 
@@ -262,7 +262,7 @@ The [offline examples](examples/README.md) run with fixture data.
 Gloam is opt-in. Install its optional engine beside the add-on to use private USDG payments:
 
 ```sh
-npx -y -p @oakagentkit/addon@0.4.3 -p @oakagentkit/gloam@0.4.3 oak mcp
+npx -y -p @oakagentkit/addon@0.4.4 -p @oakagentkit/gloam@0.4.4 oak mcp
 ```
 
 The default MCP command keeps the add-on alone. Gloam tools remain discoverable without the engine and give this install command when called. Only shield deposits sign wallet transactions. Pay, claim and cash-out make proofs locally for Gloam's relay; every action requires human confirmation, including free claims. Never paste a note or key into an agent. Back up Gloam notes with `oak export` in your own terminal; backups cover only the notes present when made.
